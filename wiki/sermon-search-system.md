@@ -32,6 +32,20 @@ The embeds are self-contained HTML documents (extracted to
 on the new site they become either iframes or inlined pages. **This system is
 the reason a static-site migration is low-risk.**
 
+## PDF hosting dependency
+
+The `file_url` links in `sermon_notes_v3` (213 docs) point to PDFs in Google
+Drive owned by **[owner school-domain account]** — a Workspace account on the
+[school](gateway-christian-school.md)'s domain, not the personal
+[owner personal gmail] account that owns the site, quiz sheet, and Firebase
+project (verified by sampling files across the index, 2026-07-21; the index's
+`owner` field is a content label — "charley"/"phill" — not the Google account).
+RISK: if the gw-school.org Workspace or that account is ever suspended,
+renamed, or cleaned up, every sermon-note PDF link breaks at once. Options if
+that becomes a concern: transfer the Drive folder to the gmail account, or
+re-host the PDFs (e.g., Firebase Hosting under `site/`) and update `file_url`
+in the index.
+
 ## Security
 
 The Elasticsearch API key is publicly visible in page source (unavoidable for a
