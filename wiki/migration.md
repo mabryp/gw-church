@@ -56,7 +56,13 @@ existing links keep working.
   (`/about/what-we-believe` etc. as directories), embeds served from
   `site/embeds/` in iframes, Luke/John get "coming soon" content. Verified in
   local preview: home, pastor page, Mark plan embed, sermon search (live
-  Elasticsearch queries work — 177 results). Not yet deployed.
+  Elasticsearch queries work — 177 results).
+- 2026-07-20: **Deployed** to Firebase Hosting project `gw-church` →
+  https://gw-church.web.app. Verified live: homepage renders, `/home` and
+  `/social_media` 301s work, content pages and embeds serve 200. Remaining:
+  custom-domain setup for gw-church.org in Firebase console + DNS cutover at
+  registrar + disconnect domain from Google Sites; Elasticsearch key scope
+  check.
 
 ## Sources
 
