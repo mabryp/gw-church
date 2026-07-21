@@ -31,3 +31,12 @@ images to `site/assets/` (source URLs are short-lived signed links). Added
 in local preview including live Elasticsearch search. Wiki updated:
 migration.md (decisions, open items, status). Awaiting owner's Firebase
 project + deploy, then DNS cutover.
+
+## [2026-07-20] site | Deployed to Firebase Hosting
+Owner had already created Firebase project `gw-church` and logged in the CLI.
+Linked the repo via `.firebaserc` (no `firebase init` needed — firebase.json
+already present) and deployed 20 files. Live at https://gw-church.web.app.
+Verified redirects (/home → /, /social_media → /connect) and 200s on content
+pages and embeds. Remaining for owner: add gw-church.org as custom domain in
+Firebase console, update DNS, disconnect Google Sites from the domain; verify
+Elasticsearch API key is read-only.
