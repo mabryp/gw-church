@@ -59,3 +59,10 @@ their published /viewform URLs, wired them into the Matthew plan's
 data-quiz-url slots, verified 10 active quiz buttons in preview, deployed.
 Weeks 9/10/13/14 await questions from the owner. Wiki: reading-plans.md
 documents the quiz system and repeat procedure.
+
+## [2026-07-21] query | Sermon PDF ownership
+Owner asked whose account holds the study-section PDFs. Queried
+sermon_notes_v3 (213 docs with file_url) and sampled Drive metadata: all PDFs
+are owned by phillip.mabry@gw-school.org (school Workspace domain), not the
+personal gmail that owns everything else. Filed as a dependency/risk note in
+sermon-search-system.md.
