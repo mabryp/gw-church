@@ -49,3 +49,13 @@ keeps quiz buttons and "why these matter" notes; Mark keeps weekly summaries.
 Content preserved verbatim; fixed Matthew's footer (Mark is weeks 15–21, not
 15–20). Verified in preview (14+7 weeks, 8 active quizzes) and deployed.
 Originals untouched in raw/embeds/. Wiki: reading-plans.md updated.
+
+## [2026-07-21] site | Built and linked Week 11 & 12 quizzes
+Discovered the owner's existing quiz system in Google Drive (gospel_quiz sheet
+with bound "Quiz Builder" Apps Script; questions existed for W11/W12 but no
+forms). Drove the owner's Chrome (with permission) to run Validate + "Build
+quiz by ID" for W11 and W12, producing two auto-graded Google Forms. Captured
+their published /viewform URLs, wired them into the Matthew plan's
+data-quiz-url slots, verified 10 active quiz buttons in preview, deployed.
+Weeks 9/10/13/14 await questions from the owner. Wiki: reading-plans.md
+documents the quiz system and repeat procedure.
