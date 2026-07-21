@@ -20,3 +20,14 @@ connect-channels, site-structure, sermon-search-system, reading-plans,
 migration) and populated the index. Lint findings recorded in site-structure:
 broken /social_media homepage link, two empty pages, publicly-visible
 Elasticsearch API key needing a read-only-scope check.
+
+## [2026-07-20] site | Built site/ for Firebase Hosting
+Owner chose Firebase Hosting and a light design refresh. Generated all 12 pages
+as static HTML under `site/` with original URL paths preserved; navy/lime
+palette from the church logo; embeds (2 reading plans, 2 search apps) copied
+verbatim to `site/embeds/` and iframed. Captured logo, pastor, and school
+images to `site/assets/` (source URLs are short-lived signed links). Added
+`firebase.json` with redirects fixing the broken /social_media link. Verified
+in local preview including live Elasticsearch search. Wiki updated:
+migration.md (decisions, open items, status). Awaiting owner's Firebase
+project + deploy, then DNS cutover.
