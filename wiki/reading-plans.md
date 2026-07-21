@@ -23,6 +23,22 @@ Old Testament sidebar ("why this matters" commentary). Styled, printable
   added week by week.
 - Embed sources extracted to `raw/embeds/reading-plan_{matthew,mark}-reading-plan_embed.html`.
 
+## Standardized template (2026-07-20)
+
+On the migrated site both plans were rebuilt on one shared template
+(`site/embeds/reading-plan.css` + identical markup structure), replacing the
+two divergent original designs. Unified features: navy/lime brand hero with
+meta pills, print button + print styles, "How to Use This Plan" intro, week
+cards (number badge / title / dates / five day cards), lime OT-connections box,
+and the "Three C's of Reading" section — now on both plans. Matthew keeps its
+quiz buttons (8 live Google Form links; weeks 9–14 activate when a URL is added
+to `data-quiz-url`) and its italic "why these matter" OT notes; Mark keeps its
+weekly summary paragraphs. All readings, dates, titles, and prose carried over
+verbatim. One correction: Matthew's footer said Mark would be "Weeks 15–20";
+Mark actually runs weeks 15–21, so the footer now says 15–21. Original designs
+remain in `raw/embeds/`. Luke and John should use this same template when
+their plans are written.
+
 ## Migration implications
 
 Like the [Sermon Search System](sermon-search-system.md), these are
