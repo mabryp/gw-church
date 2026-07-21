@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sermon Search</title>
+  <!-- Existing Scripts and Stylesheets -->
+  <script src="https://cdn.jsdelivr.net/npm/@searchkit/instantsearch-client@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/searchkit@latest"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+      /* Existing Styles */
+
+      body {
+        font-family: sans-serif;
+        padding: 1em;
+      }
+
+      .ais-ClearRefinements {
+        margin: 1em 0;
+      }
+
+      .ais-SearchBox {
+        margin: 1em 0;
+        width: 75%; /* Ensure hits take full width of the right panel */
+      }
+
+      .ais-SearchBox-input {
+        border-radius: 25px;
+        border: 2px solid #ccc;
+        
+      }
+
+      .ais-Pagination {
+        margin-top: 1em;
+      }
+
+      /* Float-based Layout Adjustments */
+      .left-panel {
+        float: left;
+        width: 250px;
+        box-sizing: border-box; /* Include padding and border in width */
+      }
+
+      .right-panel {
+        margin-left: 270px; /* 250px width + 20px margin */
+        box-sizing: border-box;
+      }
+
+      /* Clearfix to contain floats */
+      .ais-InstantSearch::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .ais-Hits-item {
+        margin-bottom: 1em;
+        width: 80%; /* Ensure hits take full width of the right panel */
+        position: relative;
+        border: 1px solid #ccc;
+        transition: border 0.3s ease;
+        border-radius: 25px;
+      }
+
+      .ais-Hits-item img {
+        margin-right: 1em;
+      }
+
+      .hit-name {
+        margin-bottom: 0.5em;
+      }
+
+      .hit-description {
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 0.5em;
+      }
+
+      .female {
+        color: #FF1493;
+        font-weight: bold;
+      }
+
+      .male {
+        color: #1493FF;
+        font-weight: bold;
+      }
+
+      .state {
+        text-transform: uppercase;
+        color: #002233;
+      }
+
+      .ais-Hits-item:hover {
+        border-radius: 25px;
+        border: 3px solid #d1e231;
+        background-color: transparent;
+        transition: border-radius 1s;
+      }
+
+      /* New Styles for Date Range Filter */
+      .date-range-filter {
+        margin-top: 2em;
+      }
+
+      .date-range-filter h2 {
+        margin-bottom: 0.5em;
+      }
+
+      .date-range-filter label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
+
+      /* If using Flatpickr, additional styles can be added here */
+      /* For standard date inputs */
+      .date-range-filter input[type="date"] {
+        width: 100%;
+        padding: 0.5em;
+        margin-bottom: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fefefe;
+        color: #333;
+        font-size: 14px;
+      }
+
+      /* Customize the placeholder text color if needed */
+      .date-range-filter input[type="date"]::-webkit-input-placeholder {
+        color: #aaa;
+      }
+
+      .date-range-filter input[type="date"]::-moz-placeholder {
+        color: #aaa;
+      }
+
+      .date-range-filter input[type="date"]:-ms-input-placeholder {
+        color: #aaa;
+      }
+
+      .date-range-filter input[type="date"]:-moz-placeholder {
+        color: #aaa;
+      }
+
+      .preset-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .preset-buttons button {
+        padding: 0.5em 1em;
+        cursor: pointer;
+        border: none;
+        background-color: #3E5C76;
+        color: white;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .preset-buttons button:hover {
+        background-color: #2a436d;
+      }
+
+      .clear-button {
+        padding: 0.5em 1em;
+        cursor: pointer;
+        border: none;
+        background-color: #ccc;
+        color: #333;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        margin-top: 1em;
+      }
+
+      .clear-button:hover {
+        background-color: #bbb;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 0.9rem;
+      }
+  </style>
+</head>
+
+<body>
+  <div class="ais-InstantSearch">
+    <div class="left-panel">
+      <h1>Search Sermon Notes</h1>
+      <h2>Filters</h2>
+      <h3>Topic Filter</h3>
+      <div id="type-list"></div>
+      <h3>Book Filter</h3>
+      <div id="books-list"></div>
+      <h3>Category Filter</h3>
+      <div id="category-list"></div>
+    </div>
+
+    <div class="right-panel">
+      <div id="searchbox" class="ais-SearchBox"></div>
+      <div id="stats"></div>
+      <div class="ais-ClearRefinements"></div>
+      <div id="hits"></div>
+      <div id="pagination"></div>
+    </div>
+  </div>
+
+  <script>
+    const sk = new Searchkit({
+      connection: {
+        host: 'https://gateway.es.us-central1.gcp.cloud.es.io/',
+        apiKey: 'UXF0UmtKSUJsVmNnT2g0YklYSFQ6UTdVVjYxMVpRNDZKa2RtUndmQ0QxZw==',
+      },
+      search_settings: {
+        result_attributes: ['topics', 'filename', 'file_url', 'verses', 'summary', 'category', 'owner', 'books', 'commentary', 'corrected_text'],
+        search_attributes: [
+          { attribute: 'filename', field: 'filename', type: 'string' },
+          { attribute: 'summary', field: 'summary', type: 'string' },
+          { attribute: 'verses', field: 'verses', type: 'string' },
+          { attribute: 'commentary', field: 'commentary', type: 'string' },
+          { attribute: 'books', field: 'book', type: 'string'},
+          { attribute: 'topics', field: 'topics', type: 'string' },
+          { attribute: 'file_url', field: 'file_url', type: 'string' },
+          { attribute: 'corrected_text', field: 'corrected_text', type: 'string' }
+        ],
+        facet_attributes: [
+          { attribute: 'topics', field: 'topics', type: 'string' },
+          { attribute: 'books', field: 'books', type: 'string'},
+          { attribute: 'verses', field: 'verses', type: 'string'},
+          { attribute: 'owner', field: 'owner', type: 'string' },
+          { attribute: 'category', field: 'category', type: 'string' }
+        ],
+      }
+    });
+
+    const search = instantsearch({
+      indexName: 'sermon_notes_v3',
+      searchClient: SearchkitInstantsearchClient(sk),
+    });
+
+    search.addWidgets([
+      instantsearch.widgets.configure({ hitsPerPage: 10, sort: 'published_at:desc' }),
+      instantsearch.widgets.searchBox({
+        container: '#searchbox',
+        placeholder: 'Search by sermon title, topic, verse, or song, or anything else'
+      }),
+      instantsearch.widgets.hits({
+        container: "#hits",
+        templates: {
+          item: function(hit) {
+            return `<div>
+                    ${hit.file_url
+                      ? `<strong><a href="${hit.file_url}"> ${hit.filename}</strong></a><br></div>`
+                      : `<strong>${hit.filename}</strong><br></div>`
+                     }
+                    <hr>
+                    <div class="hit-summary">Owner: ${hit.owner}</div>
+                    <hr> 
+                    <div class="hit-summary" style="white-space: pre-wrap;">${hit.summary}</div>
+                    <hr>
+                    <div class="hit-summary">
+                      <details class="hit-summary">
+                        <summary>Referenced Verses:</summary>
+                        ${hit.verses.map(verse => `<div>${verse}</div>`).join('')}
+                      </details>
+                      <details class="hit-summary">
+                        <summary>Theological Topics:</summary>
+                        ${hit.topics.map(verse => `<div>${verse}</div>`).join('')}
+                      </details>
+                      <details class="hit-summary">
+                        <summary>Additional Commentary:</summary>
+                        <div style="white-space: pre-wrap;"> ${hit.commentary} </div> 
+                      </details>
+                    </div>`;
+          }
+        }
+      }),
+      instantsearch.widgets.menuSelect({ container: '#type-list', attribute: 'topics', sortBy: ['count:desc', 'name:asc'], limit: 100 }),
+      instantsearch.widgets.menuSelect({ container: '#books-list', attribute: 'books', sortBy: ['count:desc', 'name:asc'], limit: 100 }),
+      instantsearch.widgets.menuSelect({ container: '#category-list', attribute: 'category', sortBy: ['count:desc', 'name:asc'], limit: 100 }),
+      instantsearch.widgets.pagination({ container: '#pagination' }),
+      instantsearch.widgets.stats({ container: '#stats' }),
+    ]);
+
+    search.start();
+  </script>
+</body>
+</html>

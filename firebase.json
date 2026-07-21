@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "public": "site",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": ["firebase.json", "**/.*"],
+    "redirects": [
+      { "source": "/home", "destination": "/", "type": 301 },
+      { "source": "/social_media", "destination": "/connect", "type": 301 }
+    ]
+  }
+}
