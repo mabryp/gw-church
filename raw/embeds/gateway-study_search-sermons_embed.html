@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sermon Search</title>
+    <!-- Existing Scripts and Stylesheets -->
+    <script src="https://cdn.jsdelivr.net/npm/@searchkit/instantsearch-client@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/searchkit@latest"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/algolia-min.css"
+    />
+    <!-- Flatpickr CSS (Optional for Enhanced Date Picker) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+      /* Existing Styles */
+
+      body {
+        font-family: sans-serif;
+        padding: 1em;
+      }
+
+      .ais-ClearRefinements {
+        margin: 1em 0;
+      }
+
+      .ais-SearchBox {
+        margin: 1em 0;
+        width: 75%; /* Ensure hits take full width of the right panel */
+      }
+
+      .ais-SearchBox-input {
+        border-radius: 25px;
+        border: 2px solid #ccc;
+        
+      }
+
+      .ais-Pagination {
+        margin-top: 1em;
+      }
+
+      /* Float-based Layout Adjustments */
+      .left-panel {
+        float: left;
+        width: 250px;
+        box-sizing: border-box; /* Include padding and border in width */
+      }
+
+      .right-panel {
+        margin-left: 270px; /* 250px width + 20px margin */
+        box-sizing: border-box;
+      }
+
+      /* Clearfix to contain floats */
+      .ais-InstantSearch::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .ais-Hits-item {
+        margin-bottom: 1em;
+        width: 80%; /* Ensure hits take full width of the right panel */
+        position: relative;
+        border: 1px solid #ccc;
+        transition: border 0.3s ease;
+        border-radius: 25px;
+      }
+
+      .ais-Hits-item img {
+        margin-right: 1em;
+      }
+
+      .hit-name {
+        margin-bottom: 0.5em;
+      }
+
+      .hit-description {
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 0.5em;
+      }
+
+      .female {
+        color: #FF1493;
+        font-weight: bold;
+      }
+
+      .male {
+        color: #1493FF;
+        font-weight: bold;
+      }
+
+      .state {
+        text-transform: uppercase;
+        color: #002233;
+      }
+
+      .ais-Hits-item:hover {
+        border-radius: 25px;
+        border: 3px solid #d1e231;
+        background-color: transparent;
+        transition: border-radius 1s;
+      }
+
+      /* New Styles for Date Range Filter */
+      .date-range-filter {
+        margin-top: 2em;
+      }
+
+      .date-range-filter h2 {
+        margin-bottom: 0.5em;
+      }
+
+      .date-range-filter label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
+
+      /* If using Flatpickr, additional styles can be added here */
+      /* For standard date inputs */
+      .date-range-filter input[type="date"] {
+        width: 100%;
+        padding: 0.5em;
+        margin-bottom: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fefefe;
+        color: #333;
+        font-size: 14px;
+      }
+
+      /* Customize the placeholder text color if needed */
+      .date-range-filter input[type="date"]::-webkit-input-placeholder {
+        color: #aaa;
+      }
+
+      .date-range-filter input[type="date"]::-moz-placeholder {
+        color: #aaa;
+      }
+
+      .date-range-filter input[type="date"]:-ms-input-placeholder {
+        color: #aaa;
+      }
+
+      .date-range-filter input[type="date"]:-moz-placeholder {
+        color: #aaa;
+      }
+
+      .preset-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .preset-buttons button {
+        padding: 0.5em 1em;
+        cursor: pointer;
+        border: none;
+        background-color: #3E5C76;
+        color: white;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .preset-buttons button:hover {
+        background-color: #2a436d;
+      }
+
+      .clear-button {
+        padding: 0.5em 1em;
+        cursor: pointer;
+        border: none;
+        background-color: #ccc;
+        color: #333;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        margin-top: 1em;
+      }
+
+      .clear-button:hover {
+        background-color: #bbb;
+      }
+
+      .error-message {
+        color: red;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ais-InstantSearch">
+      <h1>Search Past Gateway Sermons</h1>
+      <p style="font-size: 12px;">Only sermons with transcripts are available for search.</p>
+      <div class="left-panel">
+        <h2>Topic Select</h2>
+        <div id="type-list"></div>
+        <h2>Book Select</h2>
+        <div id="type-books"></div>
+        <h2>Song Select</h2>
+        <div id="type-song"></div>
+
+        <!-- Date Range Filter -->
+        <div class="date-range-filter">
+          <h2>Date Range</h2>
+          <label for="start-date">Start Date:</label>
+          <input type="date" id="start-date" max="" />
+
+          <label for="end-date">End Date:</label>
+          <input type="date" id="end-date" min="" />
+
+          <div class="preset-buttons">
+            <button type="button" data-days="7">Last 7 Days</button>
+            <button type="button" data-days="30">Last 30 Days</button>
+          </div>
+          <button type="button" id="clear-filters" class="clear-button">Clear Filters</button>
+          <p class="error-message" id="date-error"></p>
+        </div>
+      </div>
+      <div class="right-panel">
+        <div id="searchbox" class="ais-SearchBox"></div>
+        <div id="stats"></div>
+        <div class="ais-ClearRefinements"></div>
+        <div id="hits"></div>
+        <div id="pagination"></div>
+      </div>
+    </div>
+
+    <!-- Flatpickr JS (Optional for Enhanced Date Picker) -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      // Existing JavaScript Code
+  let versesChartInstance = null;
+  function displayVersesChart(verses, counts) {
+  const ctx = document.getElementById('versesChart').getContext('2d');
+
+  // Destroy existing chart if it exists
+  if (versesChartInstance) {
+    versesChartInstance.destroy();
+  }
+
+  // Create a new chart
+  versesChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: verses, // Bible verses
+      datasets: [{
+        label: 'Verse Occurrences',
+        data: counts, // Number of occurrences
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+      const sk = new Searchkit({
+        connection: {
+          host: 'https://gateway.es.us-central1.gcp.cloud.es.io/',
+          apiKey: 'UXF0UmtKSUJsVmNnT2g0YklYSFQ6UTdVVjYxMVpRNDZKa2RtUndmQ0QxZw==',
+        },
+        search_settings: {
+          sorting: {
+            default: {
+              field: 'published_at',
+              order: 'desc',
+            },
+          },
+          result_attributes: [
+            'published_at',
+            'quote',
+            'topics',
+            'video_title',
+            'title',
+            'url',
+            'verses',
+            'video_description',
+            'summary',
+            'songs',
+            'books',
+            'thumbnails.default.url'
+          ],
+          search_attributes: [
+            { attribute: 'title', field: 'title', type: 'string' },
+            { attribute: 'video_description', field: 'video_description', type: 'string' },
+            { attribute: 'transcript', field: 'transcript', type: 'string' },
+            { attribute: 'quote', field: 'quote', type: 'string' },
+            { attribute: 'summary', field: 'summary', type: 'string' },
+            { attribute: 'verses', field: 'verses', type: 'string' },
+            { attribute: 'topics', field: 'topics', type: 'string' },
+            { attribute: 'songs', field: 'songs', type: 'string' },
+           
+          ],
+          facet_attributes: [
+            { attribute: 'topics', field: 'topics', type: 'string' },
+            { attribute: 'published_at', field: 'published_at', type: 'date' },
+            { attribute: 'verses', field: 'verses', type: 'string' },
+            { attribute: 'books', field: 'books', type: 'string' },
+            { attribute: 'thumbnails.default.url', field: 'thumbnails.default.url', type: 'string' },
+            { attribute: 'songs', field: 'songs', type: 'string' }
+          ],
+        },
+      });
+
+      const search = instantsearch({
+        indexName: 'gateway_sermons_v3',
+        searchClient: SearchkitInstantsearchClient(sk),
+      });
+
+      search.addWidgets([
+        instantsearch.widgets.configure({
+          hitsPerPage: 10,
+          sort: 'published_at:desc',
+        }),
+        instantsearch.widgets.searchBox({
+          container: '#searchbox',
+          placeholder: 'Search by sermon title, topic, verse, or song, or anything else'
+        }),
+        instantsearch.widgets.hits({
+        container: "#hits",
+        templates: {
+            item: function(hit) {
+                // Convert the published_at timestamp to a human-readable date
+                const publishedDate = new Date(hit.published_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const formattedVerses = hit.verses.join(', '); 
+                const formattedSongs = hit.songs.join(', ');
+                const formattedTopics = hit.topics.join(', ');
+                const formattedThumbnails = hit.thumbnails.default.url;
+                const formattedSummary = `<p>${hit.summary.replace(/\n/g, '</p><p>')}</p>`;
+                // Return the hit template with the formatted date
+                return `
+                <div>
+                    <div class="video-title">
+                    <a href="${hit.url}" target="_blank" style="font-weight:bold; text-decoration: underline; color: #3E5C76;">
+                        ${hit.video_title}</a> <p class="align-right"><strong>${publishedDate}</strong></p>
+                    <a href="${hit.url}" target="_blank" style="font-weight:bold; text-decoration: underline; color: #3E5C76;">
+                        <img src="${formattedThumbnails}" alt="thumbnail" style="width: 120px; height: 90px; float: left; margin-right: 1em;">
+                    </a>
+                    </div>
+                    <p><strong>Description: </strong>${hit.video_description}</p>
+                    <br>
+                    <hr>
+                    <details><summary><strong>Service Details</strong></summary>
+                    <p><strong>Message Quote: </strong> <em> ${hit.quote} </em></p>
+                    <p><strong>Worship Songs: </strong> ${formattedSongs}</p>
+                    <p><strong>Prominent Verses: </strong> ${formattedVerses}</p>
+                    <p><strong>Topics: </strong> ${formattedTopics}</p>
+                    </details>
+                    <hr>
+                    <details><summary><strong>Summary </strong></summary><br>${formattedSummary}</details>
+                    <hr>
+                </div>
+                `;
+            }
+        }
+    }),
+        instantsearch.widgets.menuSelect({
+          container: '#type-list',
+          attribute: 'topics',
+          sortBy: ['count:desc', 'name:asc'],
+          limit: 100,
+        }),
+        instantsearch.widgets.menuSelect({
+          container: '#type-song',
+          attribute: 'songs',
+          sortBy: ['count:desc', 'name:asc'],
+          limit: 100,
+        }),
+        instantsearch.widgets.menuSelect({
+          container: '#type-books',
+          attribute: 'books',
+          sortBy: ['count:desc', 'name:asc'],
+          limit: 100,
+        }),
+        instantsearch.widgets.pagination({
+          container: '#pagination',
+        }),
+        instantsearch.widgets.stats({
+          container: '#stats',
+        }),
+      ]);
+
+      search.start();
+
+      search.on('render', function () {
+    if (search.helper.lastResults && search.helper.lastResults.hits) {
+    hits_ = search.helper.lastResults.hits;
+    console.log('Last search results:', hits_);
+          } else {
+    console.log('No results available or hits are null');
+          } 
+        console.log('Last search results:', search.helper.lastResults.hits);
+        const verseCountMap = {};
+        hits_.forEach(hit => {
+          hit.verses.forEach(verse => {
+            if (verseCountMap[verse]) {
+              verseCountMap[verse]++;
+            } else {
+              verseCountMap[verse] = 1;
+            }
+          });
+        }); 
+      const labels = Object.keys(verseCountMap);
+      const data = Object.values(verseCountMap);
+      displayVersesChart(labels, data) 
+      });
+
+      // New JavaScript Code for Date Range Filter
+
+      // DOM Elements for Date Range
+      const startDateInput = document.getElementById('start-date');
+      const endDateInput = document.getElementById('end-date');
+      const dateError = document.getElementById('date-error');
+
+      // Preset Buttons
+      const presetButtons = document.querySelectorAll('.preset-buttons button[data-days]');
+      const clearFiltersButton = document.getElementById('clear-filters');
+
+      // Initialize default dates
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      const oneMonthAgoStr = oneMonthAgo.toISOString().split('T')[0];
+
+      // Set default values and attributes
+      startDateInput.value = oneMonthAgoStr;
+      endDateInput.value = todayStr;
+
+      startDateInput.max = todayStr;
+      endDateInput.min = oneMonthAgoStr;
+
+      endDateInput.max = todayStr;
+      startDateInput.min = oneMonthAgoStr;
+
+      // Initialize Flatpickr (Optional for Enhanced Date Picker)
+      flatpickr("#start-date", {
+        dateFormat: "Y-m-d",
+        maxDate: "today",
+        defaultDate: oneMonthAgoStr,
+        onChange: function(selectedDates, dateStr, instance) {
+          // Update the min of endDateInput
+          endDateInput._flatpickr.set('minDate', dateStr);
+          updateDateRangeFilter();
+        }
+      });
+
+      flatpickr("#end-date", {
+        dateFormat: "Y-m-d",
+        maxDate: "today",
+        defaultDate: todayStr,
+        onChange: function(selectedDates, dateStr, instance) {
+          // Update the max of startDateInput
+          startDateInput._flatpickr.set('maxDate', dateStr);
+          updateDateRangeFilter();
+        }
+      });
+
+      // Function to Update Refinements using InstantSearch.js's configure widget
+      function updateDateRangeFilter() {
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
+
+        // Clear previous error
+        dateError.textContent = '';
+
+        if (startDate && endDate) {
+          if (startDate > endDate) {
+            dateError.textContent = 'Start date cannot be after end date.';
+            return;
+          }
+
+          // Construct the date range filter for Elasticsearch
+          const dateRangeFilter = `published_at:[${startDate} TO ${endDate}]`;
+
+          console.log(`Applying date filter: ${dateRangeFilter}`);
+
+          // Update the configure widget's filters
+          search.helper
+            .setQueryParameter('filters', dateRangeFilter)
+            .search();
+        } else {
+          console.log('Removing date filters');
+          // If one of the dates is missing, remove the date filter
+          search.helper
+            .setQueryParameter('filters', '')
+            .search();
+        }
+      }
+
+      // Event Listeners for Date Inputs (Handled by Flatpickr's onChange)
+      // No need for separate event listeners if using Flatpickr
+
+      // Handle Preset Button Clicks
+      presetButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const days = parseInt(button.getAttribute('data-days'), 10);
+          const endDate = new Date();
+          const startDate = new Date();
+          startDate.setDate(endDate.getDate() - days);
+
+          const startDateStr = startDate.toISOString().split('T')[0];
+          const endDateStr = endDate.toISOString().split('T')[0];
+
+          // Update date inputs
+          startDateInput.value = startDateStr;
+          endDateInput.value = endDateStr;
+
+          // Update min and max attributes
+          endDateInput.min = startDateStr;
+          startDateInput.max = endDateStr;
+
+          // Update Flatpickr min and max
+          startDateInput._flatpickr.set('maxDate', endDateStr);
+          endDateInput._flatpickr.set('minDate', startDateStr);
+
+          // Clear previous error
+          dateError.textContent = '';
+
+          // Construct the date range filter
+          const dateRangeFilter = `published_at:[${startDateStr} TO ${endDateStr}]`;
+
+          console.log(`Applying preset date filter: ${dateRangeFilter}`);
+
+          // Apply the filter using InstantSearch.js's helper
+          search.helper
+            .setQueryParameter('filters', dateRangeFilter)
+            .search();
+        });
+      });
+
+      // Handle Clear Filters Button
+      clearFiltersButton.addEventListener('click', () => {
+        // Reset to default dates
+        startDateInput.value = oneMonthAgoStr;
+        endDateInput.value = todayStr;
+        
+        // Reset min and max attributes
+        endDateInput.min = oneMonthAgoStr;
+        startDateInput.max = todayStr;
+
+        // Reset Flatpickr min and max
+        startDateInput._flatpickr.set('maxDate', todayStr);
+        endDateInput._flatpickr.set('minDate', oneMonthAgoStr);
+
+        // Clear error message
+        dateError.textContent = '';
+
+        console.log('Clearing date filters');
+        // Remove date range filters by setting 'filters' to an empty string
+        search.helper
+          .setQueryParameter('filters', '')
+          .search();
+      });
+    </script>
+  </body>
+</html>
