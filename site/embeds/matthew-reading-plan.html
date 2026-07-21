@@ -1,608 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matthew Reading Plan — Gospel Reading Plan Year One</title>
-  <style>
-    @media print {
-      .no-print { display: none; }
-      .weeks-grid { display: block; }
-      .week-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1.25rem; break-inside: avoid; page-break-inside: avoid; margin-bottom: 1.25rem; }
-      .week-card { break-inside: avoid; page-break-inside: avoid; }
-      .handout { padding: 1rem; }
-      .cover { padding: 1rem 0 1rem; }
-    }
-    @media screen { .week-row { display: contents; } }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: #f5f5f3;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      color: #1a1a1a;
-    }
-
-    .handout {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem 1.5rem;
-      background: #ffffff;
-      border-radius: 12px;
-    }
-
-    @media (max-width: 640px) {
-      .handout { margin: 0; border-radius: 0; }
-    }
-
-    .cover {
-      text-align: center;
-      padding: 2rem 0 1.5rem;
-      border-bottom: 2px solid #378ADD;
-      margin-bottom: 2rem;
-    }
-    .cover-eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #378ADD;
-      margin-bottom: 0.5rem;
-    }
-    .cover-title {
-      font-size: 28px;
-      font-weight: 500;
-      color: #1a1a1a;
-      margin-bottom: 0.3rem;
-    }
-    .cover-sub {
-      font-size: 14px;
-      color: #666;
-    }
-
-    .weeks-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 1.25rem;
-    }
-    @media (max-width: 580px) { .weeks-grid { grid-template-columns: 1fr; } }
-
-    .week-card {
-      background: #ffffff;
-      border: 0.5px solid rgba(0,0,0,0.12);
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .week-header {
-      background: #E6F1FB;
-      padding: 10px 14px 9px;
-      border-bottom: 0.5px solid #B5D4F4;
-    }
-    .week-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #185FA5;
-    }
-    .week-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: #0C447C;
-      line-height: 1.3;
-      margin-top: 1px;
-    }
-    .week-dates {
-      font-size: 11px;
-      color: #378ADD;
-      margin-top: 2px;
-    }
-    .week-body {
-      padding: 10px 14px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .days-table { width: 100%; border-collapse: collapse; }
-    .days-table tr { border-bottom: 0.5px solid rgba(0,0,0,0.08); }
-    .days-table tr:last-child { border-bottom: none; }
-    .days-table td { padding: 5px 0; font-size: 13px; line-height: 1.4; }
-    .day-label {
-      color: #888;
-      width: 36px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding-right: 8px;
-      vertical-align: top;
-    }
-    .passage { color: #1a1a1a; }
-
-    .ot-section {
-      background: #E6F1FB;
-      border-radius: 6px;
-      padding: 8px 10px;
-    }
-    .ot-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #185FA5;
-      margin-bottom: 3px;
-    }
-    .ot-refs {
-      font-size: 12px;
-      color: #0C447C;
-      line-height: 1.5;
-      margin-bottom: 6px;
-    }
-    .ot-divider {
-      border: none;
-      border-top: 0.5px solid #B5D4F4;
-      margin: 6px 0;
-    }
-    .ot-why-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #185FA5;
-      margin-bottom: 3px;
-    }
-    .ot-why {
-      font-size: 12px;
-      color: #185FA5;
-      line-height: 1.55;
-      font-style: italic;
-    }
-
-    /* Quiz button — hidden until a URL is present, shown by JS */
-    .quiz-btn {
-      display: none;
-      width: 100%;
-      padding: 8px 12px;
-      background: #185FA5;
-      color: #ffffff;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: inherit;
-      text-align: center;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .quiz-btn:hover { background: #0C447C; }
-    .quiz-btn.active { display: block; }
-
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-      padding-top: 1rem;
-      border-top: 0.5px solid rgba(0,0,0,0.1);
-      font-size: 12px;
-      color: #888;
-    }
-
-    .print-btn {
-      display: block;
-      margin: 0 auto 1.5rem;
-      padding: 8px 20px;
-      font-size: 13px;
-      cursor: pointer;
-      border: 0.5px solid rgba(0,0,0,0.2);
-      border-radius: 8px;
-      background: transparent;
-      color: #1a1a1a;
-      font-family: inherit;
-    }
-    .print-btn:hover { background: #f5f5f3; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matthew Reading Plan — Gospel Reading Plan Year One</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="reading-plan.css">
 </head>
 <body>
-<div class="handout">
+<main class="reading-plan">
+  <section class="hero">
+    <p class="eyebrow">Gospel Reading Plan · Year One</p>
+    <h1>The Gospel of Matthew</h1>
+    <div class="meta-row">
+      <span class="meta-pill">14 Weeks</span>
+      <span class="meta-pill">April 6 – July 10, 2026</span>
+      <span class="meta-pill">Monday–Friday Readings</span>
+    </div>
+  </section>
+
   <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
 
-  <div class="cover">
-    <div class="cover-eyebrow">Gospel Reading Plan · Year One</div>
-    <div class="cover-title">The Gospel of Matthew</div>
-    <div class="cover-sub">14 weeks · April 6 – July 10, 2026 · Monday–Friday readings</div>
-  </div>
+  <section class="intro">
+    <h2>How to Use This Plan</h2>
+    <p>
+      Read the assigned passage each weekday. Take time to notice what the text reveals about
+      Jesus, how people respond to Him, and what faithful discipleship requires.
+    </p>
+  </section>
 
-  <div class="weeks-grid">
+  <section class="weeks">
 
-    <div class="week-row">
-      <!-- WEEK 1 — paste your Google Form URL into data-quiz-url="" to activate the button -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSdZNN70c3JJGHEsHG7HHqKHs1hWxMt74FGsJGEIyhBAdX7PZA/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 1</div>
-          <div class="week-title">Matthew 1–2 · Birth &amp; Early Life</div>
-          <div class="week-dates">Apr 6 – Apr 10</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSdZNN70c3JJGHEsHG7HHqKHs1hWxMt74FGsJGEIyhBAdX7PZA/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>1</span></div>
+        <div class="week-title">
+          <h2>Birth &amp; Early Life</h2>
+          <p>Matthew 1–2</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">1:1–17</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">1:18–25</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">2:1–12</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">2:13–18</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">2:19–23</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">2 Sam 7:12–16 · Micah 5:2 · Hosea 11:1 · Jer 31:15 · Isa 7:14</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">These passages form the backbone of Messianic expectation—promises of a Davidic King, a Bethlehem birth, and prophetic echoes in suffering. Matthew presents Jesus as their fulfillment.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 1 Quiz</a>
+        <div class="date">Apr 6 – Apr 10</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>1:1–17</span></div>
+          <div class="day"><strong>Tuesday</strong><span>1:18–25</span></div>
+          <div class="day"><strong>Wednesday</strong><span>2:1–12</span></div>
+          <div class="day"><strong>Thursday</strong><span>2:13–18</span></div>
+          <div class="day"><strong>Friday</strong><span>2:19–23</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: 2 Sam 7:12–16 · Micah 5:2 · Hosea 11:1 · Jer 31:15 · Isa 7:14</p>
+          <p class="ot-why">These passages form the backbone of Messianic expectation—promises of a Davidic King, a Bethlehem birth, and prophetic echoes in suffering. Matthew presents Jesus as their fulfillment.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 1 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 2 — paste your Google Form URL into data-quiz-url="" to activate the button -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSdu0W5DFwt9dvCJ9TO4n6VehvGezfTr7ROyHeJuji_X5Lgr3g/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 2</div>
-          <div class="week-title">Matthew 3–4 · Baptism &amp; Temptation</div>
-          <div class="week-dates">Apr 13 – Apr 17</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSdu0W5DFwt9dvCJ9TO4n6VehvGezfTr7ROyHeJuji_X5Lgr3g/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>2</span></div>
+        <div class="week-title">
+          <h2>Baptism &amp; Temptation</h2>
+          <p>Matthew 3–4</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">3:1–12</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">3:13–17</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">4:1–11</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">4:12–17</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">4:18–25</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Isa 40:3 · Deut 8:3; 6:16; 6:13</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">John fulfills Isaiah's "voice in the wilderness." Jesus' temptations echo Israel's wilderness testing—where Israel failed, Christ succeeds.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 2 Quiz</a>
+        <div class="date">Apr 13 – Apr 17</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>3:1–12</span></div>
+          <div class="day"><strong>Tuesday</strong><span>3:13–17</span></div>
+          <div class="day"><strong>Wednesday</strong><span>4:1–11</span></div>
+          <div class="day"><strong>Thursday</strong><span>4:12–17</span></div>
+          <div class="day"><strong>Friday</strong><span>4:18–25</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Isa 40:3 · Deut 8:3; 6:16; 6:13</p>
+          <p class="ot-why">John fulfills Isaiah’s “voice in the wilderness.” Jesus’ temptations echo Israel’s wilderness testing—where Israel failed, Christ succeeds.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 2 Quiz</a>
       </div>
-    </div>
+    </article>
 
-    <div class="week-row">
-      <!-- WEEK 3 -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSfDFlUdOg9AeA2yxQFkx8B52P-IswpzxA6xgvSP3f4gO7oyXw/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 3</div>
-          <div class="week-title">Matthew 5 · Sermon on the Mount I</div>
-          <div class="week-dates">Apr 20 – Apr 24</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSfDFlUdOg9AeA2yxQFkx8B52P-IswpzxA6xgvSP3f4gO7oyXw/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>3</span></div>
+        <div class="week-title">
+          <h2>Sermon on the Mount I</h2>
+          <p>Matthew 5</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">5:1–12</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">5:13–26</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">5:27–37</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">5:38–48</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">5:17–20 (re-read)</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Exodus 20 · Leviticus 19:18</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">Jesus is not abolishing the Law—He is fulfilling and intensifying it. These passages show the original commandments He now interprets at the heart level.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 3 Quiz</a>
+        <div class="date">Apr 20 – Apr 24</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>5:1–12</span></div>
+          <div class="day"><strong>Tuesday</strong><span>5:13–26</span></div>
+          <div class="day"><strong>Wednesday</strong><span>5:27–37</span></div>
+          <div class="day"><strong>Thursday</strong><span>5:38–48</span></div>
+          <div class="day"><strong>Friday</strong><span>5:17–20 (re-read)</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Exodus 20 · Leviticus 19:18</p>
+          <p class="ot-why">Jesus is not abolishing the Law—He is fulfilling and intensifying it. These passages show the original commandments He now interprets at the heart level.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 3 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 4 -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLScARUPmtFN2nA-NMcFj6x-RHx8LxnNzAddAHt8oWBwgodTBmg/viewform?usp=sharing&ouid=115640525677031127885">
-        <div class="week-header">
-          <div class="week-label">Week 4</div>
-          <div class="week-title">Matthew 6–7 · Sermon on the Mount II</div>
-          <div class="week-dates">Apr 27 – May 1</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLScARUPmtFN2nA-NMcFj6x-RHx8LxnNzAddAHt8oWBwgodTBmg/viewform?usp=sharing&amp;ouid=115640525677031127885">
+      <header class="week-header">
+        <div class="week-number">Week <span>4</span></div>
+        <div class="week-title">
+          <h2>Sermon on the Mount II</h2>
+          <p>Matthew 6–7</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">6:1–18</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">6:19–34</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">7:1–12</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">7:13–23</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">7:24–29</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Proverbs 3:5–6 · Psalm 1</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">These wisdom texts reinforce Jesus' teaching: true righteousness is not external—it is rooted in trust, obedience, and a transformed heart.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 4 Quiz</a>
+        <div class="date">Apr 27 – May 1</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>6:1–18</span></div>
+          <div class="day"><strong>Tuesday</strong><span>6:19–34</span></div>
+          <div class="day"><strong>Wednesday</strong><span>7:1–12</span></div>
+          <div class="day"><strong>Thursday</strong><span>7:13–23</span></div>
+          <div class="day"><strong>Friday</strong><span>7:24–29</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Proverbs 3:5–6 · Psalm 1</p>
+          <p class="ot-why">These wisdom texts reinforce Jesus’ teaching: true righteousness is not external—it is rooted in trust, obedience, and a transformed heart.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 4 Quiz</a>
       </div>
-    </div>
+    </article>
 
-    <div class="week-row">
-      <!-- WEEK 5 -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLScGgEjsZ2myHPzYl96zDoEFQT1nSTVngoEEVK-fb1wGO4uRNg/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 5</div>
-          <div class="week-title">Matthew 8–9 · Miracles &amp; Faith</div>
-          <div class="week-dates">May 4 – May 8</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLScGgEjsZ2myHPzYl96zDoEFQT1nSTVngoEEVK-fb1wGO4uRNg/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>5</span></div>
+        <div class="week-title">
+          <h2>Miracles &amp; Faith</h2>
+          <p>Matthew 8–9</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">8:1–17</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">8:18–34</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">9:1–17</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">9:18–31</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">9:32–38</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Isaiah 53:4</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why this matters</div>
-            <div class="ot-why">Matthew connects Jesus' healing ministry to the Suffering Servant, showing His miracles are signs of redemptive restoration—not random acts of power.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 5 Quiz</a>
+        <div class="date">May 4 – May 8</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>8:1–17</span></div>
+          <div class="day"><strong>Tuesday</strong><span>8:18–34</span></div>
+          <div class="day"><strong>Wednesday</strong><span>9:1–17</span></div>
+          <div class="day"><strong>Thursday</strong><span>9:18–31</span></div>
+          <div class="day"><strong>Friday</strong><span>9:32–38</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connection: Isaiah 53:4</p>
+          <p class="ot-why">Matthew connects Jesus’ healing ministry to the Suffering Servant, showing His miracles are signs of redemptive restoration—not random acts of power.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 5 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 6 -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSckhmU9hFqXArX40muyDVAWLlcML5XX4EMmW-CNQ1xSf74PnQ/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 6</div>
-          <div class="week-title">Matthew 10 · The Twelve Sent Out</div>
-          <div class="week-dates">May 11 – May 15</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSckhmU9hFqXArX40muyDVAWLlcML5XX4EMmW-CNQ1xSf74PnQ/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>6</span></div>
+        <div class="week-title">
+          <h2>The Twelve Sent Out</h2>
+          <p>Matthew 10</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">10:1–15</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">10:16–25</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">10:26–33</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">10:34–39</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">10:40–42</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Micah 7:6</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why this matters</div>
-            <div class="ot-why">Jesus warns that allegiance to Him will divide even families—echoing prophetic warnings that faithfulness to God often brings conflict, not comfort.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 6 Quiz</a>
+        <div class="date">May 11 – May 15</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>10:1–15</span></div>
+          <div class="day"><strong>Tuesday</strong><span>10:16–25</span></div>
+          <div class="day"><strong>Wednesday</strong><span>10:26–33</span></div>
+          <div class="day"><strong>Thursday</strong><span>10:34–39</span></div>
+          <div class="day"><strong>Friday</strong><span>10:40–42</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connection: Micah 7:6</p>
+          <p class="ot-why">Jesus warns that allegiance to Him will divide even families—echoing prophetic warnings that faithfulness to God often brings conflict, not comfort.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 6 Quiz</a>
       </div>
-    </div>
+    </article>
 
-    <div class="week-row">
-      <!-- WEEK 7 -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSc9DUy2RWzDs0NMewoAJn3mZBrV8BcixNHk98Q2NTIrIfj_mA/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 7</div>
-          <div class="week-title">Matthew 11–12 · Jesus &amp; Opposition</div>
-          <div class="week-dates">May 18 – May 22</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSc9DUy2RWzDs0NMewoAJn3mZBrV8BcixNHk98Q2NTIrIfj_mA/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>7</span></div>
+        <div class="week-title">
+          <h2>Jesus &amp; Opposition</h2>
+          <p>Matthew 11–12</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">11:1–19</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">11:20–30</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">12:1–21</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">12:22–37</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">12:38–50</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Isaiah 42:1–4 · Psalm 110:1</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">Jesus is revealed as both the Gentle Servant and the Exalted Lord—a tension that explains why so many misunderstood Him.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 7 Quiz</a>
+        <div class="date">May 18 – May 22</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>11:1–19</span></div>
+          <div class="day"><strong>Tuesday</strong><span>11:20–30</span></div>
+          <div class="day"><strong>Wednesday</strong><span>12:1–21</span></div>
+          <div class="day"><strong>Thursday</strong><span>12:22–37</span></div>
+          <div class="day"><strong>Friday</strong><span>12:38–50</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Isaiah 42:1–4 · Psalm 110:1</p>
+          <p class="ot-why">Jesus is revealed as both the Gentle Servant and the Exalted Lord—a tension that explains why so many misunderstood Him.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 7 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 8 -->
-      <div class="week-card" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSdXTtwHYgJQcvM6NMrPxt4pqF6TOSOv5iw05MZnha-thFF9Gg/viewform?usp=dialog">
-        <div class="week-header">
-          <div class="week-label">Week 8</div>
-          <div class="week-title">Matthew 13 · Parables of the Kingdom</div>
-          <div class="week-dates">May 25 – May 29</div>
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSdXTtwHYgJQcvM6NMrPxt4pqF6TOSOv5iw05MZnha-thFF9Gg/viewform?usp=dialog">
+      <header class="week-header">
+        <div class="week-number">Week <span>8</span></div>
+        <div class="week-title">
+          <h2>Parables of the Kingdom</h2>
+          <p>Matthew 13</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">13:1–23</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">13:24–43</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">13:44–52</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">13:53–58</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">Review 13:1–52</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Isaiah 6:9–10 · Psalm 78:2</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">Parables both reveal and conceal truth—just as Isaiah foretold. They expose the condition of the heart, not just the content of the message.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 8 Quiz</a>
+        <div class="date">May 25 – May 29</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>13:1–23</span></div>
+          <div class="day"><strong>Tuesday</strong><span>13:24–43</span></div>
+          <div class="day"><strong>Wednesday</strong><span>13:44–52</span></div>
+          <div class="day"><strong>Thursday</strong><span>13:53–58</span></div>
+          <div class="day"><strong>Friday</strong><span>Review 13:1–52</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Isaiah 6:9–10 · Psalm 78:2</p>
+          <p class="ot-why">Parables both reveal and conceal truth—just as Isaiah foretold. They expose the condition of the heart, not just the content of the message.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 8 Quiz</a>
       </div>
-    </div>
+    </article>
 
-    <div class="week-row">
-      <!-- WEEK 9 -->
-      <div class="week-card" data-quiz-url="">
-        <div class="week-header">
-          <div class="week-label">Week 9</div>
-          <div class="week-title">Matthew 14–15 · Feeding &amp; Faith</div>
-          <div class="week-dates">Jun 1 – Jun 5</div>
+    <article class="week" data-quiz-url="">
+      <header class="week-header">
+        <div class="week-number">Week <span>9</span></div>
+        <div class="week-title">
+          <h2>Feeding &amp; Faith</h2>
+          <p>Matthew 14–15</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">14:1–21</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">14:22–36</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">15:1–20</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">15:21–39</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">Review 14:33 &amp; 15:28</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Psalm 107:29 · Isaiah 29:13</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">Jesus demonstrates authority over creation and exposes hollow religion—God desires true worship, not empty tradition.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 9 Quiz</a>
+        <div class="date">Jun 1 – Jun 5</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>14:1–21</span></div>
+          <div class="day"><strong>Tuesday</strong><span>14:22–36</span></div>
+          <div class="day"><strong>Wednesday</strong><span>15:1–20</span></div>
+          <div class="day"><strong>Thursday</strong><span>15:21–39</span></div>
+          <div class="day"><strong>Friday</strong><span>Review 14:33 &amp; 15:28</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Psalm 107:29 · Isaiah 29:13</p>
+          <p class="ot-why">Jesus demonstrates authority over creation and exposes hollow religion—God desires true worship, not empty tradition.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 9 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 10 -->
-      <div class="week-card" data-quiz-url="">
-        <div class="week-header">
-          <div class="week-label">Week 10</div>
-          <div class="week-title">Matthew 16–17 · Peter's Confession</div>
-          <div class="week-dates">Jun 8 – Jun 12</div>
+    <article class="week" data-quiz-url="">
+      <header class="week-header">
+        <div class="week-number">Week <span>10</span></div>
+        <div class="week-title">
+          <h2>Peter’s Confession</h2>
+          <p>Matthew 16–17</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">16:1–20</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">16:21–28</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">17:1–13</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">17:14–23</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">17:24–27</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Daniel 7:13–14 · Psalm 2</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">These texts define the Messiah as both Suffering Servant and Glorious King—the tension the disciples struggle to grasp.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 10 Quiz</a>
+        <div class="date">Jun 8 – Jun 12</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>16:1–20</span></div>
+          <div class="day"><strong>Tuesday</strong><span>16:21–28</span></div>
+          <div class="day"><strong>Wednesday</strong><span>17:1–13</span></div>
+          <div class="day"><strong>Thursday</strong><span>17:14–23</span></div>
+          <div class="day"><strong>Friday</strong><span>17:24–27</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Daniel 7:13–14 · Psalm 2</p>
+          <p class="ot-why">These texts define the Messiah as both Suffering Servant and Glorious King—the tension the disciples struggle to grasp.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 10 Quiz</a>
       </div>
-    </div>
+    </article>
 
-    <div class="week-row">
-      <!-- WEEK 11 -->
-      <div class="week-card" data-quiz-url="">
-        <div class="week-header">
-          <div class="week-label">Week 11</div>
-          <div class="week-title">Matthew 18–20 · Kingdom Ethics</div>
-          <div class="week-dates">Jun 15 – Jun 19</div>
+    <article class="week" data-quiz-url="">
+      <header class="week-header">
+        <div class="week-number">Week <span>11</span></div>
+        <div class="week-title">
+          <h2>Kingdom Ethics</h2>
+          <p>Matthew 18–20</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">18:1–20</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">18:21–35</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">19:1–15</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">19:16–30</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">20:1–34</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Isaiah 53:10–12</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why this matters</div>
-            <div class="ot-why">True greatness in the Kingdom comes through humility, sacrifice, and service—patterns fulfilled in Christ Himself.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 11 Quiz</a>
+        <div class="date">Jun 15 – Jun 19</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>18:1–20</span></div>
+          <div class="day"><strong>Tuesday</strong><span>18:21–35</span></div>
+          <div class="day"><strong>Wednesday</strong><span>19:1–15</span></div>
+          <div class="day"><strong>Thursday</strong><span>19:16–30</span></div>
+          <div class="day"><strong>Friday</strong><span>20:1–34</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connection: Isaiah 53:10–12</p>
+          <p class="ot-why">True greatness in the Kingdom comes through humility, sacrifice, and service—patterns fulfilled in Christ Himself.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 11 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 12 -->
-      <div class="week-card" data-quiz-url="">
-        <div class="week-header">
-          <div class="week-label">Week 12</div>
-          <div class="week-title">Matthew 21–24:14 · Jerusalem &amp; Transition</div>
-          <div class="week-dates">Jun 22 – Jun 26</div>
+    <article class="week" data-quiz-url="">
+      <header class="week-header">
+        <div class="week-number">Week <span>12</span></div>
+        <div class="week-title">
+          <h2>Jerusalem &amp; Transition</h2>
+          <p>Matthew 21–24:14</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">21:1–17</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">21:18–46</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">22:1–22</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">22:23–46</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">23:1–39 + 24:1–14</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Zech 9:9 · Psalm 118:22–26 · Psalm 110:1</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">Jesus enters as King, yet is rejected—fulfilling prophecy. The "rejected stone" becomes the cornerstone of God's redemptive plan.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 12 Quiz</a>
+        <div class="date">Jun 22 – Jun 26</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>21:1–17</span></div>
+          <div class="day"><strong>Tuesday</strong><span>21:18–46</span></div>
+          <div class="day"><strong>Wednesday</strong><span>22:1–22</span></div>
+          <div class="day"><strong>Thursday</strong><span>22:23–46</span></div>
+          <div class="day"><strong>Friday</strong><span>23:1–39 + 24:1–14</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Zech 9:9 · Psalm 118:22–26 · Psalm 110:1</p>
+          <p class="ot-why">Jesus enters as King, yet is rejected—fulfilling prophecy. The “rejected stone” becomes the cornerstone of God’s redemptive plan.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 12 Quiz</a>
       </div>
-    </div>
+    </article>
 
-    <div class="week-row">
-      <!-- WEEK 13 -->
-      <div class="week-card" data-quiz-url="">
-        <div class="week-header">
-          <div class="week-label">Week 13</div>
-          <div class="week-title">Matthew 24:15–26:35 · Judgment &amp; Preparation</div>
-          <div class="week-dates">Jun 29 – Jul 3</div>
+    <article class="week" data-quiz-url="">
+      <header class="week-header">
+        <div class="week-number">Week <span>13</span></div>
+        <div class="week-title">
+          <h2>Judgment &amp; Preparation</h2>
+          <p>Matthew 24:15–26:35</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">24:15–35</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">24:36–51</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">25:1–30</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">25:31–46</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">26:1–35</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Daniel 7</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why this matters</div>
-            <div class="ot-why">Jesus frames history in terms of final judgment and eternal kingship—echoing Daniel's vision of the Son of Man reigning forever.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 13 Quiz</a>
+        <div class="date">Jun 29 – Jul 3</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>24:15–35</span></div>
+          <div class="day"><strong>Tuesday</strong><span>24:36–51</span></div>
+          <div class="day"><strong>Wednesday</strong><span>25:1–30</span></div>
+          <div class="day"><strong>Thursday</strong><span>25:31–46</span></div>
+          <div class="day"><strong>Friday</strong><span>26:1–35</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connection: Daniel 7</p>
+          <p class="ot-why">Jesus frames history in terms of final judgment and eternal kingship—echoing Daniel’s vision of the Son of Man reigning forever.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 13 Quiz</a>
       </div>
+    </article>
 
-      <!-- WEEK 14 -->
-      <div class="week-card" data-quiz-url="">
-        <div class="week-header">
-          <div class="week-label">Week 14</div>
-          <div class="week-title">Matthew 26:36–28:20 · The Cross &amp; Resurrection</div>
-          <div class="week-dates">Jul 6 – Jul 10</div>
+    <article class="week" data-quiz-url="">
+      <header class="week-header">
+        <div class="week-number">Week <span>14</span></div>
+        <div class="week-title">
+          <h2>The Cross &amp; Resurrection</h2>
+          <p>Matthew 26:36–28:20</p>
         </div>
-        <div class="week-body">
-          <table class="days-table">
-            <tr><td class="day-label">Mon</td><td class="passage">26:36–75</td></tr>
-            <tr><td class="day-label">Tue</td><td class="passage">27:1–26</td></tr>
-            <tr><td class="day-label">Wed</td><td class="passage">27:27–44</td></tr>
-            <tr><td class="day-label">Thu</td><td class="passage">27:45–66</td></tr>
-            <tr><td class="day-label">Fri</td><td class="passage">28:1–20</td></tr>
-          </table>
-          <div class="ot-section">
-            <div class="ot-label">Supplemental OT</div>
-            <div class="ot-refs">Psalm 22 · Isaiah 53</div>
-            <hr class="ot-divider">
-            <div class="ot-why-label">Why these matter</div>
-            <div class="ot-why">The clearest prophetic windows into the Cross—revealing that Jesus' suffering was not accidental, but ordained, substitutionary, and redemptive.</div>
-          </div>
-          <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 14 Quiz</a>
+        <div class="date">Jul 6 – Jul 10</div>
+      </header>
+      <div class="week-body">
+        <div class="readings">
+          <div class="day"><strong>Monday</strong><span>26:36–75</span></div>
+          <div class="day"><strong>Tuesday</strong><span>27:1–26</span></div>
+          <div class="day"><strong>Wednesday</strong><span>27:27–44</span></div>
+          <div class="day"><strong>Thursday</strong><span>27:45–66</span></div>
+          <div class="day"><strong>Friday</strong><span>28:1–20</span></div>
         </div>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Psalm 22 · Isaiah 53</p>
+          <p class="ot-why">The clearest prophetic windows into the Cross—revealing that Jesus’ suffering was not accidental, but ordained, substitutionary, and redemptive.</p>
+        </div>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 14 Quiz</a>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="three-cs">
+    <h2>The Three C’s of Reading</h2>
+    <p>As you read each day, consider whether the passage leaves you convicted, confused, or confirmed.</p>
+    <div class="c-grid">
+      <div class="c-card">
+        <strong>Convicted</strong>
+        What is God showing me that needs to change in my beliefs, attitudes, or actions?
+      </div>
+      <div class="c-card">
+        <strong>Confused</strong>
+        What do I not yet understand, and what question should I bring to further study?
+      </div>
+      <div class="c-card">
+        <strong>Confirmed</strong>
+        What truth about God, Christ, or faithful living has been strengthened in me?
       </div>
     </div>
+  </section>
 
-  </div>
-
-  <div class="footer">Next up: The Gospel of Mark · Weeks 15–20</div>
-</div>
-
+  <p class="footer-note">Gateway Church · Gospel Reading Plan · 2026 — Next up: The Gospel of Mark · Weeks 15–21</p>
+</main>
 <script>
-  // Automatically activates quiz buttons when a URL is present in data-quiz-url
-  document.querySelectorAll('.week-card[data-quiz-url]').forEach(function(card) {
+  // Activates a week's quiz button when a URL is present in data-quiz-url
+  document.querySelectorAll('.week[data-quiz-url]').forEach(function (card) {
     var url = card.getAttribute('data-quiz-url').trim();
     if (url) {
       var btn = card.querySelector('.quiz-btn');

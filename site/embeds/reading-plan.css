@@ -1,0 +1,272 @@
+/* Gateway Church — shared stylesheet for all Gospel Reading Plan documents.
+   Matches the site brand: navy + lime, Playfair Display + Open Sans. */
+:root {
+  --navy: #1e3a6e;
+  --navy-dark: #16294e;
+  --lime: #c3d600;
+  --lime-soft: #f3f6dc;
+  --cream: #fdfdfb;
+  --card: #f4f5f0;
+  --text: #1f2328;
+  --muted: #5c6570;
+  --white: #ffffff;
+  --border: #dde0d6;
+  --shadow: 0 8px 24px rgba(22, 41, 78, 0.10);
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.55;
+}
+
+.reading-plan {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 28px 18px 48px;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  color: var(--white);
+  border-radius: 18px;
+  padding: 46px 34px;
+  box-shadow: var(--shadow);
+  border-bottom: 5px solid var(--lime);
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  right: -90px;
+  top: -95px;
+  border: 42px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+.eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  margin: 16px 0 0;
+  font-size: 1.08rem;
+  color: #e8ecf5;
+}
+.meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.meta-pill {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.10);
+  font-size: 0.9rem;
+}
+
+/* ---------- Print button / intro ---------- */
+.print-btn {
+  display: block;
+  margin: 22px auto 0;
+  padding: 8px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--text);
+  font-family: inherit;
+}
+.print-btn:hover { background: var(--card); }
+
+.intro {
+  margin: 24px 0;
+  padding: 22px 24px;
+  background: var(--white);
+  border-left: 5px solid var(--lime);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+.intro h2 { margin: 0 0 8px; font-family: var(--serif); color: var(--navy); }
+.intro p { margin: 0; }
+
+/* ---------- Weeks ---------- */
+.weeks { display: grid; gap: 18px; }
+
+.week {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.week-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 21px 24px;
+  background: linear-gradient(90deg, var(--card), #fafbf6);
+  border-bottom: 1px solid var(--border);
+}
+.week-number {
+  min-width: 76px;
+  text-align: center;
+  padding: 10px 12px;
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  border-bottom: 3px solid var(--lime);
+}
+.week-number span { display: block; font-size: 1.35rem; }
+.week-title h2 {
+  margin: 0;
+  font-family: var(--serif);
+  color: var(--navy);
+  font-size: 1.55rem;
+}
+.week-title p { margin: 3px 0 0; color: var(--muted); font-weight: 700; }
+.date { text-align: right; color: var(--navy); font-weight: 700; white-space: nowrap; }
+
+.week-body { padding: 22px 24px 24px; }
+
+.readings {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.day {
+  min-height: 96px;
+  padding: 13px 12px;
+  background: #fbfcf8;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.day strong {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.day span { font-weight: 700; color: var(--navy); }
+
+/* ---------- OT connections ---------- */
+.ot {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: var(--lime-soft);
+  border-left: 4px solid var(--lime);
+  border-radius: 8px;
+}
+.ot-refs { margin: 0; font-weight: 700; color: var(--navy); }
+.ot-why { margin: 6px 0 0; font-size: 0.92rem; color: var(--muted); font-style: italic; }
+
+.summary { margin: 0; font-size: 1rem; }
+
+/* ---------- Quiz button (hidden until data-quiz-url present) ---------- */
+.quiz-btn {
+  display: none;
+  margin-top: 16px;
+  padding: 9px 14px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.quiz-btn:hover { background: var(--navy-dark); }
+.quiz-btn.active { display: inline-block; }
+
+/* ---------- Three C's ---------- */
+.three-cs {
+  margin-top: 28px;
+  padding: 26px;
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  border-bottom: 5px solid var(--lime);
+}
+.three-cs h2 { margin: 0 0 7px; font-family: var(--serif); }
+.three-cs > p { margin: 0 0 18px; color: #dbe2f0; }
+.c-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.c-card {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+.c-card strong { display: block; margin-bottom: 5px; color: var(--lime); font-size: 1.08rem; }
+
+.footer-note {
+  margin: 22px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 800px) {
+  .week-header { grid-template-columns: auto 1fr; }
+  .date { grid-column: 1 / -1; text-align: left; padding-left: 94px; margin-top: -10px; }
+  .readings { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .c-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .reading-plan { padding: 14px 10px 34px; }
+  .hero { padding: 34px 22px; border-radius: 13px; }
+  .intro, .week-body, .three-cs { padding: 18px; }
+  .week-header { padding: 18px; gap: 12px; }
+  .week-number { min-width: 64px; }
+  .week-title h2 { font-size: 1.25rem; }
+  .date { padding-left: 76px; }
+  .readings { grid-template-columns: 1fr; }
+  .day { min-height: 0; }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .no-print, .hero::after { display: none; }
+  body { background: #fff; }
+  .reading-plan { padding: 0; max-width: none; }
+  .hero, .week, .three-cs, .intro { box-shadow: none; }
+  .hero { border-radius: 0; padding: 24px; color: #000; background: #fff; border-bottom: 3px solid #000; }
+  .hero h1, .eyebrow { color: #000; }
+  .subtitle { color: #333; }
+  .meta-pill { border-color: #999; color: #000; }
+  .week { break-inside: avoid; page-break-inside: avoid; }
+  .three-cs { background: #fff; color: #000; border: 1px solid #999; }
+  .three-cs > p, .c-card { color: #000; }
+  .c-card { background: #fff; border-color: #ccc; }
+  .c-card strong { color: #000; }
+  .quiz-btn { display: none !important; }
+}

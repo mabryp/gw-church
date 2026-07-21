@@ -4,308 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Gospel of Mark Reading Plan</title>
-<style>
-  :root {
-    --navy: #17324d;
-    --blue: #2f678f;
-    --light-blue: #eaf2f7;
-    --gold: #b58a43;
-    --cream: #faf8f3;
-    --text: #26333d;
-    --muted: #667681;
-    --white: #ffffff;
-    --border: #d8e1e7;
-    --shadow: 0 8px 24px rgba(20, 47, 69, 0.10);
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    background: var(--cream);
-    color: var(--text);
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.55;
-  }
-
-  .reading-plan {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 28px 18px 48px;
-  }
-
-  .hero {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, var(--navy), var(--blue));
-    color: var(--white);
-    border-radius: 18px;
-    padding: 46px 34px;
-    box-shadow: var(--shadow);
-  }
-
-  .hero::after {
-    content: "";
-    position: absolute;
-    width: 260px;
-    height: 260px;
-    right: -90px;
-    top: -95px;
-    border: 42px solid rgba(255,255,255,0.08);
-    border-radius: 50%;
-  }
-
-  .eyebrow {
-    margin: 0 0 8px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #dbeaf4;
-  }
-
-  h1 {
-    margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
-    font-size: clamp(2.25rem, 6vw, 4.5rem);
-    line-height: 1.02;
-  }
-
-  .subtitle {
-    max-width: 720px;
-    margin: 16px 0 0;
-    font-size: 1.08rem;
-    color: #eef6fb;
-  }
-
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 24px;
-  }
-
-  .meta-pill {
-    display: inline-block;
-    padding: 8px 12px;
-    border: 1px solid rgba(255,255,255,0.28);
-    border-radius: 999px;
-    background: rgba(255,255,255,0.10);
-    font-size: 0.9rem;
-  }
-
-  .intro {
-    margin: 26px 0;
-    padding: 22px 24px;
-    background: var(--white);
-    border-left: 5px solid var(--gold);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-  }
-
-  .intro h2 {
-    margin: 0 0 8px;
-    font-family: Georgia, "Times New Roman", serif;
-    color: var(--navy);
-  }
-
-  .intro p { margin: 0; }
-
-  .weeks {
-    display: grid;
-    gap: 18px;
-  }
-
-  .week {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-
-  .week-header {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 18px;
-    align-items: center;
-    padding: 21px 24px;
-    background: linear-gradient(90deg, var(--light-blue), #f7fafc);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .week-number {
-    min-width: 76px;
-    text-align: center;
-    padding: 10px 12px;
-    background: var(--navy);
-    color: var(--white);
-    border-radius: 10px;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  .week-number span {
-    display: block;
-    font-size: 1.35rem;
-  }
-
-  .week-title h2 {
-    margin: 0;
-    font-family: Georgia, "Times New Roman", serif;
-    color: var(--navy);
-    font-size: 1.55rem;
-  }
-
-  .week-title p {
-    margin: 3px 0 0;
-    color: var(--muted);
-    font-weight: 700;
-  }
-
-  .date {
-    text-align: right;
-    color: var(--blue);
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .week-body {
-    padding: 22px 24px 24px;
-  }
-
-  .readings {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .day {
-    min-height: 96px;
-    padding: 13px 12px;
-    background: #fbfcfd;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-  }
-
-  .day strong {
-    display: block;
-    color: var(--blue);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-  }
-
-  .day span {
-    font-weight: 700;
-    color: var(--navy);
-  }
-
-  .ot {
-    margin: 0 0 16px;
-    padding: 11px 14px;
-    background: #f6f1e7;
-    border-radius: 8px;
-    color: #624d28;
-    font-weight: 700;
-  }
-
-  .summary {
-    margin: 0;
-    font-size: 1rem;
-  }
-
-  .three-cs {
-    margin-top: 28px;
-    padding: 26px;
-    background: var(--navy);
-    color: var(--white);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-  }
-
-  .three-cs h2 {
-    margin: 0 0 7px;
-    font-family: Georgia, "Times New Roman", serif;
-  }
-
-  .three-cs > p {
-    margin: 0 0 18px;
-    color: #dbe7ef;
-  }
-
-  .c-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .c-card {
-    padding: 16px;
-    background: rgba(255,255,255,0.09);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
-  }
-
-  .c-card strong {
-    display: block;
-    margin-bottom: 5px;
-    color: #f0d49f;
-    font-size: 1.08rem;
-  }
-
-  .footer-note {
-    margin: 22px 0 0;
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.88rem;
-  }
-
-  @media (max-width: 800px) {
-    .week-header {
-      grid-template-columns: auto 1fr;
-    }
-
-    .date {
-      grid-column: 1 / -1;
-      text-align: left;
-      padding-left: 94px;
-      margin-top: -10px;
-    }
-
-    .readings {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .c-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 520px) {
-    .reading-plan { padding: 14px 10px 34px; }
-    .hero { padding: 34px 22px; border-radius: 13px; }
-    .intro, .week-body, .three-cs { padding: 18px; }
-    .week-header { padding: 18px; gap: 12px; }
-    .week-number { min-width: 64px; }
-    .week-title h2 { font-size: 1.25rem; }
-    .date { padding-left: 76px; }
-    .readings { grid-template-columns: 1fr; }
-    .day { min-height: 0; }
-  }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="reading-plan.css">
 </head>
-
 <body>
 <main class="reading-plan">
   <section class="hero">
     <p class="eyebrow">Gospel Reading Plan · Year One</p>
     <h1>The Gospel of Mark</h1>
     <p class="subtitle">
-      Follow Jesus through Mark’s fast-moving account of the Servant-King:
-      acting with authority, showing compassion, suffering willingly, and triumphing over death.
+      Follow Jesus through Mark’s fast-moving account of the Servant-King: acting with authority, showing compassion, suffering willingly, and triumphing over death.
     </p>
     <div class="meta-row">
       <span class="meta-pill">7 Weeks</span>
@@ -313,6 +23,8 @@
       <span class="meta-pill">Monday–Friday Readings</span>
     </div>
   </section>
+
+  <button class="print-btn no-print" onclick="window.print()">Print / Save as PDF</button>
 
   <section class="intro">
     <h2>How to Use This Plan</h2>
@@ -341,12 +53,10 @@
           <div class="day"><strong>Thursday</strong><span>Mark 2:18–28</span></div>
           <div class="day"><strong>Friday</strong><span>Review Mark 2:10</span></div>
         </div>
-        <p class="ot">Old Testament Connections: Isaiah 40:3 · Psalm 2</p>
-        <p class="summary">
-          Mark introduces Jesus with urgency and action. The promised Messiah immediately begins
-          proclaiming the Kingdom, demonstrating divine authority through teaching, healing,
-          forgiving sins, and calling ordinary people to follow Him.
-        </p>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Isaiah 40:3 · Psalm 2</p>
+        </div>
+        <p class="summary">Mark introduces Jesus with urgency and action. The promised Messiah immediately begins proclaiming the Kingdom, demonstrating divine authority through teaching, healing, forgiving sins, and calling ordinary people to follow Him.</p>
       </div>
     </article>
 
@@ -367,12 +77,10 @@
           <div class="day"><strong>Thursday</strong><span>Mark 4:21–34</span></div>
           <div class="day"><strong>Friday</strong><span>Mark 4:35–41</span></div>
         </div>
-        <p class="ot">Old Testament Connections: Isaiah 6 · Psalm 107:23–30</p>
-        <p class="summary">
-          As Jesus’ ministry expands, opposition also grows. His parables reveal the condition of
-          the human heart, while His authority over nature confirms that even creation obeys the
-          Servant-King.
-        </p>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Isaiah 6 · Psalm 107:23–30</p>
+        </div>
+        <p class="summary">As Jesus’ ministry expands, opposition also grows. His parables reveal the condition of the human heart, while His authority over nature confirms that even creation obeys the Servant-King.</p>
       </div>
     </article>
 
@@ -393,12 +101,10 @@
           <div class="day"><strong>Thursday</strong><span>Mark 6:30–44</span></div>
           <div class="day"><strong>Friday</strong><span>Mark 6:45–56</span></div>
         </div>
-        <p class="ot">Old Testament Connections: Psalm 23 · Psalm 107</p>
-        <p class="summary">
-          Jesus displays remarkable compassion toward the desperate, the broken, and the outcast.
-          His miracles reveal both His divine power and His deep concern for those who come to Him
-          in faith.
-        </p>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Psalm 23 · Psalm 107</p>
+        </div>
+        <p class="summary">Jesus displays remarkable compassion toward the desperate, the broken, and the outcast. His miracles reveal both His divine power and His deep concern for those who come to Him in faith.</p>
       </div>
     </article>
 
@@ -419,12 +125,10 @@
           <div class="day"><strong>Thursday</strong><span>Mark 8:22–30</span></div>
           <div class="day"><strong>Friday</strong><span>Mark 8:31–38</span></div>
         </div>
-        <p class="ot">Old Testament Connections: Isaiah 29:13 · Daniel 7:13–14</p>
-        <p class="summary">
-          Jesus exposes empty religion while progressively revealing His true identity. Peter’s
-          confession marks a turning point as Jesus begins preparing His disciples for a suffering
-          Messiah rather than a conquering political king.
-        </p>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Isaiah 29:13 · Daniel 7:13–14</p>
+        </div>
+        <p class="summary">Jesus exposes empty religion while progressively revealing His true identity. Peter’s confession marks a turning point as Jesus begins preparing His disciples for a suffering Messiah rather than a conquering political king.</p>
       </div>
     </article>
 
@@ -445,11 +149,10 @@
           <div class="day"><strong>Thursday</strong><span>Mark 10:32–45</span></div>
           <div class="day"><strong>Friday</strong><span>Mark 10:46–52</span></div>
         </div>
-        <p class="ot">Old Testament Connection: Isaiah 53</p>
-        <p class="summary">
-          Greatness in God’s Kingdom is measured by humility and service. Jesus teaches that the
-          King Himself came not to be served, but to serve and to give His life as a ransom for many.
-        </p>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connection: Isaiah 53</p>
+        </div>
+        <p class="summary">Greatness in God’s Kingdom is measured by humility and service. Jesus teaches that the King Himself came not to be served, but to serve and to give His life as a ransom for many.</p>
       </div>
     </article>
 
@@ -470,12 +173,10 @@
           <div class="day"><strong>Thursday</strong><span>Mark 15</span></div>
           <div class="day"><strong>Friday</strong><span>Mark 16</span></div>
         </div>
-        <p class="ot">Old Testament Connections: Psalm 22 · Isaiah 53 · Daniel 7</p>
-        <p class="summary">
-          The Servant willingly lays down His life, accomplishing redemption through the cross.
-          His resurrection vindicates every claim He made and proclaims His victory over sin,
-          death, and the grave.
-        </p>
+        <div class="ot">
+          <p class="ot-refs">Old Testament Connections: Psalm 22 · Isaiah 53 · Daniel 7</p>
+        </div>
+        <p class="summary">The Servant willingly lays down His life, accomplishing redemption through the cross. His resurrection vindicates every claim He made and proclaims His victory over sin, death, and the grave.</p>
       </div>
     </article>
 
@@ -496,11 +197,7 @@
           <div class="day"><strong>Thursday</strong><span>Review Both Passages</span></div>
           <div class="day"><strong>Friday</strong><span>Reflective Reading</span></div>
         </div>
-        <p class="summary">
-          Mark presents Jesus as the Servant who acts with authority, compassion, and sacrificial
-          love. Luke now begins an orderly account, inviting us to understand with certainty who
-          Jesus is and why His life changes everything.
-        </p>
+        <p class="summary">Mark presents Jesus as the Servant who acts with authority, compassion, and sacrificial love. Luke now begins an orderly account, inviting us to understand with certainty who Jesus is and why His life changes everything.</p>
       </div>
     </article>
 

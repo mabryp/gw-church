@@ -40,3 +40,12 @@ Verified redirects (/home → /, /social_media → /connect) and 200s on content
 pages and embeds. Remaining for owner: add gw-church.org as custom domain in
 Firebase console, update DNS, disconnect Google Sites from the domain; verify
 Elasticsearch API key is read-only.
+
+## [2026-07-20] site | Standardized reading plan design
+Rebuilt the Matthew and Mark plan documents on a single shared template
+(shared `reading-plan.css`, identical markup): brand hero, print button,
+intro, uniform week cards, OT-connections box, Three C's section. Matthew
+keeps quiz buttons and "why these matter" notes; Mark keeps weekly summaries.
+Content preserved verbatim; fixed Matthew's footer (Mark is weeks 15–21, not
+15–20). Verified in preview (14+7 weeks, 8 active quizzes) and deployed.
+Originals untouched in raw/embeds/. Wiki: reading-plans.md updated.
