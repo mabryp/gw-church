@@ -85,3 +85,13 @@ and verified: all pages 200 over HTTPS on the custom domain, correct content,
 redirects working. Remaining: www cert (needs its own console entry),
 unassigning the domain from the old Google Site. migration.md updated with a
 DNS reference section.
+
+## [2026-07-22] site | www live — DNS migration finished
+Owner added the www custom-domain entry in the Firebase console and swapped
+the www record to the desired CNAME (gw-church.web.app). Confirmed via the
+Hosting REST API that validation was already passing (the interim A record
+also pointed at Firebase, so no TTL exposure), monitored the edge, and the
+cert issued (CN=www.gw-church.org). Verified both hostnames serve the site
+with correct titles and redirects. Only the Google Sites domain unassignment
+remains. Next up: ingest raw/Mark_Quiz_Bank_Template.xlsx and build the Mark
+quizzes.
