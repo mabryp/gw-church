@@ -86,6 +86,16 @@ redirects working. Remaining: www cert (needs its own console entry),
 unassigning the domain from the old Google Site. migration.md updated with a
 DNS reference section.
 
+## [2026-07-22] site | Embeds now auto-size — whole page scrolls
+Owner flagged that reading plans scrolled inside their frame (a Google Sites
+leftover feel). Added a same-origin auto-height script to the four embed
+wrapper pages (both reading plans, Charley's Notes, Search Sermons): the
+iframe now sizes to its content (ResizeObserver keeps it in sync as search
+results change), and .embed-frame.tall lost its border/box so content flows
+as part of the page. Verified in preview (Matthew 7198px tall, no inner
+scroll; search page resizes with results) and deployed. Fixed-height frames
+remain only for the cross-origin calendar/map embeds on Home.
+
 ## [2026-07-22] site | www live — DNS migration finished
 Owner added the www custom-domain entry in the Firebase console and swapped
 the www record to the desired CNAME (gw-church.web.app). Confirmed via the
