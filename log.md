@@ -66,3 +66,12 @@ sermon_notes_v3 (213 docs with file_url) and sampled Drive metadata: all PDFs
 are owned by phillip.mabry@gw-school.org (school Workspace domain), not the
 personal gmail that owns everything else. Filed as a dependency/risk note in
 sermon-search-system.md.
+
+## [2026-07-21] site | Pushed repo to GitHub
+Created private repo https://github.com/mabryp/gw-church (owner's mabryp
+account) and pushed main. The wiki, raw sources, and site now have an offsite
+backup; future commits should be pushed. Also mapped current DNS for the
+cutover: apex A 198.185.159.145 (Squarespace forwarding, apex → www),
+www CNAME ghs.googlehosted.com (Google Sites), nameservers
+ns-cloud-c*.googledomains.com (Google Cloud DNS / legacy Google Domains,
+now managed via Squarespace).
