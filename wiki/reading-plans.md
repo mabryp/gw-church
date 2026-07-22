@@ -48,7 +48,17 @@ captured from the dialog or from the form's /viewform redirect).
 2026-07-21: built W11 and W12 forms this way and linked them on the site.
 Questions for W9, W10, W13, W14 do not exist yet — owner will supply; after
 appending them to the sheet, repeat: Quiz Builder → Build quiz by ID → wire
-URL into `site/embeds/matthew-reading-plan.html` → deploy. All readings, dates, titles, and prose carried over
+URL into the MARK/MATTHEW data in `tools/build_plans.py` → rebuild → deploy.
+
+2026-07-22: **All 7 Mark quizzes live.** The LLM drafted the 84-question bank
+(repo: `mark_quiz_bank.csv`, owner-reviewed), loaded it into the sheet's
+questions tab via a temporary Firebase-hosted copy + IMPORTDATA + paste-values
+(byte-exact, checksum-verified; the Sheets import picker is unreachable to
+automation), ran Build quiz by ID for W15–W21 (W21 needed a retry after an
+Apps Script "exceeded maximum execution time"), validated every form (title +
+12 questions + anonymous 200), and wired the URLs through build_plans.py.
+Quiz URLs now live ONLY in tools/build_plans.py — edit there and rebuild,
+never in the generated HTML (hand-edits get clobbered on rebuild). All readings, dates, titles, and prose carried over
 verbatim. One correction: Matthew's footer said Mark would be "Weeks 15–20";
 Mark actually runs weeks 15–21, so the footer now says 15–21. Original designs
 remain in `raw/embeds/`. Luke and John should use this same template when
