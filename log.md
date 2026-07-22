@@ -105,3 +105,16 @@ results change), and .embed-frame.tall lost its border/box so content flows
 as part of the page. Verified in preview (Matthew 7198px tall, no inner
 scroll; search page resizes with results) and deployed. Fixed-height frames
 remain only for the cross-origin calendar/map embeds on Home.
+
+## [2026-07-22] site | All 7 Mark quizzes built and live
+Owner approved the drafted 84-question bank and asked for same-day go-live.
+Loaded the questions into gospel_quiz via a temp Firebase-hosted CSV +
+IMPORTDATA + paste-as-values (checksum-verified byte-exact; the import picker
+iframe is unreachable to automation). Sheet validation passed (190 rows).
+Drove Quiz Builder for W15–W21: two menu misfires typed into cells (caught,
+reverted via undo/Escape with zero damage) and W21 hit an Apps Script
+execution-time limit (clean retry succeeded). Validated all 7 forms — correct
+titles, 12 questions each with passages, anonymously reachable — captured
+published URLs, wired them into tools/build_plans.py, rebuilt both plans,
+removed the temp CSV, deployed, and confirmed 7 active quiz buttons on the
+live Mark plan. Renamed mark_quiz_bank_DRAFT.csv → mark_quiz_bank.csv.
