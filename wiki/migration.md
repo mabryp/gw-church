@@ -40,14 +40,30 @@ existing links keep working.
 
 ## Open items
 
-1. **DNS cutover:** point gw-church.org at Firebase Hosting after deploy
-   (owner controls registrar; also disconnect the domain from Google Sites).
-2. **Elasticsearch API key scope** — verify read-only before go-live
+1. **www.gw-church.org** — A record is in place but Firebase has not issued
+   its cert; likely needs its own custom-domain entry in the console
+   (redirect-to-apex type). Apex is DONE (see status log).
+2. **Unassign the custom domain from the old Google Site** so it stops
+   claiming gw-church.org.
+3. **Elasticsearch API key scope** — verify read-only
    ([Sermon Search System](sermon-search-system.md) § Security). Confirmed the
    cluster accepts cross-origin requests, so the embeds work from any host.
-3. Signed Google image URLs expire — images were captured to `site/assets/`
+4. Signed Google image URLs expire — images were captured to `site/assets/`
    (logo, pastor photo, school photo); any future images must be saved as
    files, not hotlinked.
+
+## DNS reference (post-cutover, 2026-07-22)
+
+Zone hosted on legacy Google Domains nameservers (ns-cloud-c*), managed via
+the owner's Squarespace account. Records: `@ A 199.36.158.100` (Firebase),
+`@ TXT "hosting-site=gw-church"`, `www A 199.36.158.100`. Gotchas hit during
+cutover, for next time: the DNS editor's Host field is zone-relative (use `@`,
+not the full domain — full domain creates doubled names like
+gw-church.org.gw-church.org); the old Squarespace records carried 4-hour TTLs,
+so validation lagged the fix by hours; Squarespace's domain-forwarding feature
+generates parking A records (198.185.159.x / 198.49.23.x) and serves a
+"Coming Soon" page with its own cert — which can masquerade as a working site
+in cached-DNS checks.
 
 ## Status log
 
@@ -59,10 +75,11 @@ existing links keep working.
   Elasticsearch queries work — 177 results).
 - 2026-07-20: **Deployed** to Firebase Hosting project `gw-church` →
   https://gw-church.web.app. Verified live: homepage renders, `/home` and
-  `/social_media` 301s work, content pages and embeds serve 200. Remaining:
-  custom-domain setup for gw-church.org in Firebase console + DNS cutover at
-  registrar + disconnect domain from Google Sites; Elasticsearch key scope
-  check.
+  `/social_media` 301s work, content pages and embeds serve 200.
+- 2026-07-22: **DNS cutover complete.** https://gw-church.org serves the new
+  site with a valid Firebase-issued certificate — verified end-to-end (all
+  pages 200, correct content, redirects). www pending its own cert/console
+  entry.
 
 ## Sources
 

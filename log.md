@@ -75,3 +75,13 @@ cutover: apex A 198.185.159.145 (Squarespace forwarding, apex → www),
 www CNAME ghs.googlehosted.com (Google Sites), nameservers
 ns-cloud-c*.googledomains.com (Google Cloud DNS / legacy Google Domains,
 now managed via Squarespace).
+
+## [2026-07-22] site | DNS cutover complete — gw-church.org live on Firebase
+Walked the owner through the cutover: diagnosed the initial ACME 403 (old
+Squarespace A records still in place), then a Host-field typo that put the
+TXT/A records at gw-church.org.gw-church.org, then a 4-hour TTL wait on the
+old records. Set a monitor on Firebase's edge; cert for gw-church.org issued
+and verified: all pages 200 over HTTPS on the custom domain, correct content,
+redirects working. Remaining: www cert (needs its own console entry),
+unassigning the domain from the old Google Site. migration.md updated with a
+DNS reference section.
