@@ -40,10 +40,7 @@ existing links keep working.
 
 ## Open items
 
-1. **www.gw-church.org** — A record is in place but Firebase has not issued
-   its cert; likely needs its own custom-domain entry in the console
-   (redirect-to-apex type). Apex is DONE (see status log).
-2. **Unassign the custom domain from the old Google Site** so it stops
+1. **Unassign the custom domain from the old Google Site** so it stops
    claiming gw-church.org.
 3. **Elasticsearch API key scope** — verify read-only
    ([Sermon Search System](sermon-search-system.md) § Security). Confirmed the
@@ -56,7 +53,7 @@ existing links keep working.
 
 Zone hosted on legacy Google Domains nameservers (ns-cloud-c*), managed via
 the owner's Squarespace account. Records: `@ A 199.36.158.100` (Firebase),
-`@ TXT "hosting-site=gw-church"`, `www A 199.36.158.100`. Gotchas hit during
+`@ TXT "hosting-site=gw-church"`, `www CNAME gw-church.web.app`. Gotchas hit during
 cutover, for next time: the DNS editor's Host field is zone-relative (use `@`,
 not the full domain — full domain creates doubled names like
 gw-church.org.gw-church.org); the old Squarespace records carried 4-hour TTLs,
@@ -78,8 +75,10 @@ in cached-DNS checks.
   `/social_media` 301s work, content pages and embeds serve 200.
 - 2026-07-22: **DNS cutover complete.** https://gw-church.org serves the new
   site with a valid Firebase-issued certificate — verified end-to-end (all
-  pages 200, correct content, redirects). www pending its own cert/console
-  entry.
+  pages 200, correct content, redirects).
+- 2026-07-22: **www live.** Owner added the www custom-domain entry and CNAME;
+  cert issued (CN=www.gw-church.org, expires 2026-10-20). Both hostnames
+  verified serving the site with working redirects. DNS migration finished.
 
 ## Sources
 
