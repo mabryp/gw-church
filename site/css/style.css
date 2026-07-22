@@ -145,6 +145,9 @@ main.page.wide { max-width: 1080px; }
   background: #fff;
 }
 .embed-frame iframe { display: block; width: 100%; height: 560px; border: 0; }
+/* .tall frames auto-size to their content via script, so the page scrolls —
+   the fixed height below is only the pre-script fallback */
+.embed-frame.tall { border: none; border-radius: 0; background: transparent; overflow: visible; }
 .embed-frame.tall iframe { height: min(78vh, 900px); }
 
 /* ---------- Footer ---------- */

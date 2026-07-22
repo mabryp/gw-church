@@ -67,5 +67,34 @@
     </div>
   </div>
 </footer>
+<script>
+  // Same-origin embed: size the iframe to its content so the page scrolls, not the frame
+  (function () {
+    var frame = document.querySelector('.embed-frame iframe');
+    if (!frame) return;
+    function fit() {
+      try {
+        var doc = frame.contentDocument;
+        if (doc && doc.documentElement) {
+          frame.style.height = doc.documentElement.scrollHeight + 'px';
+        }
+      } catch (e) { /* cross-origin: leave fixed height */ }
+    }
+    function arm() {
+      fit();
+      try {
+        var doc = frame.contentDocument;
+        if (doc && 'ResizeObserver' in window) {
+          new ResizeObserver(fit).observe(doc.documentElement);
+        } else {
+          setInterval(fit, 800);
+        }
+      } catch (e) {}
+    }
+    frame.addEventListener('load', arm);
+    if (frame.contentDocument && frame.contentDocument.readyState === 'complete') arm();
+    window.addEventListener('resize', fit);
+  })();
+</script>
 </body>
 </html>
