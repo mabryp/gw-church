@@ -58,7 +58,20 @@ automation), ran Build quiz by ID for W15–W21 (W21 needed a retry after an
 Apps Script "exceeded maximum execution time"), validated every form (title +
 12 questions + anonymous 200), and wired the URLs through build_plans.py.
 Quiz URLs now live ONLY in tools/build_plans.py — edit there and rebuild,
-never in the generated HTML (hand-edits get clobbered on rebuild). All readings, dates, titles, and prose carried over
+never in the generated HTML (hand-edits get clobbered on rebuild).
+
+### Results shown to quiz takers (fixed 2026-07-22)
+
+The Quiz Builder script creates forms with "Release grades: Later, after
+manual review" and all respondent-visibility settings off, so submitters saw
+nothing after submitting. Google exposes these settings in NO API (Forms API
+and Apps Script both lack them) — they are UI-only. All 17 live quiz forms
+(W1–W8, W11–W12, W15–W21) were fixed by hand in the Forms editor: Release
+grades = Immediately after each submission; Missed questions, Correct
+answers, and Point values all visible. (W1–W8 already had
+immediately+missed-questions set — presumably manually — and needed only the
+last two toggles.) **After any future Quiz Builder run, open the new form's
+Settings and make these same changes** — the script cannot do it. All readings, dates, titles, and prose carried over
 verbatim. One correction: Matthew's footer said Mark would be "Weeks 15–20";
 Mark actually runs weeks 15–21, so the footer now says 15–21. Original designs
 remain in `raw/embeds/`. Luke and John should use this same template when
