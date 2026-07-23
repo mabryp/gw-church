@@ -118,3 +118,14 @@ titles, 12 questions each with passages, anonymously reachable — captured
 published URLs, wired them into tools/build_plans.py, rebuilt both plans,
 removed the temp CSV, deployed, and confirmed 7 active quiz buttons on the
 live Mark plan. Renamed mark_quiz_bank_DRAFT.csv → mark_quiz_bank.csv.
+
+## [2026-07-22] site | Quiz takers now see their results
+Owner reported quiz submitters saw nothing after submitting. Root cause: the
+Quiz Builder script creates forms set to "Release grades: Later, after manual
+review" with all respondent-visibility toggles off; these settings have no
+API, so all 17 live quiz forms (Matthew W1-W8/W11-W12, Mark W15-W21) were
+fixed by hand in the Forms editor via Chrome: release grades → immediately,
+missed questions/correct answers/point values → visible. W1-W8 were already
+half-configured (immediately + missed questions) and needed only the last two
+toggles. Each form's final state screenshot-verified. Repeat-procedure note
+added to reading-plans.md for future builds.
