@@ -54,9 +54,11 @@ Deploy commands (created 2026-07-22):
 - Production only: `firebase deploy --only hosting:prod`
 - Both: `firebase deploy --only hosting`
 
-Workflow: deploy to preprod, share the preprod URL for review, then deploy the
-same `site/` to prod once approved. Both targets deploy the same working tree —
-there is no separate preprod branch or directory.
+**Workflow rule (owner directive, 2026-07-22): every site change deploys to
+preprod first for review; prod is deployed only after the owner accepts the
+preprod version.** See CLAUDE.md § Deploy for the binding procedure. Both
+targets deploy the same working tree — there is no separate preprod branch or
+directory.
 
 ## Open items
 
