@@ -17,7 +17,9 @@ Homepage themes: a place to be known, rest, heal, learn, grow, lead, make an
 impact; multi-cultural, community-oriented, "room enough for everyone." Tagline
 motif on the school page: a mission "to train and send."
 
-Pastor: [Charley](charley.md), pastor since 1981. Doctrine:
+Lead pastor: [Chris Dumont](chris-dumont.md), who succeeded
+[Charley](charley.md) (pastor 1981 until retirement, reported July 2026).
+Doctrine:
 [What We Believe](what-we-believe.md). Affiliated school:
 [Gateway Christian School](gateway-christian-school.md). Outreach channels:
 [Connect Channels](connect-channels.md).

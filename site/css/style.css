@@ -110,6 +110,18 @@ main.page.wide { max-width: 1080px; }
 .photo { margin: 0 0 1.5rem; }
 .photo img { width: 100%; height: auto; border-radius: 10px; }
 .photo figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+.photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  max-width: 800px;
+  background: var(--card);
+  border: 2px dashed var(--muted);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
 
 .link-cards { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
 .link-cards a {

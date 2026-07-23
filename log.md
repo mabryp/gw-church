@@ -129,3 +129,20 @@ missed questions/correct answers/point values → visible. W1-W8 were already
 half-configured (immediately + missed questions) and needed only the last two
 toggles. Each form's final state screenshot-verified. Repeat-procedure note
 added to reading-plans.md for future builds.
+
+## [2026-07-22] site | Our Pastor page: Chris Dumont placeholder
+Owner reported Charley has retired and Chris Dumont is now lead pastor; no
+photo of Chris yet. Rewrote site/about/our-pastor/index.html as honest
+placeholder content: Chris Dumont named as lead pastor with a "photo coming
+soon" block (new .photo-placeholder CSS rule) and TODO markers for photo/bio,
+plus a Pastor Emeritus section preserving Charley's story and linking his
+notes/sermon search. Updated About hub card ("Meet Pastor Chris Dumont").
+Wiki synced: created chris-dumont.md; updated charley.md, gateway-church.md,
+site-structure.md, index.md. Not yet deployed.
+
+## [2026-07-22] site | Deployed Chris Dumont placeholder
+Owner approved deploying the pastor-transition placeholder as-is. Ran
+`firebase deploy --only hosting` (21 files, release complete); verified live
+at gw-church.web.app/about/our-pastor — page shows Chris Dumont, the
+photo-coming-soon block, and the Pastor Emeritus section; no Charley-as-
+current-pastor copy remains.

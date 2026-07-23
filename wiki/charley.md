@@ -1,6 +1,6 @@
 # Charley (Pastor)
 
-**Summary:** Pastor of [Gateway Church](gateway-church.md) since 1981; Air Force Academy-trained, internationally invited discipleship teacher.
+**Summary:** Pastor of [Gateway Church](gateway-church.md) from 1981 until his retirement (reported July 2026); Air Force Academy-trained, internationally invited discipleship teacher. Succeeded by [Chris Dumont](chris-dumont.md).
 
 ## Background
 
@@ -27,9 +27,12 @@ In You", "Something Worth Waiting For — The Spirit Upon".
 
 ## Related
 
-His sermon notes and sermons are searchable via the
+Charley has retired; [Chris Dumont](chris-dumont.md) is now lead pastor, and
+the site's `/about/our-pastor` page presents Charley as Pastor Emeritus. His
+sermon notes and sermons remain searchable via the
 [Sermon Search System](sermon-search-system.md) ("Charley's Notes" page is named
-for him). Site bio notes the photo caption "Charley (center)".
+for him). The original Google Sites bio noted the photo caption "Charley
+(center)"; that photo no longer appears on the pastor page.
 
 ## Sources
 
