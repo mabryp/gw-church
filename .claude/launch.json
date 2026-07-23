@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "gateway-site",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8787", "-d", "site"],
-      "port": 8787
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "python3 -m http.server \"${PORT:-8787}\" -d site"],
+      "port": 8787,
+      "autoPort": true
     }
   ]
 }
