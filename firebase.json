@@ -1,12 +1,26 @@
 {
-  "hosting": {
-    "public": "site",
-    "cleanUrls": true,
-    "trailingSlash": false,
-    "ignore": ["firebase.json", "**/.*"],
-    "redirects": [
-      { "source": "/home", "destination": "/", "type": 301 },
-      { "source": "/social_media", "destination": "/connect", "type": 301 }
-    ]
-  }
+  "hosting": [
+    {
+      "target": "prod",
+      "public": "site",
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "ignore": ["firebase.json", "**/.*"],
+      "redirects": [
+        { "source": "/home", "destination": "/", "type": 301 },
+        { "source": "/social_media", "destination": "/connect", "type": 301 }
+      ]
+    },
+    {
+      "target": "preprod",
+      "public": "site",
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "ignore": ["firebase.json", "**/.*"],
+      "redirects": [
+        { "source": "/home", "destination": "/", "type": 301 },
+        { "source": "/social_media", "destination": "/connect", "type": 301 }
+      ]
+    }
+  ]
 }

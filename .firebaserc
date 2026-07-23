@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "gw-church"
-  }
+  },
+  "targets": {
+    "gw-church": {
+      "hosting": {
+        "prod": [
+          "gw-church"
+        ],
+        "preprod": [
+          "gw-church-preprod"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
