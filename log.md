@@ -146,3 +146,13 @@ Owner approved deploying the pastor-transition placeholder as-is. Ran
 at gw-church.web.app/about/our-pastor — page shows Chris Dumont, the
 photo-coming-soon block, and the Pastor Emeritus section; no Charley-as-
 current-pastor copy remains.
+
+## [2026-07-22] site | Preprod hosting environment stood up
+Owner requested a test site for reviewing changes before production. Created
+second Firebase Hosting site gw-church-preprod in project gw-church, mapped
+deploy targets (prod → gw-church, preprod → gw-church-preprod) in .firebaserc,
+converted firebase.json hosting config to a two-target array (identical
+settings), and deployed → https://gw-church-preprod.web.app (verified 200,
+pastor page shows Chris Dumont content). Documented environments and deploy
+commands in migration.md. Also committed the earlier pastor-transition
+changes (bfa4eb9).

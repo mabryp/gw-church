@@ -38,6 +38,26 @@ existing links keep working.
    voice; navy + lime palette taken from the church logo (`site/assets/home.png`),
    Playfair Display + Open Sans kept, sticky header, mobile hamburger nav.
 
+## Hosting environments
+
+Two Firebase Hosting sites in project `gw-church`, both serving `site/`,
+mapped to deploy targets in `.firebaserc` / `firebase.json`:
+
+| Target | Site | URL | Purpose |
+|---|---|---|---|
+| `prod` | gw-church | https://gw-church.org (and gw-church.web.app) | Production |
+| `preprod` | gw-church-preprod | https://gw-church-preprod.web.app | Review changes before production |
+
+Deploy commands (created 2026-07-22):
+
+- Preprod only: `firebase deploy --only hosting:preprod`
+- Production only: `firebase deploy --only hosting:prod`
+- Both: `firebase deploy --only hosting`
+
+Workflow: deploy to preprod, share the preprod URL for review, then deploy the
+same `site/` to prod once approved. Both targets deploy the same working tree —
+there is no separate preprod branch or directory.
+
 ## Open items
 
 1. **Unassign the custom domain from the old Google Site** so it stops
@@ -79,6 +99,10 @@ in cached-DNS checks.
 - 2026-07-22: **www live.** Owner added the www custom-domain entry and CNAME;
   cert issued (CN=www.gw-church.org, expires 2026-10-20). Both hostnames
   verified serving the site with working redirects. DNS migration finished.
+- 2026-07-22: **Preprod environment created** — second hosting site
+  `gw-church-preprod` with prod/preprod deploy targets (see Hosting
+  environments above). Initial deploy verified at
+  https://gw-church-preprod.web.app.
 
 ## Sources
 
