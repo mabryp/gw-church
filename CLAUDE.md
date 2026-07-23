@@ -43,6 +43,20 @@ Answer questions from the wiki first, citing pages; fall back to `raw/` when the
 wiki is silent. If a query surfaces something worth keeping, file it back into the
 wiki as a page or addition, and log it.
 
+### Deploy
+
+Two Firebase Hosting targets: `preprod` (gw-church-preprod.web.app) and `prod`
+(gw-church.org). **All site changes deploy to preprod FIRST** for owner review:
+
+1. `firebase deploy --only hosting:preprod`, then share the preprod URL.
+2. Wait for the owner's explicit acceptance.
+3. Only then `firebase deploy --only hosting:prod`.
+
+Never deploy to prod without a preprod review of the same changes — even for
+"trivial" fixes, and even if asked to "deploy" without specifying a target
+(deploy to preprod and ask). Log every deploy with the `site` prefix, noting
+which target.
+
 ### Lint
 On request (or when drift is suspected): scan for contradictions, stale claims,
 orphaned pages, broken cross-links, and index mismatches. Flag findings in the log

@@ -156,3 +156,9 @@ settings), and deployed → https://gw-church-preprod.web.app (verified 200,
 pastor page shows Chris Dumont content). Documented environments and deploy
 commands in migration.md. Also committed the earlier pastor-transition
 changes (bfa4eb9).
+
+## [2026-07-22] site | Deploy rule: preprod-first, prod only after acceptance
+Owner directive: all site changes go to preprod (gw-church-preprod.web.app)
+for review first; production is deployed only after explicit acceptance.
+Codified as CLAUDE.md § Deploy (binding workflow) and noted in migration.md
+Hosting environments section.
