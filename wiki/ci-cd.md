@@ -42,14 +42,13 @@ developers should push branches to this repo.
 - Anyone with repo write access can trigger preprod preview deploys (intended)
   and could modify workflows — grant write access deliberately.
 
-## Enforcement gap
+## Enforcement
 
-**Branch protection on `main` is NOT enabled** — GitHub returns 403 on a
-private repo under the free plan ("Upgrade to GitHub Pro or make this
-repository public"). Until the repo is public or the plan upgraded, nothing
-technically stops a collaborator from pushing straight to `main` (which would
-auto-deploy prod); the preprod-first rule is enforced by CLAUDE.md § Deploy
-and by convention. Revisit if collaborators are added.
+**Branch protection on `main` is enabled** (2026-07-24, after the repo went
+public — the free plan blocks protection on private repos): merging a PR
+requires 1 approving review. `enforce_admins` is off, so the owner (admin) can
+still push wiki/log commits directly to `main`; collaborators cannot, which is
+what technically enforces the preprod-first rule for site changes.
 
 ## Targets reference
 

@@ -182,3 +182,20 @@ Deploy-to-production run — prod + preprod mirror deploys succeeded via the
 service account. Preview path: test PR #1 triggered Deploy-PR-preview, which
 commented and served a working preview URL (gw-church-preprod--pr1-...,
 HTTP 200); PR closed unmerged, branch deleted. Pipeline live.
+
+## [2026-07-24] site | Privacy scan, history scrub, repo made public
+Owner authorized making the repo public after a personal-data scan. Findings
+and actions: (1) owner's work email was author/committer on all commits →
+history rewritten with git-filter-repo, all commits now use the GitHub
+noreply address, repo-local git config set to match (NOTE: commit SHAs
+changed; SHAs cited in earlier log entries no longer resolve); (2) personal
+gmail + school-account emails and their account-ownership mapping in
+sermon-search-system.md and log.md → replaced with neutral placeholders in
+files AND all history; (3) Elasticsearch API key in the embeds (already
+public on the live site) verified read-only via _has_privileges — no
+write/cluster privileges, cannot enumerate indices; re-scope recommendation
+recorded in sermon-search-system.md § Security. Pre-rewrite backup bundle
+saved locally. Repo flipped public, then branch protection enabled on main
+(1 approving review; admin exempt for wiki commits). CLAUDE.md and ci-cd.md
+updated. Residual public-by-design: church contact info, mark_quiz_bank.csv
+(quiz answer key), raw/ site crawl.

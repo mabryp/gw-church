@@ -69,13 +69,16 @@ deploys can drift from `main`.
 The preprod-first rule holds even for "trivial" fixes, and even if asked to
 "deploy" without a target (use the PR path, or deploy preprod and ask). A
 direct push to `main` touching `site/` auto-deploys prod — agent sessions
-must never do that. GitHub branch protection is NOT enabled (private repo on
-the free plan), so this rule is enforced by this file, not by GitHub. Log
-every deploy or deploy-affecting change with the `site` prefix, noting target.
+must never do that. Branch protection on `main` requires 1 approving review
+to merge a PR; the owner (admin) is exempt from direct-push restrictions —
+that exemption is for wiki/log commits, not a prod shortcut. Log every deploy
+or deploy-affecting change with the `site` prefix, noting target.
 
 ### Collaboration
 
-The repo is hosted at github.com/mabryp/gw-church (private). Multiple
+The repo is hosted at github.com/mabryp/gw-church (**public** as of
+2026-07-24 — never commit anything personal or secret; personal emails were
+scrubbed from files and git history before publication). Multiple
 developers manage the agent through this same repository; deploys need no GCP
 credentials — GitHub Actions holds a Firebase service account in the repo
 secret `FIREBASE_SERVICE_ACCOUNT_GW_CHURCH` (see [wiki/ci-cd.md](wiki/ci-cd.md)).

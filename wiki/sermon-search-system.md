@@ -49,10 +49,13 @@ in the index.
 ## Security
 
 The Elasticsearch API key is publicly visible in page source (unavoidable for a
-serverless client-side search, and already public today). ACTION ITEM for the
-site owner: confirm the key is scoped **read-only to these two indices**; if it
-has write or cluster privileges, rotate it and issue a search-only key before
-(or during) migration.
+serverless client-side search, and already public today). **Verified read-only
+2026-07-24** via `_has_privileges` introspection: no write/delete/manage on any
+index, no cluster privileges, and it cannot enumerate indices (`_cat/indices`
+403s). Residual: its read grant matches all index names, not just the two
+sermon indices — someone who guessed another index's name could read it. Low
+risk on this dedicated cluster; still, at the next rotation issue a key scoped
+to `sermons_v2` + `sermon_notes_v3` only.
 
 ## Sources
 
