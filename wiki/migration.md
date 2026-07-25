@@ -56,9 +56,10 @@ Deploy commands (created 2026-07-22):
 
 **Workflow rule (owner directive, 2026-07-22): every site change deploys to
 preprod first for review; prod is deployed only after the owner accepts the
-preprod version.** See CLAUDE.md § Deploy for the binding procedure. Both
-targets deploy the same working tree — there is no separate preprod branch or
-directory.
+preprod version.** See CLAUDE.md § Deploy for the binding procedure. Deploys
+are now git-driven — PRs get preview URLs, merging to `main` deploys prod —
+see [CI/CD Pipeline](ci-cd.md); the CLI commands above remain as the owner's
+manual fallback.
 
 ## Open items
 

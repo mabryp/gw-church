@@ -1,0 +1,38 @@
+# Production deploy: runs when site changes land on main (i.e. a PR is merged,
+# or the owner pushes directly). Deploys the live channel of both hosting
+# sites, so gw-church.org updates and gw-church-preprod.web.app stays a
+# mirror of main.
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "site/**"
+      - "firebase.json"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy prod (gw-church.org)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GW_CHURCH }}
+          projectId: gw-church
+          target: prod
+          channelId: live
+      - name: Sync preprod mirror (gw-church-preprod.web.app)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GW_CHURCH }}
+          projectId: gw-church
+          target: preprod
+          channelId: live

@@ -162,3 +162,16 @@ Owner directive: all site changes go to preprod (gw-church-preprod.web.app)
 for review first; production is deployed only after explicit acceptance.
 Codified as CLAUDE.md § Deploy (binding workflow) and noted in migration.md
 Hosting environments section.
+
+## [2026-07-22] site | CI/CD pipeline: PR previews + prod-on-merge
+Owner approved git-driven deploys so other developers can ship without GCP
+credentials. Created service account github-action-hosting@gw-church (roles:
+firebasehosting.admin, serviceusage.apiKeysViewer), stored its key as GitHub
+secret FIREBASE_SERVICE_ACCOUNT_GW_CHURCH (local key deleted). Added
+.github/workflows/preview-deploy.yml (PRs touching site/ or firebase.json →
+preview channel on preprod site, URL commented on PR, 7-day expiry) and
+prod-deploy.yml (push to main → prod live + preprod live mirror). Branch
+protection on main NOT enabled — GitHub free plan blocks it on private repos
+(403); rule enforced via CLAUDE.md instead. CLAUDE.md § Deploy rewritten for
+the PR path + new § Collaboration (multi-developer, agent-through-repo
+conventions). New wiki page ci-cd.md; migration.md and index.md updated.
