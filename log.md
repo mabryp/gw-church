@@ -175,3 +175,10 @@ protection on main NOT enabled — GitHub free plan blocks it on private repos
 (403); rule enforced via CLAUDE.md instead. CLAUDE.md § Deploy rewritten for
 the PR path + new § Collaboration (multi-developer, agent-through-repo
 conventions). New wiki page ci-cd.md; migration.md and index.md updated.
+
+## [2026-07-22] site | CI/CD pipeline verified end-to-end
+Prod path: push to main (pastor-transition site changes) triggered the
+Deploy-to-production run — prod + preprod mirror deploys succeeded via the
+service account. Preview path: test PR #1 triggered Deploy-PR-preview, which
+commented and served a working preview URL (gw-church-preprod--pr1-...,
+HTTP 200); PR closed unmerged, branch deleted. Pipeline live.
