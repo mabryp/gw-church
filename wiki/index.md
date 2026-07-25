@@ -21,3 +21,4 @@ LLM; updated on every ingest.
 ## The project
 
 - [migration.md](migration.md) — Google Sites → static host migration: portability assessment, open decisions, status
+- [ci-cd.md](ci-cd.md) — GitHub Actions deploy pipeline: PR previews on preprod, prod on merge to main, credential setup

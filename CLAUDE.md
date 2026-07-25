@@ -46,16 +46,49 @@ wiki as a page or addition, and log it.
 ### Deploy
 
 Two Firebase Hosting targets: `preprod` (gw-church-preprod.web.app) and `prod`
-(gw-church.org). **All site changes deploy to preprod FIRST** for owner review:
+(gw-church.org). **All site changes are reviewed on preprod FIRST; prod only
+after the owner's explicit acceptance.** Full pipeline details:
+[wiki/ci-cd.md](wiki/ci-cd.md).
 
-1. `firebase deploy --only hosting:preprod`, then share the preprod URL.
-2. Wait for the owner's explicit acceptance.
-3. Only then `firebase deploy --only hosting:prod`.
+**Primary path — git automation (PRs):**
 
-Never deploy to prod without a preprod review of the same changes — even for
-"trivial" fixes, and even if asked to "deploy" without specifying a target
-(deploy to preprod and ask). Log every deploy with the `site` prefix, noting
-which target.
+1. Make site changes on a feature branch; push and open a PR to `main`.
+2. GitHub Actions deploys any PR touching `site/` or `firebase.json` to a
+   temporary preview channel on the preprod site and comments the URL on the
+   PR. Share that URL for review.
+3. Owner acceptance = the owner merging the PR. On merge, Actions deploys
+   prod (gw-church.org) and re-syncs gw-church-preprod.web.app to match main.
+4. Never merge a site PR yourself — the merge IS the prod approval, and it
+   belongs to the owner.
+
+**Fallback — manual CLI (owner-run sessions only):** preprod first
+(`firebase deploy --only hosting:preprod`), wait for acceptance, then
+`firebase deploy --only hosting:prod`. Prefer the PR path; manual prod
+deploys can drift from `main`.
+
+The preprod-first rule holds even for "trivial" fixes, and even if asked to
+"deploy" without a target (use the PR path, or deploy preprod and ask). A
+direct push to `main` touching `site/` auto-deploys prod — agent sessions
+must never do that. GitHub branch protection is NOT enabled (private repo on
+the free plan), so this rule is enforced by this file, not by GitHub. Log
+every deploy or deploy-affecting change with the `site` prefix, noting target.
+
+### Collaboration
+
+The repo is hosted at github.com/mabryp/gw-church (private). Multiple
+developers manage the agent through this same repository; deploys need no GCP
+credentials — GitHub Actions holds a Firebase service account in the repo
+secret `FIREBASE_SERVICE_ACCOUNT_GW_CHURCH` (see [wiki/ci-cd.md](wiki/ci-cd.md)).
+
+- Every agent session, whoever runs it, follows this CLAUDE.md: same wiki and
+  log discipline, same deploy rules.
+- `site/` and `firebase.json` changes: always feature branch + PR (triggers
+  the preview deploy). Wiki/log/CLAUDE.md-only changes may be committed
+  directly to `main` — the deploy workflows path-filter them out.
+- `git pull` at session start and push after committing — other developers
+  work against the same `main`, and an unpushed wiki is invisible to them.
+- Never commit credentials. The service account key exists only in the GitHub
+  secret; there is no local copy.
 
 ### Lint
 On request (or when drift is suspected): scan for contradictions, stale claims,

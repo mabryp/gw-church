@@ -1,0 +1,29 @@
+# PR preview: every pull request that touches the site gets its own temporary
+# preview URL (a Firebase preview channel on the gw-church-preprod site).
+# The action posts the URL as a comment on the PR. Channels expire in 7 days.
+name: Deploy PR preview
+
+on:
+  pull_request:
+    paths:
+      - "site/**"
+      - "firebase.json"
+
+jobs:
+  preview:
+    # PRs from forks don't get the secret; only same-repo branches deploy.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GW_CHURCH }}
+          projectId: gw-church
+          target: preprod
+          expires: 7d
