@@ -199,3 +199,18 @@ saved locally. Repo flipped public, then branch protection enabled on main
 (1 approving review; admin exempt for wiki commits). CLAUDE.md and ci-cd.md
 updated. Residual public-by-design: church contact info, mark_quiz_bank.csv
 (quiz answer key), raw/ site crawl.
+
+## [2026-08-02] query | Collaborator onboarding: Alex
+Owner added a second collaborator, Alex (GitHub: adcast1016-cpu, write
+access), who is new to git and the LLM-wiki workflow. CLAUDE.md § Collaboration
+gained a "Who's who" list mapping first names to GitHub logins and a standing
+teaching-mode instruction: in Alex's sessions, explain git/deploy operations
+before running them, define jargon, and narrate state after each step. No
+site/ changes.
+
+## [2026-08-02] ingest | wiki/git-basics.md (collaborator onboarding)
+Authored wiki/git-basics.md at the owner's request: a deliberately short git
+primer for Alex — core terms, this repo's branch/PR/preview workflow, a
+command cheat sheet, and how to learn alongside the AI. Indexed under "The
+project". CLAUDE.md teaching-mode note now points to it and caps lesson
+length so teaching doesn't crowd out website work.
