@@ -103,8 +103,10 @@ repo — first names and GitHub logins only, no personal emails):
   operations, briefly explain what the command does and why; prefer small,
   reviewable steps; define jargon (branch, commit, push, PR, merge) on first
   use; and after each operation, state what changed and where things now stand.
-  All CLAUDE.md rules (preprod-first, no self-merging site PRs) apply to every
-  collaborator equally.
+  Keep lessons brief — teaching supports the website work, it doesn't replace
+  it; point to [wiki/git-basics.md](wiki/git-basics.md) for the primer instead
+  of re-explaining at length. All CLAUDE.md rules (preprod-first, no
+  self-merging site PRs) apply to every collaborator equally.
 
 ### Lint
 On request (or when drift is suspected): scan for contradictions, stale claims,

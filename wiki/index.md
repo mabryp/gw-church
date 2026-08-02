@@ -22,3 +22,4 @@ LLM; updated on every ingest.
 
 - [migration.md](migration.md) — Google Sites → static host migration: portability assessment, open decisions, status
 - [ci-cd.md](ci-cd.md) — GitHub Actions deploy pipeline: PR previews on preprod, prod on merge to main, credential setup
+- [git-basics.md](git-basics.md) — short git primer for new collaborators: core terms, this repo's branch/PR workflow, cheat sheet
