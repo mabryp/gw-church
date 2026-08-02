@@ -93,6 +93,19 @@ secret `FIREBASE_SERVICE_ACCOUNT_GW_CHURCH` (see [wiki/ci-cd.md](wiki/ci-cd.md))
 - Never commit credentials. The service account key exists only in the GitHub
   secret; there is no local copy.
 
+**Who's who** (identify the session's user by their email/GitHub login; public
+repo — first names and GitHub logins only, no personal emails):
+
+- Phillip (`mabryp`) — owner/admin. Prod acceptance (merging site PRs) is his.
+- Alex (`adcast1016-cpu`) — collaborator, write access. Alex is new to git and
+  to the LLM-wiki workflow. In sessions run by Alex (or when unsure who is
+  running the session), work in **teaching mode**: before running git or deploy
+  operations, briefly explain what the command does and why; prefer small,
+  reviewable steps; define jargon (branch, commit, push, PR, merge) on first
+  use; and after each operation, state what changed and where things now stand.
+  All CLAUDE.md rules (preprod-first, no self-merging site PRs) apply to every
+  collaborator equally.
+
 ### Lint
 On request (or when drift is suspected): scan for contradictions, stale claims,
 orphaned pages, broken cross-links, and index mismatches. Flag findings in the log
