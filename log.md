@@ -214,3 +214,14 @@ primer for Alex — core terms, this repo's branch/PR/preview workflow, a
 command cheat sheet, and how to learn alongside the AI. Indexed under "The
 project". CLAUDE.md teaching-mode note now points to it and caps lesson
 length so teaching doesn't crowd out website work.
+
+## [2026-08-06] site | preview URL pinned to PR description (preview-deploy.yml)
+Owner reported the PR #4 preview "didn't work" — the deploy had in fact
+succeeded, but the preview URL lived only in a bot comment in the PR
+conversation tab and was easy to miss. Per owner directive (link must be
+apparent to Phillip and Alex after each preview deploy), preview-deploy.yml
+gained a github-script step that pins the preview URL and expiry to the TOP
+of the PR description in a marker-delimited block, updated in place on every
+push. Deploy-affecting change (workflow only; no site/ content touched).
+wiki/ci-cd.md and wiki/git-basics.md updated to say where the link appears
+and to clarify that gw-church-preprod.web.app itself only re-syncs on merge.

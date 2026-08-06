@@ -30,8 +30,10 @@ Claude does most of the typing, but this is what's happening underneath:
 1. **Pull first** — `git pull` at session start so you're building on the latest.
 2. **Branch** — site changes go on a feature branch, never straight to `main`.
 3. **Edit, then commit** — small commits with clear messages.
-4. **Push and open a PR** — pushing a branch that touches `site/` triggers an
-   automatic preview deploy; the preview URL appears as a comment on the PR.
+4. **Push and open a PR** — opening a PR that touches `site/` triggers an
+   automatic preview deploy. The preview link is **pinned at the top of the
+   PR description** (and also appears as a bot comment); open that link to
+   see your change live before anything ships.
 5. **Review on preprod, Phillip merges** — merging the PR is the approval that
    deploys the live site (gw-church.org). **Never merge your own site PR**; that
    decision belongs to the owner. Full pipeline: [ci-cd.md](ci-cd.md).
