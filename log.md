@@ -214,3 +214,32 @@ primer for Alex — core terms, this repo's branch/PR/preview workflow, a
 command cheat sheet, and how to learn alongside the AI. Indexed under "The
 project". CLAUDE.md teaching-mode note now points to it and caps lesson
 length so teaching doesn't crowd out website work.
+
+## [2026-08-12] site | Luke/John reading plan hero sections
+Alex's first learning PR (#4, branch claude/getting-started-repo-c87o87):
+added site/embeds/temp-luke-reading-plan.html and
+temp-john-reading-plan.html, matching the Matthew/Mark hero component
+(reading-plan.css) with portrait-themed subtitles (Luke: Savior, John: Son
+of God) and a coming-soon note; the two site/reading-plan/*/index.html pages
+now embed these via iframe instead of a plain paragraph. Meta-row pills are
+placeholders (no confirmed schedule yet) rather than invented dates. "temp-"
+naming flags these embeds for rename once real plan content is written.
+Preview verified on gw-church-preprod PR #4 channel.
+
+## [2026-08-12] site | Connect page: Facebook → YouTube for livestreams
+Corrected outdated claim on site/connect/index.html and
+wiki/connect-channels.md: sermons are no longer livestreamed on Facebook —
+YouTube is now the livestream and past-stream destination (per Alex, owner
+of this correction). Facebook copy now covers pastor messages and church
+news/events only.
+
+## [2026-08-12] site | Connect page icon cards; shared .link-cards update
+Reworked Connect's Facebook/YouTube links into icon link-cards (monochrome
+navy inline SVGs, no hotlinked logo images) using the existing `.link-cards`
+component from site/css/style.css. The CSS change (`.link-cards a` to flex)
+is shared site-wide, so also updated site/about/index.html's three cards
+with a `.link-text` wrapper to keep their stacked title/subtitle layout —
+caught via local render (headless Chromium) before committing: the first
+pass silently broke About's layout (title and subtitle collapsed onto one
+line), fixed and re-verified with screenshots. Font-loading and one
+favicon 404 console errors are sandbox/pre-existing, unrelated.
