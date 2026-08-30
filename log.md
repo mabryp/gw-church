@@ -247,3 +247,16 @@ three plans; Matthew/Mark output verified byte-identical. Week titles and
 summaries are LLM-written pending owner review; open calendar slots render
 as "Catch-Up / Reflection". Target: preprod preview via PR to main —
 supersedes PR #4's coming-soon hero. Wiki reading-plans.md/index updated.
+
+## [2026-08-30] site | fix inner scrollbar on embed wrapper pages (PR #5)
+Owner reported an inner scrollbar on the Luke plan preview. Cause: the
+wrapper pages' iframe auto-size script observed the embed's inner document
+with a parent-window ResizeObserver, which silently never fires in some
+browsers (WebKit/Firefox) — so after web fonts reflowed the content taller,
+the frame stayed at its load-time height and the overflow scrolled inside
+the iframe (Chromium unaffected; reproduced/verified headlessly). Fixed on
+all five wrapper pages (three reading plans, Charley's Notes, Search
+Sermons): arm() now always polls fit() every 800ms and re-fits on
+doc.fonts.ready, keeping ResizeObserver as a fast path. Verified in
+Chromium desktop+mobile with ResizeObserver deleted: frames size to
+content, no inner scroll. Pushed to PR #5 (preprod preview).
