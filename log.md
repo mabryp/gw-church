@@ -214,3 +214,49 @@ primer for Alex — core terms, this repo's branch/PR/preview workflow, a
 command cheat sheet, and how to learn alongside the AI. Indexed under "The
 project". CLAUDE.md teaching-mode note now points to it and caps lesson
 length so teaching doesn't crowd out website work.
+
+## [2026-08-06] site | preview URL pinned to PR description (preview-deploy.yml)
+Owner reported the PR #4 preview "didn't work" — the deploy had in fact
+succeeded, but the preview URL lived only in a bot comment in the PR
+conversation tab and was easy to miss. Per owner directive (link must be
+apparent to Phillip and Alex after each preview deploy), preview-deploy.yml
+gained a github-script step that pins the preview URL and expiry to the TOP
+of the PR description in a marker-delimited block, updated in place on every
+push. Deploy-affecting change (workflow only; no site/ content touched).
+wiki/ci-cd.md and wiki/git-basics.md updated to say where the link appears
+and to clarify that gw-church-preprod.web.app itself only re-syncs on merge.
+
+## [2026-08-30] query | Luke reading plan schedule located
+Owner asked whether the Luke reading plan is accessible. The repo has only
+placeholders, but Joy Dumont published the full Luke schedule as "Reading
+Plan Luke ..." all-day events on the Gateway Public Calendar (most entered
+the night of Aug 29-30). Retrieved the complete run — weekdays Aug 31 to
+Oct 30, 2026, Luke 1:1-38 through 24:36-53, with two Friday OT supplement
+sets and review/reflection days; a few weekday slots still empty. Filed the
+schedule into wiki/reading-plans.md (new "Luke schedule" section, table row,
+summary) and updated the index line. Site page can now be built from it.
+
+## [2026-08-30] site | Luke reading plan page built on shared template (preprod PR)
+Owner asked for the Luke plan on the site matching Matthew/Mark. Added LUKE
+(weeks 22-30, Aug 31 - Oct 30) to tools/build_plans.py from the Gateway
+Public Calendar schedule and generated site/embeds/luke-reading-plan.html
+(no quiz buttons yet); rewrote site/reading-plan/luke-reading-plan/index.html
+as an iframe wrapper cloned from Matthew's. build_plans.py now derives its
+repo root from the script path (was a hardcoded local path) and emits all
+three plans; Matthew/Mark output verified byte-identical. Week titles and
+summaries are LLM-written pending owner review; open calendar slots render
+as "Catch-Up / Reflection". Target: preprod preview via PR to main —
+supersedes PR #4's coming-soon hero. Wiki reading-plans.md/index updated.
+
+## [2026-08-30] site | fix inner scrollbar on embed wrapper pages (PR #5)
+Owner reported an inner scrollbar on the Luke plan preview. Cause: the
+wrapper pages' iframe auto-size script observed the embed's inner document
+with a parent-window ResizeObserver, which silently never fires in some
+browsers (WebKit/Firefox) — so after web fonts reflowed the content taller,
+the frame stayed at its load-time height and the overflow scrolled inside
+the iframe (Chromium unaffected; reproduced/verified headlessly). Fixed on
+all five wrapper pages (three reading plans, Charley's Notes, Search
+Sermons): arm() now always polls fit() every 800ms and re-fits on
+doc.fonts.ready, keeping ResizeObserver as a fast path. Verified in
+Chromium desktop+mobile with ResizeObserver deleted: frames size to
+content, no inner scroll. Pushed to PR #5 (preprod preview).

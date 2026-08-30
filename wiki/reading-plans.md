@@ -1,6 +1,6 @@
 # Reading Plans (Gospel Reading Plan, Year One)
 
-**Summary:** A 2026 congregation-wide Gospel reading program published as custom HTML embeds — Matthew (spring) and Mark (summer) are live; Luke and John pages exist but are empty placeholders.
+**Summary:** A 2026 congregation-wide Gospel reading program published as custom HTML embeds — Matthew (spring) and Mark (summer) are live; Luke's schedule now exists on the Gateway Public Calendar (fall 2026) but its site page is still a "coming soon" placeholder; John has no content yet.
 
 ## Program shape
 
@@ -13,7 +13,7 @@ Old Testament sidebar ("why this matters" commentary). Styled, printable
 |---|---|---|
 | Matthew | 14 weeks, April 6 – July 10, 2026 | Complete (ran spring 2026); includes 8 weekly quiz links (Google Forms) |
 | Mark | July 13 – August 28, 2026 (7 weeks) | **Currently running** (as of 2026-07-20); no quiz links yet |
-| Luke | — | Placeholder page, no content |
+| Luke | August 31 – October 30, 2026 (9 weeks, weeks 22–30) | **Page built on shared template** (2026-08-30, from the public-calendar schedule); in PR review. No quiz links yet |
 | John | — | Placeholder page, no content |
 
 ## Mechanics
@@ -77,6 +77,42 @@ Mark actually runs weeks 15–21, so the footer now says 15–21. Original desig
 remain in `raw/embeds/`. Luke and John should use this same template when
 their plans are written.
 
+## Luke schedule (from Gateway Public Calendar, retrieved 2026-08-30)
+
+Joy Dumont (joy.dumont@gw-school.org) entered the Luke plan as all-day events
+on the Gateway Public Calendar, most of them the night of 2026-08-29/30
+("Gospel Reading Plan - Four Portraits, One Christ"). Weekday cadence,
+Mon Aug 31 – Fri Oct 30, 2026; following Mark (weeks 15–21) these are
+presumably weeks 22–30. Bridge events during Mark's final week: Aug 25
+Luke 1:1-2, Aug 26 Luke 1:3-4, Aug 28 "Reflective Reading" (a Mark→Luke
+transition blurb).
+
+| Week (Mon–Fri) | Readings |
+|---|---|
+| Aug 31 – Sep 4 | 1:1-38 · 1:39-80 · 2:1-20 · 2:21-40 · 2:41-52 (Fri OT: Isaiah 40, 1 Samuel 2, Micah 5) |
+| Sep 7 – 11 | 3 · 4:1-30 · 4:31-44 · 4:16-21 · Review 4:16-21 (Fri OT: Isaiah 61, Psalm 2) |
+| Sep 14 – 18 | 5 · 6:1-26 · 6:27-49 · *(Thu–Fri empty)* |
+| Sep 21 – 25 | 7 · 8:1-25 · 8:26-56 · Review · Review |
+| Sep 28 – Oct 2 | 9:1-36 · 9:37-62 · Reflection · *(Thu–Fri empty)* |
+| Oct 5 – 9 | 10 · 11 · 12:1-34 · 12:35-59 · *(Fri empty)* |
+| Oct 12 – 16 | 13 · 14 · 15 · *(Thu–Fri empty)* |
+| Oct 19 – 23 | 16 · 17 · 18 · 19:1-27 · 19:28-48 |
+| Oct 26 – 30 | 20-21 · 22 · 23 · 24:1-35 · 24:36-53 |
+
+The empty weekday slots may be intentional catch-up days or simply not yet
+entered (the events were still being added when retrieved). No quiz links yet.
+
+2026-08-30: the Luke page was built from this schedule on the shared template —
+`LUKE` data added to `tools/build_plans.py` (which now also emits
+`site/embeds/luke-reading-plan.html` and computes its repo root from the
+script location instead of a hardcoded path), and
+`site/reading-plan/luke-reading-plan/index.html` rewritten as an iframe
+wrapper cloned from Matthew's. Week titles and summary paragraphs are
+LLM-written in the Mark style (owner reviews on preprod); the calendar's
+open weekday slots render as "Catch-Up / Reflection" day cells. This
+supersedes PR #4's interim "coming soon" hero
+(`site/embeds/temp-luke-reading-plan.html`), which was never merged.
+
 ## Migration implications
 
 Like the [Sermon Search System](sermon-search-system.md), these are
@@ -91,3 +127,5 @@ Mark ends Aug 28, so Luke is presumably needed by ~Aug 31, 2026).
 - raw/embeds/reading-plan_mark-reading-plan_embed.html
 - raw/reading-plan_luke-reading-plan.html (placeholder)
 - raw/reading-plan_john-reading-plan.html (placeholder)
+- Gateway Public Calendar ("Reading Plan Luke …" events by Joy Dumont),
+  retrieved via the owner's Google Calendar, 2026-08-30 — not in `raw/`.

@@ -15,9 +15,15 @@ the GitHub repo.
 1. **Feature branch → PR** against `main`. Any PR touching `site/` or
    `firebase.json` triggers `.github/workflows/preview-deploy.yml`, which
    deploys a **temporary preview channel** on the preprod site
-   (`gw-church-preprod`) and comments the unique URL on the PR
+   (`gw-church-preprod`) with a unique URL
    (e.g. `gw-church-preprod--pr7-<hash>.web.app`). Channels expire after
-   7 days; parallel PRs get separate URLs and never collide.
+   7 days; parallel PRs get separate URLs and never collide. The URL is
+   surfaced in two places on the PR (owner directive 2026-08-06 — the link
+   must be apparent to all collaborators): **pinned at the top of the PR
+   description** in a marker-delimited block the workflow updates on every
+   push, and in the Firebase bot's comment in the conversation thread.
+   Note: the live preprod URL (gw-church-preprod.web.app) does NOT change
+   on PR pushes — it only re-syncs to `main` on merge.
 2. **Owner reviews the preview URL.** Merging the PR is the acceptance.
 3. **Merge to `main`** triggers `.github/workflows/prod-deploy.yml`, which
    deploys the `live` channel of **prod** (gw-church.org) and then re-deploys

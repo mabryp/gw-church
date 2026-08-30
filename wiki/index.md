@@ -16,7 +16,7 @@ LLM; updated on every ingest.
 
 - [site-structure.md](site-structure.md) — full page map of the Google Site, content types, lint findings (broken link, empty pages)
 - [sermon-search-system.md](sermon-search-system.md) — Elasticsearch-backed sermon/notes search embeds; indexes, fields, security note
-- [reading-plans.md](reading-plans.md) — 2026 Gospel Reading Plan program: Matthew (done), Mark (running), Luke/John (placeholders)
+- [reading-plans.md](reading-plans.md) — 2026 Gospel Reading Plan program: Matthew (done), Mark (done Aug 28), Luke (Aug 31–Oct 30; page built, in PR review), John (placeholder)
 
 ## The project
 

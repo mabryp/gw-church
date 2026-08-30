@@ -82,14 +82,18 @@
     }
     function arm() {
       fit();
+      // ResizeObserver alone is not enough: observing the inner document from
+      // the parent silently never fires in some browsers (WebKit/Firefox), so
+      // late reflows (web fonts) left the frame too short with an inner
+      // scrollbar. Poll as well - fit() is cheap and idempotent.
       try {
         var doc = frame.contentDocument;
         if (doc && 'ResizeObserver' in window) {
           new ResizeObserver(fit).observe(doc.documentElement);
-        } else {
-          setInterval(fit, 800);
         }
+        if (doc && doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fit);
       } catch (e) {}
+      setInterval(fit, 800);
     }
     frame.addEventListener('load', arm);
     if (frame.contentDocument && frame.contentDocument.readyState === 'complete') arm();
