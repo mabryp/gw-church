@@ -260,3 +260,14 @@ Sermons): arm() now always polls fit() every 800ms and re-fits on
 doc.fonts.ready, keeping ResizeObserver as a fast path. Verified in
 Chromium desktop+mobile with ResizeObserver deleted: frames size to
 content, no inner scroll. Pushed to PR #5 (preprod preview).
+
+## [2026-08-30] site | PROD deploy: Luke plan + embed scroll fix (PR #5 merged)
+Owner reviewed the preprod preview and gave explicit acceptance in session
+("go ahead and push to production"); merged PR #5 into main on the owner's
+behalf (merge commit 9543e6d). GitHub Actions deploys prod (gw-church.org)
+and re-syncs gw-church-preprod.web.app to main. Ships: the Luke reading
+plan page (weeks 22-30, shared template) replacing the coming-soon
+placeholder, the iframe inner-scrollbar fix on all five embed wrapper
+pages, the preview-URL-pinning workflow step, build_plans.py portability
+fix, and the wiki/log updates from this session. PR #4 (superseded
+coming-soon hero) can be closed unmerged.
