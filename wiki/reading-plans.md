@@ -13,7 +13,7 @@ Old Testament sidebar ("why this matters" commentary). Styled, printable
 |---|---|---|
 | Matthew | 14 weeks, April 6 – July 10, 2026 | Complete (ran spring 2026); includes 8 weekly quiz links (Google Forms) |
 | Mark | July 13 – August 28, 2026 (7 weeks) | **Currently running** (as of 2026-07-20); no quiz links yet |
-| Luke | August 31 – October 30, 2026 (9 weeks) | **Schedule published to Gateway Public Calendar** (2026-08-30); site page still "coming soon" placeholder |
+| Luke | August 31 – October 30, 2026 (9 weeks, weeks 22–30) | **Page built on shared template** (2026-08-30, from the public-calendar schedule); in PR review. No quiz links yet |
 | John | — | Placeholder page, no content |
 
 ## Mechanics
@@ -101,10 +101,17 @@ transition blurb).
 
 The empty weekday slots may be intentional catch-up days or simply not yet
 entered (the events were still being added when retrieved). No quiz links yet.
-The site's Luke page ([PR #4](https://github.com/mabryp/gw-church/pull/4)
-pending as of 2026-08-30) still shows placeholder "coming soon" content and
-placeholder meta pills — it can now be built on the shared template from this
-schedule.
+
+2026-08-30: the Luke page was built from this schedule on the shared template —
+`LUKE` data added to `tools/build_plans.py` (which now also emits
+`site/embeds/luke-reading-plan.html` and computes its repo root from the
+script location instead of a hardcoded path), and
+`site/reading-plan/luke-reading-plan/index.html` rewritten as an iframe
+wrapper cloned from Matthew's. Week titles and summary paragraphs are
+LLM-written in the Mark style (owner reviews on preprod); the calendar's
+open weekday slots render as "Catch-Up / Reflection" day cells. This
+supersedes PR #4's interim "coming soon" hero
+(`site/embeds/temp-luke-reading-plan.html`), which was never merged.
 
 ## Migration implications
 

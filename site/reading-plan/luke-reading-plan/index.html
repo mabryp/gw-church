@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Luke Reading Plan · Gateway Church</title>
-<meta name="description" content="Gospel of Luke reading plan — coming soon.">
+<meta name="description" content="Gospel of Luke reading plan — 9 weeks, August 31 – October 30, 2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
@@ -42,11 +42,11 @@
     </ul>
   </nav>
 </header>
-<main class="page">
-
+<main class="page wide">
 <h1>Luke Reading Plan</h1>
-<p class="coming-soon">Coming soon &mdash; the Luke plan begins after the current plan concludes. Check back, or <a href="/connect">connect with us</a> to stay in the know.</p>
-
+<div class="embed-frame tall">
+  <iframe src="/embeds/luke-reading-plan.html" title="Luke Reading Plan" loading="lazy"></iframe>
+</div>
 </main>
 <footer class="site-footer">
   <div class="footer-inner">
@@ -67,5 +67,34 @@
     </div>
   </div>
 </footer>
+<script>
+  // Same-origin embed: size the iframe to its content so the page scrolls, not the frame
+  (function () {
+    var frame = document.querySelector('.embed-frame iframe');
+    if (!frame) return;
+    function fit() {
+      try {
+        var doc = frame.contentDocument;
+        if (doc && doc.documentElement) {
+          frame.style.height = doc.documentElement.scrollHeight + 'px';
+        }
+      } catch (e) { /* cross-origin: leave fixed height */ }
+    }
+    function arm() {
+      fit();
+      try {
+        var doc = frame.contentDocument;
+        if (doc && 'ResizeObserver' in window) {
+          new ResizeObserver(fit).observe(doc.documentElement);
+        } else {
+          setInterval(fit, 800);
+        }
+      } catch (e) {}
+    }
+    frame.addEventListener('load', arm);
+    if (frame.contentDocument && frame.contentDocument.readyState === 'complete') arm();
+    window.addEventListener('resize', fit);
+  })();
+</script>
 </body>
 </html>

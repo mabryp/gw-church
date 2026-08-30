@@ -235,3 +235,15 @@ Oct 30, 2026, Luke 1:1-38 through 24:36-53, with two Friday OT supplement
 sets and review/reflection days; a few weekday slots still empty. Filed the
 schedule into wiki/reading-plans.md (new "Luke schedule" section, table row,
 summary) and updated the index line. Site page can now be built from it.
+
+## [2026-08-30] site | Luke reading plan page built on shared template (preprod PR)
+Owner asked for the Luke plan on the site matching Matthew/Mark. Added LUKE
+(weeks 22-30, Aug 31 - Oct 30) to tools/build_plans.py from the Gateway
+Public Calendar schedule and generated site/embeds/luke-reading-plan.html
+(no quiz buttons yet); rewrote site/reading-plan/luke-reading-plan/index.html
+as an iframe wrapper cloned from Matthew's. build_plans.py now derives its
+repo root from the script path (was a hardcoded local path) and emits all
+three plans; Matthew/Mark output verified byte-identical. Week titles and
+summaries are LLM-written pending owner review; open calendar slots render
+as "Catch-Up / Reflection". Target: preprod preview via PR to main —
+supersedes PR #4's coming-soon hero. Wiki reading-plans.md/index updated.
