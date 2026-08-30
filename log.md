@@ -225,3 +225,13 @@ of the PR description in a marker-delimited block, updated in place on every
 push. Deploy-affecting change (workflow only; no site/ content touched).
 wiki/ci-cd.md and wiki/git-basics.md updated to say where the link appears
 and to clarify that gw-church-preprod.web.app itself only re-syncs on merge.
+
+## [2026-08-30] query | Luke reading plan schedule located
+Owner asked whether the Luke reading plan is accessible. The repo has only
+placeholders, but Joy Dumont published the full Luke schedule as "Reading
+Plan Luke ..." all-day events on the Gateway Public Calendar (most entered
+the night of Aug 29-30). Retrieved the complete run — weekdays Aug 31 to
+Oct 30, 2026, Luke 1:1-38 through 24:36-53, with two Friday OT supplement
+sets and review/reflection days; a few weekday slots still empty. Filed the
+schedule into wiki/reading-plans.md (new "Luke schedule" section, table row,
+summary) and updated the index line. Site page can now be built from it.
