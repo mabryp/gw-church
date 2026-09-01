@@ -260,3 +260,20 @@ Sermons): arm() now always polls fit() every 800ms and re-fits on
 doc.fonts.ready, keeping ResizeObserver as a fast path. Verified in
 Chromium desktop+mobile with ResizeObserver deleted: frames size to
 content, no inner scroll. Pushed to PR #5 (preprod preview).
+
+## [2026-09-01] site | Drafted Luke quiz bank and wired the Luke plan for quizzes
+Asked whether the Luke quiz was accessible. It is not: the `gospel_quiz` sheet
+(id 1IHJE85Y…) is invisible to the Drive account agent sessions connect through
+(phillip.mabry@gw-school.org) — the id returns "not found" and no quiz/gospel
+files are searchable — and no Luke bank existed in the repo. Drafted one
+instead: `luke_quiz_bank.csv`, 108 questions for W22–W30, byte-schema-identical
+to `mark_quiz_bank.csv` (12 per week, 4 easy / 4 medium / 4 hard, points 1/2/3,
+CRLF, UTF-8), keyed to each week's readings in `tools/build_plans.py` and
+validated (header match, no blanks, unique ids, every correct_answer present
+among its choices). Flipped LUKE to `has_quizzes=True` and rebuilt; the only
+rendered change is the quiz-activation script, since the template hides buttons
+until a `data-quiz-url` is set, so readers see no difference yet. Updated
+wiki/reading-plans.md (new "Luke quiz bank" section with the owner-side steps)
+and wiki/index.md. Not done, and not doable from an agent session: loading the
+bank into the sheet, running Quiz Builder for W22–W30, the UI-only results
+settings, and pasting the nine URLs back into build_plans.py.

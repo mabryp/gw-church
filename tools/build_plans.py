@@ -327,5 +327,5 @@ with open(f'{ROOT}/site/embeds/matthew-reading-plan.html', 'w') as f:
 with open(f'{ROOT}/site/embeds/mark-reading-plan.html', 'w') as f:
     f.write(build(MARK, 'summary', True))
 with open(f'{ROOT}/site/embeds/luke-reading-plan.html', 'w') as f:
-    f.write(build(LUKE, 'summary', False))
+    f.write(build(LUKE, 'summary', True))
 print('wrote all plans')
