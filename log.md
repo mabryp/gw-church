@@ -277,3 +277,31 @@ wiki/reading-plans.md (new "Luke quiz bank" section with the owner-side steps)
 and wiki/index.md. Not done, and not doable from an agent session: loading the
 bank into the sheet, running Quiz Builder for W22–W30, the UI-only results
 settings, and pasting the nine URLs back into build_plans.py.
+
+## [2026-09-01] ingest | Luke quiz questions (owner-supplied)
+Owner uploaded the real Luke bank: 90 questions, 10 per week for W22–W30, in a
+simple 9-column format. Archived verbatim as
+`raw/luke_quizzes_weeks_22-30.csv`. Its week/passage groupings match the LUKE
+weeks in build_plans.py exactly. Discarded the 108-question LLM draft from
+earlier today rather than merging it, and rewrote `luke_quiz_bank.csv` as a
+machine conversion of the owner's file into the 23-column gospel_quiz schema —
+question text, all four options, and the answer key carried over verbatim
+(verified row by row against the source). Derived mechanically: quiz_id,
+quiz_title, reference_id, topic, passages, tags. Left blank rather than
+invented: learning_objective, explanation, common_misconception — note that
+`explanation` is the post-answer feedback in the Matthew/Mark forms, so as
+loaded Luke will grade but explain nothing. Given uniform values for want of a
+source: difficulty medium / points 2, question_type recall. Updated
+wiki/reading-plans.md and wiki/index.md. Still blocked on the owner's personal
+Google account: loading the sheet, Quiz Builder for W22–W30, the UI-only
+results settings, and the nine URLs.
+
+## [2026-09-01] lint | Answer-position bias in the Mark quiz bank
+While comparing answer distributions, found that 77 of 84 correct answers in
+`mark_quiz_bank.csv` sit in position B (A: 1, C: 6, D: 0) with
+`shuffle_answers` FALSE on every row — so a taker who always picks B scores
+~92% on the seven live Mark quizzes without reading. Flagged, not repaired:
+the forms are built and live, and re-keying them is the owner's call.
+Matthew's bank is not in the repo and could not be checked. The owner's Luke
+questions are well distributed (A 27 / B 24 / C 20 / D 19) and were loaded
+with shuffle_answers TRUE.
