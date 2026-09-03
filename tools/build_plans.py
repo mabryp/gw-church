@@ -148,7 +148,7 @@ LUKE = {
          ['Luke 1:1–38', 'Luke 1:39–80', 'Luke 2:1–20', 'Luke 2:21–40', 'Luke 2:41–52'],
          'Isaiah 40 · 1 Samuel 2 · Micah 5',
          'Luke opens his orderly account with songs, angels, and humble shepherds. The long-promised Savior arrives not in a palace but a manger, and from the very first chapter Luke shows God lifting up the lowly.',
-         None),
+         'https://docs.google.com/forms/d/e/1FAIpQLSfT4hh7mterDg5v-GXSNXcXdWpTshSkFNf6VrZkoEe08oIyLg/viewform'),
         (23, 'Luke 3–4', 'Prepared and Announced', 'Sep 7 – Sep 11',
          ['Luke 3', 'Luke 4:1–30', 'Luke 4:31–44', 'Luke 4:16–21', 'Review Luke 4:16–21'],
          'Isaiah 61 · Psalm 2',

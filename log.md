@@ -305,3 +305,14 @@ the forms are built and live, and re-keying them is the owner's call.
 Matthew's bank is not in the repo and could not be checked. The owner's Luke
 questions are well distributed (A 27 / B 24 / C 20 / D 19) and were loaded
 with shuffle_answers TRUE.
+
+## [2026-09-01] site | Linked the Week 22 Luke quiz
+Owner supplied the first Luke form URL (W22). Wired it into the LUKE week 22
+tuple in tools/build_plans.py and rebuilt; the Week 22 card now carries
+data-quiz-url and renders an active "Take the Week 22 Quiz" button. Matthew and
+Mark output unchanged. W23–W30 slots remain None, so those weeks still render
+no button. NOT verified from this session: docs.google.com is blocked by the
+network egress proxy here, so the form's title, question count, and anonymous
+accessibility could not be checked the way the Mark forms were — the owner
+should confirm on the PR preview, particularly that the form opens without a
+Google sign-in for congregation members.
