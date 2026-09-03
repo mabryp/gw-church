@@ -324,3 +324,15 @@ remain None. Confirmed no duplicate form ids across the file and no change to
 the Matthew or Mark output. Same caveat as W22: docs.google.com is blocked by
 the egress proxy here, so the form's title, question count, and anonymous
 accessibility were not verified from this session.
+
+## [2026-09-03] site | Luke weeks 22–23 quizzes deployed to prod
+PR #6 (Luke quiz bank + weeks 22 and 23 quiz links) reviewed on the preprod
+preview channel and merged by the owner. prod-deploy ran on the merge commit
+d3a7ff1: both steps succeeded — gw-church.org deployed and
+gw-church-preprod.web.app re-synced to main. The Luke plan now shows live quiz
+buttons for weeks 22 and 23; W24–W30 slots are still None and render nothing.
+Declined the request to push straight to main, per the CLAUDE.md rule that the
+merge is the prod approval and belongs to the owner; the owner merged.
+Note the forms themselves were never reachable from the agent session
+(docs.google.com is blocked by the egress proxy), so title, question count, and
+anonymous accessibility remain owner-verified only.

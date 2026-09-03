@@ -13,7 +13,7 @@ Old Testament sidebar ("why this matters" commentary). Styled, printable
 |---|---|---|
 | Matthew | 14 weeks, April 6 – July 10, 2026 | Complete (ran spring 2026); includes 8 weekly quiz links (Google Forms) |
 | Mark | July 13 – August 28, 2026 (7 weeks) | **Currently running** (as of 2026-07-20); no quiz links yet |
-| Luke | August 31 – October 30, 2026 (9 weeks, weeks 22–30) | Page live (merged 2026-08-30). Quiz bank drafted (`luke_quiz_bank.csv`, W22–W30); forms not built, no quiz links yet |
+| Luke | August 31 – October 30, 2026 (9 weeks, weeks 22–30) | **Currently running.** Page live; quiz bank loaded from the owner's questions. Weeks 22–23 quizzes live on prod (2026-09-03); W24–W30 forms not built yet |
 | John | — | Placeholder page, no content |
 
 ## Mechanics
@@ -138,6 +138,11 @@ medium / `points` 2 (20 points per quiz), and `question_type` recall.
 
 `shuffle_answers` is **TRUE for Luke**, deliberately departing from Mark's
 FALSE — see the lint finding below.
+
+2026-09-03: the owner built the first two Luke forms and supplied their URLs;
+both were wired into the `LUKE` week tuples and shipped to prod via PR #6.
+Weeks 22 and 23 now show live quiz buttons on gw-church.org. W24–W30 slots
+remain `None` and render no button until their URLs arrive.
 
 ### Lint finding: answer-position bias in the Mark quizzes (2026-09-01)
 
