@@ -316,3 +316,11 @@ network egress proxy here, so the form's title, question count, and anonymous
 accessibility could not be checked the way the Mark forms were — the owner
 should confirm on the PR preview, particularly that the form opens without a
 Google sign-in for congregation members.
+
+## [2026-09-01] site | Linked the Week 23 Luke quiz
+Wired the owner-supplied W23 form URL into tools/build_plans.py and rebuilt.
+Weeks 22 and 23 now render active quiz buttons on the Luke plan; W24–W30 slots
+remain None. Confirmed no duplicate form ids across the file and no change to
+the Matthew or Mark output. Same caveat as W22: docs.google.com is blocked by
+the egress proxy here, so the form's title, question count, and anonymous
+accessibility were not verified from this session.

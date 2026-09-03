@@ -153,7 +153,7 @@ LUKE = {
          ['Luke 3', 'Luke 4:1–30', 'Luke 4:31–44', 'Luke 4:16–21', 'Review Luke 4:16–21'],
          'Isaiah 61 · Psalm 2',
          'John prepares the way, the Spirit descends, and Jesus withstands the tempter. In the Nazareth synagogue Jesus reads Isaiah and announces His mission: good news to the poor, liberty to the captives, sight to the blind.',
-         None),
+         'https://docs.google.com/forms/d/e/1FAIpQLSeWWPAPnUqPJgJGZzX7XHeqWzUl_Pq5AP50xGiyt4eYR23zvw/viewform'),
         (24, 'Luke 5–6', 'Calling and Teaching', 'Sep 14 – Sep 18',
          ['Luke 5', 'Luke 6:1–26', 'Luke 6:27–49', 'Catch-Up / Reflection', 'Catch-Up / Reflection'],
          None,
