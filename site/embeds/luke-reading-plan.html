@@ -36,7 +36,7 @@
 
   <section class="weeks">
 
-    <article class="week">
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSfT4hh7mterDg5v-GXSNXcXdWpTshSkFNf6VrZkoEe08oIyLg/viewform">
       <header class="week-header">
         <div class="week-number">Week <span>22</span></div>
         <div class="week-title">
@@ -57,10 +57,11 @@
           <p class="ot-refs">Old Testament Connections: Isaiah 40 · 1 Samuel 2 · Micah 5</p>
         </div>
         <p class="summary">Luke opens his orderly account with songs, angels, and humble shepherds. The long-promised Savior arrives not in a palace but a manger, and from the very first chapter Luke shows God lifting up the lowly.</p>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 22 Quiz</a>
       </div>
     </article>
 
-    <article class="week">
+    <article class="week" data-quiz-url="https://docs.google.com/forms/d/e/1FAIpQLSeWWPAPnUqPJgJGZzX7XHeqWzUl_Pq5AP50xGiyt4eYR23zvw/viewform">
       <header class="week-header">
         <div class="week-number">Week <span>23</span></div>
         <div class="week-title">
@@ -81,6 +82,7 @@
           <p class="ot-refs">Old Testament Connections: Isaiah 61 · Psalm 2</p>
         </div>
         <p class="summary">John prepares the way, the Spirit descends, and Jesus withstands the tempter. In the Nazareth synagogue Jesus reads Isaiah and announces His mission: good news to the poor, liberty to the captives, sight to the blind.</p>
+        <a class="quiz-btn" target="_blank" rel="noopener">Take the Week 23 Quiz</a>
       </div>
     </article>
 
@@ -254,5 +256,18 @@
 
   <p class="footer-note">Gateway Church · Gospel Reading Plan · 2026</p>
 </main>
+<script>
+  // Activates a week's quiz button when a URL is present in data-quiz-url
+  document.querySelectorAll('.week[data-quiz-url]').forEach(function (card) {
+    var url = card.getAttribute('data-quiz-url').trim();
+    if (url) {
+      var btn = card.querySelector('.quiz-btn');
+      if (btn) {
+        btn.href = url;
+        btn.classList.add('active');
+      }
+    }
+  });
+</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 # Reading Plans (Gospel Reading Plan, Year One)
 
-**Summary:** A 2026 congregation-wide Gospel reading program published as custom HTML embeds — Matthew (spring) and Mark (summer) are live; Luke's schedule now exists on the Gateway Public Calendar (fall 2026) but its site page is still a "coming soon" placeholder; John has no content yet.
+**Summary:** A 2026 congregation-wide Gospel reading program published as custom HTML embeds — Matthew (spring), Mark (summer), and Luke (fall 2026) are live on the shared template; Luke's 108-question quiz bank is drafted in the repo but its Google Forms are not yet built; John has no content yet.
 
 ## Program shape
 
@@ -13,7 +13,7 @@ Old Testament sidebar ("why this matters" commentary). Styled, printable
 |---|---|---|
 | Matthew | 14 weeks, April 6 – July 10, 2026 | Complete (ran spring 2026); includes 8 weekly quiz links (Google Forms) |
 | Mark | July 13 – August 28, 2026 (7 weeks) | **Currently running** (as of 2026-07-20); no quiz links yet |
-| Luke | August 31 – October 30, 2026 (9 weeks, weeks 22–30) | **Page built on shared template** (2026-08-30, from the public-calendar schedule); in PR review. No quiz links yet |
+| Luke | August 31 – October 30, 2026 (9 weeks, weeks 22–30) | Page live (merged 2026-08-30). Quiz bank drafted (`luke_quiz_bank.csv`, W22–W30); forms not built, no quiz links yet |
 | John | — | Placeholder page, no content |
 
 ## Mechanics
@@ -112,6 +112,58 @@ LLM-written in the Mark style (owner reviews on preprod); the calendar's
 open weekday slots render as "Catch-Up / Reflection" day cells. This
 supersedes PR #4's interim "coming soon" hero
 (`site/embeds/temp-luke-reading-plan.html`), which was never merged.
+
+### Luke quiz bank (owner-supplied 2026-09-01)
+
+The owner supplied the Luke questions directly:
+`raw/luke_quizzes_weeks_22-30.csv` — 90 questions, 10 per week for W22–W30,
+in a simple 9-column format (Week, Passage, Question, Option A–D, Correct
+Answer as a letter, Scripture Reference). Its week/passage groupings match the
+`LUKE` weeks in `tools/build_plans.py` exactly. This replaced an earlier
+108-question LLM draft, which was discarded rather than merged.
+
+`luke_quiz_bank.csv` is the machine conversion of that source into the
+23-column `gospel_quiz` schema. Question text, all four options, and the
+answer key are carried over verbatim (verified row by row); everything else is
+derived mechanically: `quiz_id` W<week>, `quiz_title` in the Mark convention,
+`reference_id` W<week>-Q01…Q10, `topic` = the week's theme, `passages` = the
+source's Scripture Reference, `tags` = chapter refs.
+
+Three fields the source does not carry were **left blank rather than
+invented** — `learning_objective`, `explanation`, `common_misconception`. In
+the Matthew and Mark forms `explanation` is the feedback a taker sees after
+answering, so as loaded today Luke's quizzes will grade but explain nothing.
+Two more had no source value and were given a uniform setting: `difficulty`
+medium / `points` 2 (20 points per quiz), and `question_type` recall.
+
+`shuffle_answers` is **TRUE for Luke**, deliberately departing from Mark's
+FALSE — see the lint finding below.
+
+### Lint finding: answer-position bias in the Mark quizzes (2026-09-01)
+
+In `mark_quiz_bank.csv`, 77 of 84 correct answers sit in position B (A: 1,
+C: 6, D: 0), and every row sets `shuffle_answers` FALSE. If the Quiz Builder
+honors that flag, a taker who always picks B scores about 92% on the seven
+live Mark quizzes without reading. Not repaired here — the forms are already
+built and live, and re-keying them is the owner's call. Matthew's bank is not
+in the repo, so it could not be checked and may have the same problem. The
+owner-supplied Luke questions are well distributed by comparison (A 27 / B 24
+/ C 20 / D 19), and are loaded with `shuffle_answers` TRUE.
+
+**Remaining steps require the owner's personal Google account** — the
+`gospel_quiz` sheet is not visible to `phillip.mabry@gw-school.org`, the Drive
+account agent sessions connect through (re-confirmed 2026-09-01). The
+sequence:
+
+1. Append `luke_quiz_bank.csv` to the `gospel_quiz` sheet's `questions` tab.
+2. Quiz Builder → Build quiz by ID for W22 … W30 (nine runs; expect the
+   occasional "exceeded maximum execution time" retry seen with W21).
+3. For each new form, open Settings and set Release grades = Immediately after
+   each submission, and turn on Missed questions, Correct answers, and Point
+   values — these are UI-only, per the section above.
+4. Paste the nine form URLs into the `LUKE` week tuples in
+   `tools/build_plans.py` (last element of each tuple), rerun the script, and
+   open a PR so the preview deploy can be reviewed.
 
 ## Migration implications
 

@@ -260,3 +260,67 @@ Sermons): arm() now always polls fit() every 800ms and re-fits on
 doc.fonts.ready, keeping ResizeObserver as a fast path. Verified in
 Chromium desktop+mobile with ResizeObserver deleted: frames size to
 content, no inner scroll. Pushed to PR #5 (preprod preview).
+
+## [2026-09-01] site | Drafted Luke quiz bank and wired the Luke plan for quizzes
+Asked whether the Luke quiz was accessible. It is not: the `gospel_quiz` sheet
+(id 1IHJE85Y…) is invisible to the Drive account agent sessions connect through
+(phillip.mabry@gw-school.org) — the id returns "not found" and no quiz/gospel
+files are searchable — and no Luke bank existed in the repo. Drafted one
+instead: `luke_quiz_bank.csv`, 108 questions for W22–W30, byte-schema-identical
+to `mark_quiz_bank.csv` (12 per week, 4 easy / 4 medium / 4 hard, points 1/2/3,
+CRLF, UTF-8), keyed to each week's readings in `tools/build_plans.py` and
+validated (header match, no blanks, unique ids, every correct_answer present
+among its choices). Flipped LUKE to `has_quizzes=True` and rebuilt; the only
+rendered change is the quiz-activation script, since the template hides buttons
+until a `data-quiz-url` is set, so readers see no difference yet. Updated
+wiki/reading-plans.md (new "Luke quiz bank" section with the owner-side steps)
+and wiki/index.md. Not done, and not doable from an agent session: loading the
+bank into the sheet, running Quiz Builder for W22–W30, the UI-only results
+settings, and pasting the nine URLs back into build_plans.py.
+
+## [2026-09-01] ingest | Luke quiz questions (owner-supplied)
+Owner uploaded the real Luke bank: 90 questions, 10 per week for W22–W30, in a
+simple 9-column format. Archived verbatim as
+`raw/luke_quizzes_weeks_22-30.csv`. Its week/passage groupings match the LUKE
+weeks in build_plans.py exactly. Discarded the 108-question LLM draft from
+earlier today rather than merging it, and rewrote `luke_quiz_bank.csv` as a
+machine conversion of the owner's file into the 23-column gospel_quiz schema —
+question text, all four options, and the answer key carried over verbatim
+(verified row by row against the source). Derived mechanically: quiz_id,
+quiz_title, reference_id, topic, passages, tags. Left blank rather than
+invented: learning_objective, explanation, common_misconception — note that
+`explanation` is the post-answer feedback in the Matthew/Mark forms, so as
+loaded Luke will grade but explain nothing. Given uniform values for want of a
+source: difficulty medium / points 2, question_type recall. Updated
+wiki/reading-plans.md and wiki/index.md. Still blocked on the owner's personal
+Google account: loading the sheet, Quiz Builder for W22–W30, the UI-only
+results settings, and the nine URLs.
+
+## [2026-09-01] lint | Answer-position bias in the Mark quiz bank
+While comparing answer distributions, found that 77 of 84 correct answers in
+`mark_quiz_bank.csv` sit in position B (A: 1, C: 6, D: 0) with
+`shuffle_answers` FALSE on every row — so a taker who always picks B scores
+~92% on the seven live Mark quizzes without reading. Flagged, not repaired:
+the forms are built and live, and re-keying them is the owner's call.
+Matthew's bank is not in the repo and could not be checked. The owner's Luke
+questions are well distributed (A 27 / B 24 / C 20 / D 19) and were loaded
+with shuffle_answers TRUE.
+
+## [2026-09-01] site | Linked the Week 22 Luke quiz
+Owner supplied the first Luke form URL (W22). Wired it into the LUKE week 22
+tuple in tools/build_plans.py and rebuilt; the Week 22 card now carries
+data-quiz-url and renders an active "Take the Week 22 Quiz" button. Matthew and
+Mark output unchanged. W23–W30 slots remain None, so those weeks still render
+no button. NOT verified from this session: docs.google.com is blocked by the
+network egress proxy here, so the form's title, question count, and anonymous
+accessibility could not be checked the way the Mark forms were — the owner
+should confirm on the PR preview, particularly that the form opens without a
+Google sign-in for congregation members.
+
+## [2026-09-01] site | Linked the Week 23 Luke quiz
+Wired the owner-supplied W23 form URL into tools/build_plans.py and rebuilt.
+Weeks 22 and 23 now render active quiz buttons on the Luke plan; W24–W30 slots
+remain None. Confirmed no duplicate form ids across the file and no change to
+the Matthew or Mark output. Same caveat as W22: docs.google.com is blocked by
+the egress proxy here, so the form's title, question count, and anonymous
+accessibility were not verified from this session.
