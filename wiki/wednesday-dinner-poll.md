@@ -63,8 +63,16 @@ enforcement.
 
 **Rules** enforce: uid matches the doc id, `theme` is in the week's allowed
 list, `name` is non-empty and length-capped, `request.time < closesAt`, and no
-deletes. Add **App Check** (reCAPTCHA v3) so the open write path can't be
-scripted.
+deletes. Add **App Check** so the open write path can't be scripted — anonymous
+auth lets a script mint unlimited uids, so the rules alone cap each identity at
+one vote but do not cap identities. Use the **reCAPTCHA Enterprise** provider,
+not reCAPTCHA v3: Google steers new integrations to Enterprise and recommends
+existing v3 users upgrade (both are invisible to the voter; first 10,000
+assessments/month are free). Caveat to check at setup: reCAPTCHA Enterprise is a
+Google Cloud service and may require the project on the Blaze plan even within
+its free tier. If that is unwelcome, shipping without App Check is defensible at
+this threat level — rules still bound the damage — but it leaves an open write
+path on the public internet.
 
 **Results:** a section on the same page reads the week's `votes` subcollection
 and tallies client-side — trivial at congregation scale (tens of votes). Live

@@ -342,3 +342,21 @@ reset entirely. Recommended a Firestore-backed page on the existing Firebase
 project over a prefilled Google Form, noting that Firestore rules would be a new
 deploy surface the workflows do not currently cover. Nothing built — design only,
 pending the owner's decision.
+
+## [2026-09-04] query | Firebase setup path for the dinner poll
+Owner asked how to turn on Firestore, Anonymous auth, and App Check for the
+poll design in [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md).
+Walked the console steps in session; corrected the design page's App Check
+provider from reCAPTCHA v3 to **reCAPTCHA Enterprise** (Google now steers new
+integrations to Enterprise and recommends v3 users upgrade; both invisible,
+10k assessments/month free), and recorded two caveats found while working it
+through: reCAPTCHA Enterprise may require the project on the Blaze plan even
+inside its free tier, and reCAPTCHA site keys are domain-scoped, so Firebase
+Hosting PR preview channels get a fresh subdomain per PR that the key will not
+cover — App Check should stay unenforced until the page is on a stable domain.
+Also noted the missing prerequisite: no Web App is registered on the project
+yet (the site loads no Firebase SDK today), and that registration must come
+before App Check. NOT verified from this session: firebase.google.com is
+blocked by the network egress proxy here, so the console click-paths are from
+knowledge, not checked against the live UI. Nothing enabled or built — the
+owner drives the console.
