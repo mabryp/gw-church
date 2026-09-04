@@ -17,6 +17,7 @@ LLM; updated on every ingest.
 - [site-structure.md](site-structure.md) — full page map of the Google Site, content types, lint findings (broken link, empty pages)
 - [sermon-search-system.md](sermon-search-system.md) — Elasticsearch-backed sermon/notes search embeds; indexes, fields, security note
 - [reading-plans.md](reading-plans.md) — 2026 Gospel Reading Plan program: Matthew (done), Mark (done Aug 28), Luke (Aug 31–Oct 30; page live, owner's 90-question bank converted, forms not yet built), John (placeholder)
+- [wednesday-dinner-poll.md](wednesday-dinner-poll.md) — design options for a weekly dinner-theme vote: week-keyed Firestore page (recommended) vs. prefilled Google Form; not built
 
 ## The project
 

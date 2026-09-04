@@ -324,3 +324,21 @@ remain None. Confirmed no duplicate form ids across the file and no change to
 the Matthew or Mark output. Same caveat as W22: docs.google.com is blocked by
 the egress proxy here, so the form's title, question count, and anonymous
 accessibility were not verified from this session.
+
+## [2026-09-04] query | Weekly Wednesday dinner theme poll
+Owner asked how best to add a weekly poll for the Wednesday dinner theme, with
+a fresh vote each week, readable results, one vote per person, and low
+management overhead. Surveyed the current stack (static Firebase Hosting, no
+database or functions; workflows deploy hosting only, path-filtered to
+`site/**` and `firebase.json`; existing interactive pieces are Google
+Forms/Sheets/Apps Script) and filed the analysis as
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md), linked from the
+index under "The website". Key findings recorded there: real one-vote-per-person
+requires identifying voters, which conflicts with this repo's standing practice
+of keeping congregation-facing forms sign-in-free (see the 2026-09-01 entries),
+so a device-bound anonymous uid plus a required name is the right tier; and
+keying the poll by the ISO week of the upcoming Wednesday removes the weekly
+reset entirely. Recommended a Firestore-backed page on the existing Firebase
+project over a prefilled Google Form, noting that Firestore rules would be a new
+deploy surface the workflows do not currently cover. Nothing built — design only,
+pending the owner's decision.
