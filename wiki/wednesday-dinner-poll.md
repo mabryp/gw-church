@@ -17,7 +17,7 @@ Nothing is deployed and nothing is enabled on the Firebase project.
 | Firestore database | **Created** by the owner 2026-09-05 (`(default)`, Standard) |
 | Anonymous auth | Not enabled |
 | App Check | Not configured |
-| Deploy service-account roles for rules | Unknown — verify on first run of the rules workflow (see § Deploying the rules) |
+| Deploy service-account roles for rules | **Granted** by the owner 2026-09-05 — verified via `gcloud projects get-iam-policy`: `roles/firebaserules.admin` + `roles/datastore.viewer` |
 | `polls/defaults` + `polls-preview/defaults` | **Seeded** 2026-09-05 with the 13 themes and examples |
 | Theme list | **Decided** (owner, 2026-09-05) — 13 themes in `scripts/poll-defaults.json`, seeded by `scripts/seed-poll-defaults.sh` |
 | Close time / `closesNote` | Owner input needed (optional) |
@@ -326,9 +326,9 @@ for ROLE in roles/firebaserules.admin roles/datastore.viewer; do
 done
 ```
 
-Unverified: these two roles are the documented minimum for
-`firebase deploy --only firestore`, but the workflow has never run. If it
-fails on a permission, the error names the missing one. Note the owner's
+Granted 2026-09-05 and verified with `gcloud projects get-iam-policy`.
+Whether they are sufficient is confirmed by the rules workflow's first run
+on `main`; if it fails on a permission, the error names the missing one. Note the owner's
 `gcloud` on the Mac is currently logged in as the school account with a
 different active project — use `gcloud auth login` / `--account` first.
 

@@ -36,8 +36,8 @@ the GitHub repo.
    firestore` when `firestore.rules` or `firestore.indexes.json` change on
    `main`. Rules are project-wide (one database behind prod, preprod and
    every preview channel), so they never deploy from a PR. The service
-   account needs `roles/firebaserules.admin` and `roles/datastore.viewer`
-   for this step — not yet granted, see the poll page § Console setup.
+   account has `roles/firebaserules.admin` and `roles/datastore.viewer`
+   for this step (granted 2026-09-05; first workflow run still pending).
 
 Wiki/log/CLAUDE.md-only commits deploy nothing (the hosting workflows
 path-filter on `site/**` and `firebase.json`; the rules workflow on the two
@@ -49,7 +49,9 @@ developers should push branches to this repo.
 - Service account: `github-action-hosting@gw-church.iam.gserviceaccount.com`
   (created 2026-07-22 via gcloud, key `bef7a02e...`).
 - Roles (minimal): `roles/firebasehosting.admin`,
-  `roles/serviceusage.apiKeysViewer` on project `gw-church`.
+  `roles/serviceusage.apiKeysViewer` on project `gw-church`; plus
+  `roles/firebaserules.admin` and `roles/datastore.viewer` (added
+  2026-09-05) for the Firestore rules workflow.
 - Key stored ONLY as GitHub Actions secret
   `FIREBASE_SERVICE_ACCOUNT_GW_CHURCH` on mabryp/gw-church; the local key file
   was deleted after upload. Rotate: create a new key with

@@ -517,3 +517,12 @@ appeared in the tally — written to `polls-preview/2026-09-09`, not the
 production collection. No console errors. Remaining before merge: confirm
 the deploy service account's two IAM roles (only testable by the rules
 workflow's first run on main) and the owner's review. Nothing deployed.
+
+## [2026-09-05] site | Dinner poll: deploy service account granted rules roles
+Owner granted `roles/firebaserules.admin` and `roles/datastore.viewer` to
+`github-action-hosting@gw-church.iam.gserviceaccount.com`; verified with
+`gcloud projects get-iam-policy gw-church` (four roles total now). Every
+owner-side setup step for the poll is complete. Wiki status table,
+§ Console setup step 4, and [wiki/ci-cd.md](wiki/ci-cd.md) credentials
+updated. Still unverified: the rules workflow itself, which first runs on
+merge of PR #7. Pushed to PR #7; no deploy target.
