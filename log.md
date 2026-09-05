@@ -324,3 +324,214 @@ remain None. Confirmed no duplicate form ids across the file and no change to
 the Matthew or Mark output. Same caveat as W22: docs.google.com is blocked by
 the egress proxy here, so the form's title, question count, and anonymous
 accessibility were not verified from this session.
+
+## [2026-09-04] query | Weekly Wednesday dinner theme poll
+Owner asked how best to add a weekly poll for the Wednesday dinner theme, with
+a fresh vote each week, readable results, one vote per person, and low
+management overhead. Surveyed the current stack (static Firebase Hosting, no
+database or functions; workflows deploy hosting only, path-filtered to
+`site/**` and `firebase.json`; existing interactive pieces are Google
+Forms/Sheets/Apps Script) and filed the analysis as
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md), linked from the
+index under "The website". Key findings recorded there: real one-vote-per-person
+requires identifying voters, which conflicts with this repo's standing practice
+of keeping congregation-facing forms sign-in-free (see the 2026-09-01 entries),
+so a device-bound anonymous uid plus a required name is the right tier; and
+keying the poll by the ISO week of the upcoming Wednesday removes the weekly
+reset entirely. Recommended a Firestore-backed page on the existing Firebase
+project over a prefilled Google Form, noting that Firestore rules would be a new
+deploy surface the workflows do not currently cover. Nothing built — design only,
+pending the owner's decision.
+
+## [2026-09-04] query | Firebase setup path for the dinner poll
+Owner asked how to turn on Firestore, Anonymous auth, and App Check for the
+poll design in [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md).
+Walked the console steps in session; corrected the design page's App Check
+provider from reCAPTCHA v3 to **reCAPTCHA Enterprise** (Google now steers new
+integrations to Enterprise and recommends v3 users upgrade; both invisible,
+10k assessments/month free), and recorded two caveats found while working it
+through: reCAPTCHA Enterprise may require the project on the Blaze plan even
+inside its free tier, and reCAPTCHA site keys are domain-scoped, so Firebase
+Hosting PR preview channels get a fresh subdomain per PR that the key will not
+cover — App Check should stay unenforced until the page is on a stable domain.
+Also noted the missing prerequisite: no Web App is registered on the project
+yet (the site loads no Firebase SDK today), and that registration must come
+before App Check. NOT verified from this session: firebase.google.com is
+blocked by the network egress proxy here, so the console click-paths are from
+knowledge, not checked against the live UI. Nothing enabled or built — the
+owner drives the console.
+
+## [2026-09-05] query | Dinner poll handoff to a local machine
+The owner is Firebase-authenticated on his Mac and asked for the whole design
+written up so work can continue there. Rewrote
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) as a handoff
+document: status table (nothing built, nothing enabled), the one-vote tier
+decision, the date-keyed week id that removes the weekly reset, a draft data
+model and Firestore security rules, the full console setup for Web App
+registration / Firestore / Anonymous auth / App Check, verification commands
+for an authenticated machine, and the repo changes the build still needs.
+Index line updated.
+
+Verified in session: `firebase.json` and `.firebaserc` are valid and mutually
+consistent; and the week-id implementation, cross-checked against Python's
+`date.isocalendar()` over 1200 samples (400 days x 3 times of day) with zero
+mismatches, covering both 2026 DST transitions and the 53-week year boundary.
+
+NOT verified: the security rules were written without an emulator and have
+never been run; the console click-paths and `firebase`/admin-API command names
+are from knowledge, because the web session's egress proxy returns 403 at
+CONNECT for firebase.google.com, console.firebase.google.com, gw-church.org and
+gw-church.web.app (`*.googleapis.com` is reachable — a Firestore admin call
+returned a real 401 CREDENTIALS_MISSING). Declined to have the owner paste a
+CI token or service-account key to work around that: long-lived full-access
+credentials in a chat transcript are a poor trade for state the console shows
+directly.
+
+Two design problems surfaced while writing it up and are recorded as open
+items, not solved: a server-enforced vote deadline requires a per-week document,
+which reintroduces the weekly chore the design exists to avoid (resolved by
+making the deadline optional per week, UI-only by default); and Firestore rules
+are project-wide, so a rules deploy from a PR preview would affect production
+poll data — no answer yet for keeping preprod writes off prod.
+
+## [2026-09-05] site | Built the Wednesday dinner poll (feature branch, not deployed)
+Owner asked to continue the poll from his Mac. Verified project state with
+the Firebase CLI (logged in as the owner): no Web App registered and the
+Cloud Firestore API not enabled, so every console step is still ahead. Built
+the whole repo side on `claude/weekly-dinner-poll-d8ftg6` under the design's
+recommended Option A: `site/wednesday-dinner/index.html` on the shared
+template (anonymous sign-in, date-keyed ballot, live tally, change-your-mind
+re-vote), `site/wednesday-dinner/firebase-config.js` (placeholders until a
+Web App exists), `firestore.rules`, `firestore.indexes.json`, `firestore` and
+`emulators` blocks in `firebase.json`, a new `.github/workflows/rules-deploy.yml`
+that deploys rules from `main` only, a poll section in `site/css/style.css`,
+`tests/firestore-rules/` (28 allow/deny cases), and a `.gitignore` for
+emulator logs. Resolved the open preprod-vs-prod data problem: the page writes
+to `polls` only on production hostnames and to `polls-preview` everywhere
+else, with a visible banner; the rules cover both. Verified: all 28 rules
+cases pass in the Firestore emulator; the page runs end to end in Chromium
+against the auth + firestore + hosting emulators (vote lands with name,
+re-vote moves rather than doubles, a second voter appears live, a returning
+voter sees their choice preselected). NOT verified: anything against the real
+project — no Web App, database, or Anonymous auth exists yet; the rules-deploy
+workflow has never run and the service account still needs two roles; the
+first rules deploy has to be manual from the Mac (bootstrap, documented).
+Rewrote [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) to
+match (status, what is built, tested rules, console steps incl. seeding and
+IAM, local development, five owner decisions); index line updated. Deploy
+target: none — PR opened for a preprod preview only.
+
+## [2026-09-05] site | Dinner poll: owner's theme list recorded, seed script added
+Owner supplied the 13 default dinner themes. Normalised capitalisation and
+separators (e.g. "soups/chili/stew" → "Soups / Chili / Stew", "suprise" →
+"Surprise") and recorded them as `scripts/poll-defaults.json`, with
+`scripts/seed-poll-defaults.sh emulator|prod` to write them to both
+`polls/defaults` and `polls-preview/defaults` — replacing the console
+click-path and the ad-hoc curl in the local-dev notes. Verified the script
+against the Firestore emulator (both docs written, 13 themes read back) and
+the page rendering the 13-item ballot. Updated
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) (status,
+files, seeding step, open decisions — theme list closed, `closesNote` still
+open) and the index line. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: example dishes under each theme
+Owner asked for example dishes on each theme (gave Backyard BBQ and Southern
+Comfort, and asked that International Night reflect the congregation's
+Nigerian, Guamanian/Chamorro, Filipino and Turkish food). Added an
+`examples` map to `scripts/poll-defaults.json` (owner's two lines verbatim
+with minor tidying; the other eleven are agent drafts flagged in the wiki),
+taught `scripts/seed-poll-defaults.sh` to write it as a Firestore map, and
+made the page render it in small muted text under each radio choice
+(`site/wednesday-dinner/index.html`, `site/css/style.css`). Rules unchanged:
+`themes` is still the validated string list; `examples` is display-only on
+the read-only config doc. Verified the seed round-trips through the
+emulator and the page renders all 13 choices with their examples. Wiki data
+model, files table and open-decisions note updated. Pushed to PR #7.
+
+## [2026-09-05] site | Dinner poll: vote a week ahead, close Saturday, countdown
+Owner corrected the schedule: voting is never for the current week's
+Wednesday; the Sunday–Saturday ballot is for the following week's Wednesday,
+closes Saturday so the winner is announced Sunday, and should show a
+countdown. Reworked the ballot key from ISO week to the target Wednesday's
+date (`YYYY-MM-DD`, Sunday +10 … Saturday +4 in Chicago time), which let the
+security rules compute the voting window from the key itself — so the
+deadline is now server-enforced every week with no per-week document
+(previous open decision closed). Rules reject keys that are not a Wednesday,
+last week's Wednesday, the week after next, malformed or impossible dates;
+UTC bounds carry ~6h slack, the page's countdown is exact. Page: Saturday
+11:59 pm Chicago close (`CLOSE_HOUR` constant, DST-aware), live countdown
+that locks the form at zero, a per-week `closesAt` can only close earlier,
+`closesNote` no longer shown. Tests rewritten to compute the live ballot key
+with the page's logic plus five window cases: 32/32 pass in the emulator.
+Verified in Chromium against the emulators on Sat 2026-09-05: key
+`2026-09-09`, countdown to Saturday 11:59 PM, a vote landing under the date
+key. Wiki page updated throughout (summary, schedule, data model, rules,
+key/close section, open decisions). Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: names off the page and out of reach
+Owner decided not to display voters' names. Removed the name list from the
+results (counts and bars only). Because `votes` must stay publicly readable
+for the live tally, a name stored there would still be fetchable through the
+API even when not shown, so the vote is now written as two documents in one
+atomic batch: public `votes/{uid}` {theme, at} and `voters/{uid}` {name,
+theme, at} which no client can read (rules `allow read: if false`) — names
+are visible only in the Firebase console. Rules refactored into shared
+`validTheme` / `ownVoteWrite` helpers; tests extended to 43 cases (voter
+record allow/deny, own-record read denied, name rejected on the public
+doc): all pass. Verified in Chromium against the emulators that a vote
+writes both docs and the tally shows counts without names. Wiki updated
+(page behaviour, data model, rules, tier rationale, open decision 5 closed).
+Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: Web App registered on gw-church (setup step 1)
+Owner asked for setup step 1 to be run. Registered the Web App "gw-church
+site" on project `gw-church` with `firebase apps:create WEB` (app id
+`1:158831221425:web:73add5b1d866dca7c7a090`) and committed its public
+config — apiKey, authDomain, projectId, appId — into
+`site/wednesday-dinner/firebase-config.js`, replacing the placeholders.
+Not a secret by design; the rules and (later) App Check protect the data.
+Wiki status table and setup step updated. Remaining owner steps: create
+Firestore, enable Anonymous auth, grant the deploy account two IAM roles,
+first manual rules deploy, seed defaults. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: Firestore live, rules deployed, defaults seeded
+Owner created the Firestore database (step 2), ran the first manual rules
+deploy from the Mac (step 5, `firebase deploy --only firestore` — deploy
+complete, rules released), and hit `PERMISSION_DENIED` on the seed (step
+6). Cause: gcloud's active account is the school account, which has no
+access to gw-church; the Gmail account was already authenticated in gcloud,
+just not active. Added a `GCLOUD_ACCOUNT` override to
+`scripts/seed-poll-defaults.sh` and seeded both `polls/defaults` and
+`polls-preview/defaults` on the real project (13 themes + examples read
+back unauthenticated — also confirming the deployed rules' public read).
+Wiki status table and seeding notes updated. Pushed to PR #7; no hosting
+deploy target (the rules deploy was the owner's, manual, bootstrap).
+
+## [2026-09-05] site | Dinner poll verified end to end on the PR preview (real project)
+With the Web App registered, Firestore created, rules deployed and defaults
+seeded, opened PR #7's preview channel in Chromium: anonymous sign-in
+succeeded (so the owner's step 3 is done), the 13 seeded themes and
+examples loaded, the countdown showed the Saturday close, and a test vote
+("Test vote (Claude)", Backyard BBQ) was accepted by the live rules and
+appeared in the tally — written to `polls-preview/2026-09-09`, not the
+production collection. No console errors. Remaining before merge: confirm
+the deploy service account's two IAM roles (only testable by the rules
+workflow's first run on main) and the owner's review. Nothing deployed.
+
+## [2026-09-05] site | Dinner poll: deploy service account granted rules roles
+Owner granted `roles/firebaserules.admin` and `roles/datastore.viewer` to
+`github-action-hosting@gw-church.iam.gserviceaccount.com`; verified with
+`gcloud projects get-iam-policy gw-church` (four roles total now). Every
+owner-side setup step for the poll is complete. Wiki status table,
+§ Console setup step 4, and [wiki/ci-cd.md](wiki/ci-cd.md) credentials
+updated. Still unverified: the rules workflow itself, which first runs on
+merge of PR #7. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Wednesday Dinner added to the top bar on every page
+Owner asked for a top-bar link so people can find the poll. Added a
+top-level "Wednesday Dinner" nav item between About and Connect to all 13
+`site/**/index.html` pages (the poll page's own item carries
+`class="current"`). Verified in Chromium that the six-item bar fits on
+desktop and collapses into the existing mobile menu. Wiki poll page: page
+behaviour note and open decision 4 closed. Pushed to PR #7 (preview
+channel); prod on merge.

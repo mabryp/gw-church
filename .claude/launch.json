@@ -4,9 +4,21 @@
     {
       "name": "gateway-site",
       "runtimeExecutable": "sh",
-      "runtimeArgs": ["-c", "python3 -m http.server \"${PORT:-8787}\" -d site"],
+      "runtimeArgs": [
+        "-c",
+        "python3 -m http.server \"${PORT:-8787}\" -d site"
+      ],
       "port": 8787,
       "autoPort": true
+    },
+    {
+      "name": "firebase-emulators",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "PATH=\"/opt/homebrew/opt/openjdk/bin:$PATH\" firebase emulators:start --only auth,firestore,hosting --project gw-church"
+      ],
+      "port": 5050
     }
   ]
 }

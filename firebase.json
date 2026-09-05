@@ -5,10 +5,21 @@
       "public": "site",
       "cleanUrls": true,
       "trailingSlash": false,
-      "ignore": ["firebase.json", "**/.*"],
+      "ignore": [
+        "firebase.json",
+        "**/.*"
+      ],
       "redirects": [
-        { "source": "/home", "destination": "/", "type": 301 },
-        { "source": "/social_media", "destination": "/connect", "type": 301 }
+        {
+          "source": "/home",
+          "destination": "/",
+          "type": 301
+        },
+        {
+          "source": "/social_media",
+          "destination": "/connect",
+          "type": 301
+        }
       ]
     },
     {
@@ -16,11 +27,41 @@
       "public": "site",
       "cleanUrls": true,
       "trailingSlash": false,
-      "ignore": ["firebase.json", "**/.*"],
+      "ignore": [
+        "firebase.json",
+        "**/.*"
+      ],
       "redirects": [
-        { "source": "/home", "destination": "/", "type": 301 },
-        { "source": "/social_media", "destination": "/connect", "type": 301 }
+        {
+          "source": "/home",
+          "destination": "/",
+          "type": 301
+        },
+        {
+          "source": "/social_media",
+          "destination": "/connect",
+          "type": 301
+        }
       ]
     }
-  ]
+  ],
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5050
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  }
 }
