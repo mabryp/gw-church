@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Wednesday dinner poll. Design and data model: wiki/wednesday-dinner-poll.md
+//
+// Two top-level collections share these rules:
+//   polls          — production (gw-church.org)
+//   polls-preview  — written by gw-church-preprod.web.app, PR preview
+//                    channels and localhost, so review traffic never touches
+//                    the live tally. The page picks the collection by hostname.
+//
+// Each collection holds:
+//   {coll}/defaults              permanent config: { themes: [...] }
+//   {coll}/{weekId}              optional per-week override: { themes, closesAt? }
+//   {coll}/{weekId}/votes/{uid}  one vote per anonymous uid: { name, theme, at }
+//
+// Poll/config documents are read-only from the client (edit in the console).
+// Vote documents can be created and updated only by their own uid, never
+// deleted, and only with a theme from the week's active list.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isPollColl(c) {
+      return c == 'polls' || c == 'polls-preview';
+    }
+
+    function isWeekId(w) {
+      return w.matches('^[0-9]{4}-W[0-9]{2}$');
+    }
+
+    // The week's own config doc if it exists, else the permanent defaults.
+    // If neither exists, get() has no data and every write is denied —
+    // {coll}/defaults must be created before the poll can accept votes.
+    function cfg(c, weekId) {
+      return exists(/databases/$(database)/documents/$(c)/$(weekId))
+        ? get(/databases/$(database)/documents/$(c)/$(weekId)).data
+        : get(/databases/$(database)/documents/$(c)/defaults).data;
+    }
+
+    function validVote(c) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'theme', 'at'])
+          && d.keys().hasAll(['name', 'theme', 'at'])
+          && d.theme is string && d.theme in c.themes
+          && d.name is string && d.name.size() > 0 && d.name.size() <= 60
+          && d.at == request.time
+          && (!('closesAt' in c) || request.time < c.closesAt);
+    }
+
+    match /{coll}/{docId} {
+      allow read: if isPollColl(coll);
+      allow write: if false;
+
+      match /votes/{uid} {
+        allow read: if isPollColl(coll);
+        allow create, update: if isPollColl(coll)
+                              && isWeekId(docId)
+                              && request.auth != null
+                              && request.auth.uid == uid
+                              && validVote(cfg(coll, docId));
+        allow delete: if false;
+      }
+    }
+  }
+}

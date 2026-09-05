@@ -198,3 +198,66 @@ main.page.wide { max-width: 1080px; }
   .cols { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
 }
+
+/* ---------- Wednesday dinner poll ---------- */
+.poll-note { color: var(--muted); margin: 0 0 1.25rem; }
+.poll-preview {
+  background: #fff7d6;
+  border-left: 4px solid #e0b400;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.92rem;
+  margin: 0 0 1.25rem;
+}
+.poll-form fieldset { border: 0; padding: 0; margin: 0 0 1.25rem; min-width: 0; }
+.poll-form legend { font-family: var(--serif); color: var(--navy); font-size: 1.35rem; padding: 0; margin-bottom: 0.6rem; }
+.poll-form .choice {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 0.45rem;
+  background: var(--card);
+  border-left: 4px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.poll-form .choice:hover { background: #eef0e6; }
+.poll-form .choice:has(input:checked) { border-left-color: var(--lime); background: #eef0e6; }
+.poll-form .choice input { width: 1.2rem; height: 1.2rem; margin: 0; accent-color: var(--navy); flex: none; }
+.poll-form label.name { display: block; font-weight: 600; margin: 0 0 1.1rem; }
+.poll-form input[type="text"] {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  font: inherit;
+  padding: 0.55rem 0.75rem;
+  margin-top: 0.3rem;
+  border: 1px solid #c9cdc0;
+  border-radius: 8px;
+  background: #fff;
+}
+.poll-form button {
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--navy);
+  border: 0;
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+  cursor: pointer;
+}
+.poll-form button:hover { background: var(--navy-dark); }
+.poll-form button:disabled { opacity: 0.6; cursor: default; }
+.poll-status { min-height: 1.5em; margin: 0.75rem 0 0; font-weight: 600; }
+.poll-status.ok { color: #2f6b1f; }
+.poll-status.warn { color: #9a3b00; }
+.tally-total { color: var(--muted); margin: 0 0 1rem; }
+.tally-row { margin-bottom: 1rem; }
+.tally-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.tally-head strong { font-family: var(--serif); color: var(--navy); font-size: 1.1rem; }
+.tally-count { color: var(--muted); font-size: 0.92rem; white-space: nowrap; }
+.tally-bar { height: 0.7rem; background: var(--card); border-radius: 999px; overflow: hidden; margin: 0.3rem 0; }
+.tally-bar span { display: block; height: 100%; background: var(--lime); border-radius: 999px; transition: width 0.3s; }
+.tally-names { margin: 0; color: var(--muted); font-size: 0.88rem; }

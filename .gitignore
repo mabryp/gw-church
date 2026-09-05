@@ -1,0 +1,5 @@
+# Firebase emulator / CLI logs
+*-debug.log
+.firebase/
+# Node deps for the rules tests
+node_modules/

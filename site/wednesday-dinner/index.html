@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wednesday Dinner · Gateway Church</title>
+<meta name="description" content="Vote on the theme for this week's Wednesday dinner at Gateway Church.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">Gateway Church</a>
+  <button class="nav-toggle" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
+  <nav class="site-nav" aria-label="Main">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li class="has-sub"><a href="/reading-plan/matthew-reading-plan">Reading Plan</a>
+        <ul>
+          <li><a href="/reading-plan/matthew-reading-plan">Matthew Reading Plan</a></li>
+          <li><a href="/reading-plan/mark-reading-plan">Mark Reading Plan</a></li>
+          <li><a href="/reading-plan/luke-reading-plan">Luke Reading Plan</a></li>
+          <li><a href="/reading-plan/john-reading-plan">John Reading Plan</a></li>
+        </ul>
+      </li>
+      <li class="has-sub"><a href="/gateway-study/search-sermons">Gateway Study</a>
+        <ul>
+          <li><a href="/gateway-study/charleys-notes">Charley's Notes</a></li>
+          <li><a href="/gateway-study/search-sermons">Search Sermons</a></li>
+        </ul>
+      </li>
+      <li class="has-sub"><a href="/about">About</a>
+        <ul>
+          <li><a href="/about/what-we-believe">What We Believe</a></li>
+          <li><a href="/about/our-pastor">Our Pastor</a></li>
+          <li><a href="/about/gateway-christian-school">Gateway Christian School</a></li>
+        </ul>
+      </li>
+      <li><a href="/connect">Connect</a></li>
+    </ul>
+  </nav>
+</header>
+<main class="page">
+
+<h1>Wednesday Dinner</h1>
+<p class="poll-note" id="poll-week">Loading this week's poll&hellip;</p>
+<p class="poll-preview" id="poll-preview" hidden>Preview copy &mdash; votes cast here do not count toward the real poll.</p>
+
+<noscript><p class="poll-status warn">This poll needs JavaScript turned on.</p></noscript>
+
+<form class="poll-form" id="vote-form" hidden>
+  <fieldset id="themes">
+    <legend>Pick a theme</legend>
+  </fieldset>
+  <label class="name" for="voter-name">Your name
+    <input type="text" id="voter-name" name="name" maxlength="60" autocomplete="name" required>
+  </label>
+  <button type="submit" id="vote-btn">Cast my vote</button>
+  <p class="poll-status" id="status" role="status" aria-live="polite"></p>
+</form>
+<p class="poll-status" id="boot-status" role="status" aria-live="polite"></p>
+
+<section id="results-section" hidden>
+  <h2>Results so far</h2>
+  <p class="tally-total" id="tally-total"></p>
+  <div id="results"></div>
+</section>
+
+</main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <strong>Gateway Church</strong><br>
+      6623 Five Palms Drive<br>
+      San Antonio, TX 78242<br>
+      United States
+    </div>
+    <div>
+      ph: <a href="tel:+12106745703">(210) 674-5703</a><br>
+      <a href="mailto:staff@gw-church.org">staff@gw-church.org</a>
+    </div>
+    <div>
+      <a href="https://www.facebook.com/gwchurchSA/">Facebook</a><br>
+      <a href="https://www.youtube.com/channel/UCbb8E83onnnQvtVSekCOFEA">YouTube</a><br>
+      <a href="/connect">Connect with us</a>
+    </div>
+  </div>
+</footer>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
+import { getAuth, signInAnonymously, connectAuthEmulator }
+  from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js';
+import { getFirestore, doc, collection, getDoc, setDoc, onSnapshot, serverTimestamp,
+         connectFirestoreEmulator }
+  from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
+import { firebaseConfig } from '/wednesday-dinner/firebase-config.js';
+
+// ---------- Which week is this ballot for? ----------
+// Keyed by the ISO week of the UPCOMING Wednesday, in Chicago time: Mon–Wed
+// vote on this week's dinner, Thu–Sun on next week's. A new week is a new
+// key, so nothing ever needs resetting. Verified against Python's
+// isocalendar() over 1200 samples — see wiki/wednesday-dinner-poll.md.
+const TZ = 'America/Chicago';
+const NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+function chicagoParts(d) {
+  const f = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
+  const p = Object.fromEntries(f.formatToParts(d).map(x => [x.type, x.value]));
+  return { y: +p.year, m: +p.month, d: +p.day, wd: p.weekday };
+}
+
+function isoWeekId(utc) {
+  const t = new Date(Date.UTC(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate()));
+  const dayNum = (t.getUTCDay() + 6) % 7;
+  t.setUTCDate(t.getUTCDate() - dayNum + 3);          // nearest Thursday
+  const isoYear = t.getUTCFullYear();
+  const jan4 = new Date(Date.UTC(isoYear, 0, 4));
+  const week = 1 + Math.round(((t - jan4) / 86400000 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
+  return `${isoYear}-W${String(week).padStart(2, '0')}`;
+}
+
+function pollWednesday(now = new Date()) {
+  const { y, m, d, wd } = chicagoParts(now);
+  const idx = NAMES.indexOf(wd);
+  const delta = idx <= 2 ? 2 - idx : 9 - idx;
+  return new Date(Date.UTC(y, m - 1, d + delta));
+}
+
+// ---------- Environment ----------
+// Production hostnames write to `polls`; everything else (preprod, PR preview
+// channels, localhost) writes to `polls-preview` so reviews never touch the
+// live tally. On localhost the page talks to the local emulators.
+const PROD_HOSTS = ['gw-church.org', 'www.gw-church.org', 'gw-church.web.app', 'gw-church.firebaseapp.com'];
+const LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+const COLL = PROD_HOSTS.includes(location.hostname) ? 'polls' : 'polls-preview';
+const NAME_KEY = 'gw-dinner-poll-name';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+if (LOCAL) {
+  connectAuthEmulator(auth, `http://${location.hostname}:9099`, { disableWarnings: true });
+  connectFirestoreEmulator(db, location.hostname, 8080);
+}
+
+// ---------- DOM helpers ----------
+const $ = id => document.getElementById(id);
+function el(tag, attrs = {}, children = []) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else n.setAttribute(k, v);
+  }
+  for (const c of children) n.append(c);
+  return n;
+}
+function setStatus(node, msg, kind = '') {
+  node.textContent = msg;
+  node.className = 'poll-status' + (kind ? ' ' + kind : '');
+}
+function fmtWhen(date) {
+  return date.toLocaleString('en-US', {
+    timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+// ---------- Page ----------
+const weekId = pollWeekId();
+const form = $('vote-form');
+const nameInput = $('voter-name');
+const btn = $('vote-btn');
+
+function pollWeekId(now = new Date()) { return isoWeekId(pollWednesday(now)); }
+
+function renderThemes(themes, selected) {
+  const fs = $('themes');
+  fs.querySelectorAll('.choice').forEach(n => n.remove());
+  for (const theme of themes) {
+    const input = el('input', { type: 'radio', name: 'theme', value: theme });
+    if (theme === selected) input.checked = true;
+    fs.append(el('label', { class: 'choice' }, [input, el('span', { text: theme })]));
+  }
+}
+
+function renderResults(snap, themes, uid) {
+  const byTheme = new Map(themes.map(t => [t, []]));
+  let mine = null;
+  for (const d of snap.docs) {
+    const v = d.data();
+    if (!byTheme.has(v.theme)) byTheme.set(v.theme, []);
+    byTheme.get(v.theme).push(v.name);
+    if (d.id === uid) mine = v;
+  }
+  const total = snap.size;
+  const max = Math.max(1, ...[...byTheme.values()].map(a => a.length));
+  const out = $('results');
+  out.replaceChildren();
+  for (const [theme, names] of byTheme) {
+    names.sort((a, b) => a.localeCompare(b));
+    const row = el('div', { class: 'tally-row' }, [
+      el('div', { class: 'tally-head' }, [
+        el('strong', { text: theme }),
+        el('span', { class: 'tally-count', text: `${names.length} vote${names.length === 1 ? '' : 's'}` }),
+      ]),
+      el('div', { class: 'tally-bar' }, [el('span', { style: `width:${Math.round(100 * names.length / max)}%` })]),
+      el('p', { class: 'tally-names', text: names.join(', ') || '—' }),
+    ]);
+    out.append(row);
+  }
+  $('tally-total').textContent = total === 0
+    ? 'No votes yet — be the first!'
+    : `${total} ${total === 1 ? 'person has' : 'people have'} voted.`;
+  $('results-section').hidden = false;
+  return mine;
+}
+
+async function loadConfig() {
+  const week = await getDoc(doc(db, COLL, weekId));
+  if (week.exists()) return week.data();
+  const defaults = await getDoc(doc(db, COLL, 'defaults'));
+  return defaults.exists() ? defaults.data() : null;
+}
+
+async function main() {
+  const boot = $('boot-status');
+  const wed = pollWednesday();
+  const wedLabel = wed.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' });
+  $('poll-week').textContent = `This vote is for Wednesday, ${wedLabel}. One vote per person — you can change your mind until voting closes.`;
+  if (COLL !== 'polls') $('poll-preview').hidden = false;
+
+  let user;
+  try {
+    ({ user } = await signInAnonymously(auth));
+  } catch (e) {
+    console.error(e);
+    setStatus(boot, 'Could not connect to the poll. Please check your connection and reload.', 'warn');
+    return;
+  }
+
+  let cfg;
+  try {
+    cfg = await loadConfig();
+  } catch (e) {
+    console.error(e);
+    setStatus(boot, 'Could not load the poll. Please reload in a moment.', 'warn');
+    return;
+  }
+  if (!cfg || !Array.isArray(cfg.themes) || cfg.themes.length === 0) {
+    setStatus(boot, 'The poll is not set up yet — check back soon.', 'warn');
+    return;
+  }
+  const themes = cfg.themes.filter(t => typeof t === 'string');
+  const closesAt = cfg.closesAt && typeof cfg.closesAt.toDate === 'function' ? cfg.closesAt.toDate() : null;
+  const closed = closesAt !== null && Date.now() >= closesAt.getTime();
+
+  try { nameInput.value = localStorage.getItem(NAME_KEY) || ''; } catch (e) { /* storage unavailable */ }
+  renderThemes(themes, null);
+  form.hidden = false;
+  boot.hidden = true;
+
+  if (closed) {
+    form.querySelectorAll('input, button').forEach(n => { n.disabled = true; });
+    setStatus($('status'), `Voting closed ${fmtWhen(closesAt)}.`, 'warn');
+  } else if (closesAt) {
+    setStatus($('status'), `Voting closes ${fmtWhen(closesAt)}.`);
+  } else if (typeof cfg.closesNote === 'string' && cfg.closesNote) {
+    setStatus($('status'), cfg.closesNote);
+  }
+
+  let firstSnapshot = true;
+  onSnapshot(collection(db, COLL, weekId, 'votes'), snap => {
+    const mine = renderResults(snap, themes, user.uid);
+    if (firstSnapshot && mine && !closed) {
+      firstSnapshot = false;
+      const chosen = form.querySelector(`input[name="theme"][value="${CSS.escape(mine.theme)}"]`);
+      if (chosen) chosen.checked = true;
+      if (!nameInput.value) nameInput.value = mine.name;
+      setStatus($('status'), `You voted for ${mine.theme}. Change your mind? Pick another theme and vote again.`, 'ok');
+    }
+    firstSnapshot = false;
+  }, e => {
+    console.error(e);
+    setStatus($('status'), 'Live results are unavailable right now.', 'warn');
+  });
+
+  form.addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const picked = form.querySelector('input[name="theme"]:checked');
+    const name = nameInput.value.trim();
+    if (!picked) { setStatus($('status'), 'Pick a theme first.', 'warn'); return; }
+    if (!name) { setStatus($('status'), 'Please add your name so we can count one vote per person.', 'warn'); nameInput.focus(); return; }
+    btn.disabled = true;
+    setStatus($('status'), 'Saving your vote…');
+    try {
+      await setDoc(doc(db, COLL, weekId, 'votes', user.uid), { name, theme: picked.value, at: serverTimestamp() });
+      try { localStorage.setItem(NAME_KEY, name); } catch (e) { /* ignore */ }
+      setStatus($('status'), `Thanks, ${name}! Your vote for ${picked.value} is in.`, 'ok');
+    } catch (e) {
+      console.error(e);
+      setStatus($('status'), e.code === 'permission-denied'
+        ? 'That vote was not accepted — voting may have closed or the theme list changed. Reload and try again.'
+        : 'Could not save your vote. Check your connection and try again.', 'warn');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+main();
+</script>
+</body>
+</html>

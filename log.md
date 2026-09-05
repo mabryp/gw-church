@@ -393,3 +393,30 @@ which reintroduces the weekly chore the design exists to avoid (resolved by
 making the deadline optional per week, UI-only by default); and Firestore rules
 are project-wide, so a rules deploy from a PR preview would affect production
 poll data — no answer yet for keeping preprod writes off prod.
+
+## [2026-09-05] site | Built the Wednesday dinner poll (feature branch, not deployed)
+Owner asked to continue the poll from his Mac. Verified project state with
+the Firebase CLI (logged in as the owner): no Web App registered and the
+Cloud Firestore API not enabled, so every console step is still ahead. Built
+the whole repo side on `claude/weekly-dinner-poll-d8ftg6` under the design's
+recommended Option A: `site/wednesday-dinner/index.html` on the shared
+template (anonymous sign-in, date-keyed ballot, live tally, change-your-mind
+re-vote), `site/wednesday-dinner/firebase-config.js` (placeholders until a
+Web App exists), `firestore.rules`, `firestore.indexes.json`, `firestore` and
+`emulators` blocks in `firebase.json`, a new `.github/workflows/rules-deploy.yml`
+that deploys rules from `main` only, a poll section in `site/css/style.css`,
+`tests/firestore-rules/` (28 allow/deny cases), and a `.gitignore` for
+emulator logs. Resolved the open preprod-vs-prod data problem: the page writes
+to `polls` only on production hostnames and to `polls-preview` everywhere
+else, with a visible banner; the rules cover both. Verified: all 28 rules
+cases pass in the Firestore emulator; the page runs end to end in Chromium
+against the auth + firestore + hosting emulators (vote lands with name,
+re-vote moves rather than doubles, a second voter appears live, a returning
+voter sees their choice preselected). NOT verified: anything against the real
+project — no Web App, database, or Anonymous auth exists yet; the rules-deploy
+workflow has never run and the service account still needs two roles; the
+first rules deploy has to be manual from the Mac (bootstrap, documented).
+Rewrote [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) to
+match (status, what is built, tested rules, console steps incl. seeding and
+IAM, local development, five owner decisions); index line updated. Deploy
+target: none — PR opened for a preprod preview only.

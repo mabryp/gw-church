@@ -30,8 +30,18 @@ the GitHub repo.
    the `live` channel of **preprod**, keeping gw-church-preprod.web.app a
    mirror of `main`.
 
-Wiki/log/CLAUDE.md-only commits deploy nothing (both workflows path-filter on
-`site/**` and `firebase.json`). PRs from forks are skipped (no secret access);
+4. **Firestore rules** (added 2026-09-05 for the
+   [Wednesday Dinner Poll](wednesday-dinner-poll.md)): a third workflow,
+   `.github/workflows/rules-deploy.yml`, runs `firebase deploy --only
+   firestore` when `firestore.rules` or `firestore.indexes.json` change on
+   `main`. Rules are project-wide (one database behind prod, preprod and
+   every preview channel), so they never deploy from a PR. The service
+   account needs `roles/firebaserules.admin` and `roles/datastore.viewer`
+   for this step — not yet granted, see the poll page § Console setup.
+
+Wiki/log/CLAUDE.md-only commits deploy nothing (the hosting workflows
+path-filter on `site/**` and `firebase.json`; the rules workflow on the two
+Firestore files). PRs from forks are skipped (no secret access);
 developers should push branches to this repo.
 
 ## Credentials
@@ -67,4 +77,4 @@ environments for URLs and the manual CLI commands.
 
 - Owner directives in working session, 2026-07-22.
 - `.github/workflows/preview-deploy.yml`, `.github/workflows/prod-deploy.yml`,
-  `.firebaserc`, `firebase.json`.
+  `.github/workflows/rules-deploy.yml`, `.firebaserc`, `firebase.json`.

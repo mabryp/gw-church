@@ -1,0 +1,36 @@
+# Firestore rules deploy: runs when firestore.rules (or the indexes file)
+# changes on main. Kept separate from the hosting workflows because rules are
+# PROJECT-WIDE — there is one Firestore database shared by prod and preprod —
+# so they are never deployed from a PR preview, only from main. A failure here
+# does not block or roll back a hosting deploy.
+name: Deploy Firestore rules
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "firestore.rules"
+      - "firestore.indexes.json"
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Deploy rules and indexes
+        env:
+          # Same service account the hosting deploys use; it additionally
+          # needs roles/firebaserules.admin and roles/datastore.viewer on
+          # gw-church for this step (see wiki/wednesday-dinner-poll.md).
+          SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GW_CHURCH }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
+        run: |
+          printf '%s' "$SA_JSON" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          npx --yes firebase-tools@15 deploy --only firestore --project gw-church --non-interactive
+          rm -f "$GOOGLE_APPLICATION_CREDENTIALS"
