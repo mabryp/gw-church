@@ -506,3 +506,14 @@ just not active. Added a `GCLOUD_ACCOUNT` override to
 back unauthenticated — also confirming the deployed rules' public read).
 Wiki status table and seeding notes updated. Pushed to PR #7; no hosting
 deploy target (the rules deploy was the owner's, manual, bootstrap).
+
+## [2026-09-05] site | Dinner poll verified end to end on the PR preview (real project)
+With the Web App registered, Firestore created, rules deployed and defaults
+seeded, opened PR #7's preview channel in Chromium: anonymous sign-in
+succeeded (so the owner's step 3 is done), the 13 seeded themes and
+examples loaded, the countdown showed the Saturday close, and a test vote
+("Test vote (Claude)", Backyard BBQ) was accepted by the live rules and
+appeared in the tally — written to `polls-preview/2026-09-09`, not the
+production collection. No console errors. Remaining before merge: confirm
+the deploy service account's two IAM roles (only testable by the rules
+workflow's first run on main) and the owner's review. Nothing deployed.
