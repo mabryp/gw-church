@@ -13,7 +13,7 @@ Nothing is deployed and nothing is enabled on the Firebase project.
 | Page `site/wednesday-dinner/` | **Built**; verified end to end against the local emulators |
 | `firestore.rules` | **Built**; 28 allow/deny cases pass in the Firestore emulator (`tests/firestore-rules/`) |
 | Rules deploy workflow | **Built** (`.github/workflows/rules-deploy.yml`); has never run |
-| Web App registered on `gw-church` | **No** — `firebase apps:list WEB` shows none; `firebase-config.js` holds placeholders |
+| Web App registered on `gw-church` | **Done** 2026-09-05 — "gw-church site", app id `1:158831221425:web:73add5b1d866dca7c7a090`; real config committed in `firebase-config.js` |
 | Firestore database | **Not created** — the Cloud Firestore API is not even enabled on the project |
 | Anonymous auth | Not enabled |
 | App Check | Not configured |
@@ -105,7 +105,7 @@ on the site and de-duplicates only by eye.
 | File | Purpose |
 |---|---|
 | `site/wednesday-dinner/index.html` | The page, on the shared site template. ES-module script: anonymous sign-in, week id, config load, live tally via `onSnapshot`, vote / re-vote via `setDoc` on `votes/{uid}`. Remembers the voter's name in `localStorage`. |
-| `site/wednesday-dinner/firebase-config.js` | The public Firebase web-app config. **Placeholders** until a Web App exists. Not a secret (see § Console setup step 0). |
+| `site/wednesday-dinner/firebase-config.js` | The public Firebase web-app config for the "gw-church site" Web App. Not a secret (see § Console setup step 0). |
 | `site/css/style.css` | New `Wednesday dinner poll` section at the end. |
 | `firestore.rules` | Security rules (below), including the server-side voting window. |
 | `firestore.indexes.json` | Empty; required by the `firestore` block. |
@@ -218,7 +218,10 @@ All at `console.firebase.google.com/project/gw-church` unless noted. Steps
 0–2 are about five minutes; step 3 is the fiddly one and is optional to start.
 Step 4 is what makes the rules deploy from GitHub work.
 
-### 0. Register a Web App — prerequisite
+### 0. Register a Web App — done 2026-09-05
+
+Done from the Mac with `firebase apps:create WEB "gw-church site"`; the
+config is committed. Kept for reference:
 
 Gear → **Project settings** → **General** → *Your apps* → web icon `</>` →
 nickname e.g. `gw-church site` → **do not** tick "Also set up Firebase Hosting"

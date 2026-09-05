@@ -482,3 +482,14 @@ doc): all pass. Verified in Chromium against the emulators that a vote
 writes both docs and the tally shows counts without names. Wiki updated
 (page behaviour, data model, rules, tier rationale, open decision 5 closed).
 Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: Web App registered on gw-church (setup step 1)
+Owner asked for setup step 1 to be run. Registered the Web App "gw-church
+site" on project `gw-church` with `firebase apps:create WEB` (app id
+`1:158831221425:web:73add5b1d866dca7c7a090`) and committed its public
+config — apiKey, authDomain, projectId, appId — into
+`site/wednesday-dinner/firebase-config.js`, replacing the placeholders.
+Not a secret by design; the rules and (later) App Check protect the data.
+Wiki status table and setup step updated. Remaining owner steps: create
+Firestore, enable Anonymous auth, grant the deploy account two IAM roles,
+first manual rules deploy, seed defaults. Pushed to PR #7; no deploy target.
