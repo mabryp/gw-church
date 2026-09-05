@@ -420,3 +420,16 @@ Rewrote [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) to
 match (status, what is built, tested rules, console steps incl. seeding and
 IAM, local development, five owner decisions); index line updated. Deploy
 target: none — PR opened for a preprod preview only.
+
+## [2026-09-05] site | Dinner poll: owner's theme list recorded, seed script added
+Owner supplied the 13 default dinner themes. Normalised capitalisation and
+separators (e.g. "soups/chili/stew" → "Soups / Chili / Stew", "suprise" →
+"Surprise") and recorded them as `scripts/poll-defaults.json`, with
+`scripts/seed-poll-defaults.sh emulator|prod` to write them to both
+`polls/defaults` and `polls-preview/defaults` — replacing the console
+click-path and the ad-hoc curl in the local-dev notes. Verified the script
+against the Firestore emulator (both docs written, 13 themes read back) and
+the page rendering the 13-item ballot. Updated
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) (status,
+files, seeding step, open decisions — theme list closed, `closesNote` still
+open) and the index line. Pushed to PR #7; no deploy target.

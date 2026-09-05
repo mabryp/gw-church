@@ -18,7 +18,8 @@ Nothing is deployed and nothing is enabled on the Firebase project.
 | Anonymous auth | Not enabled |
 | App Check | Not configured |
 | Deploy service-account roles for rules | Not granted (see § Deploying the rules) |
-| Theme list / close time | **Owner input needed** — the page reads them from Firestore, so they can be set at seeding time |
+| Theme list | **Decided** (owner, 2026-09-05) — 13 themes in `scripts/poll-defaults.json`, seeded by `scripts/seed-poll-defaults.sh` |
+| Close time / `closesNote` | Owner input needed (optional) |
 
 Verified 2026-09-05 from the owner's Mac (`firebase login:list` → owner
 account; `firebase use` → `gw-church`).
@@ -97,6 +98,8 @@ on the site and de-duplicates only by eye.
 | `firebase.json` | New `firestore` block (rules + indexes) and `emulators` block (auth 9099, firestore 8080, hosting 5050). |
 | `.github/workflows/rules-deploy.yml` | Deploys rules + indexes when they change on `main`. |
 | `tests/firestore-rules/` | 28-case rules test (`npm install && npm test`). |
+| `scripts/poll-defaults.json` | The canonical default theme list (13 themes, owner-supplied 2026-09-05) and optional `closesNote`. |
+| `scripts/seed-poll-defaults.sh` | Writes that file to `polls/defaults` and `polls-preview/defaults` — `emulator` or `prod` (needs `gcloud` as the owner). Re-run whenever the list changes. |
 | `.gitignore` | Emulator logs, `.firebase/`, `node_modules/`. |
 
 Page behaviour worth knowing:
@@ -120,8 +123,8 @@ Page behaviour worth knowing:
 ## Data model
 
     {coll}/defaults                 # permanent; used when a week has no doc
-      themes:     ["Taco Night", "Spaghetti", "Soup & Salad", "Breakfast for Dinner"]
-      closesNote: "Voting closes Tuesday at 6 pm."     # optional, display only
+      themes:     [...]             # from scripts/poll-defaults.json (13 themes)
+      closesNote: "..."             # optional, display only
 
     {coll}/{weekId}                 # OPTIONAL per-week override, e.g. 2026-W37
       themes:     [...]             # replaces defaults for that week
@@ -215,13 +218,18 @@ and must never be pasted anywhere.
 
 Locked rules reject everything until ours are deployed; that is expected.
 
-Then create two documents in the console (**Start collection**), because the
-rules refuse every vote until they exist:
+Then seed the two `defaults` documents, because the rules refuse every vote
+until they exist. With `gcloud` logged in as the owner (the Mac's `gcloud` is
+currently on the school account — `gcloud auth login` first):
 
-- Collection `polls`, document `defaults`, field `themes` (array of strings)
-  — the starting theme list. Optionally `closesNote` (string).
-- Collection `polls-preview`, document `defaults`, same shape — this is what
-  preprod and PR previews use.
+```bash
+scripts/seed-poll-defaults.sh prod
+```
+
+That writes `scripts/poll-defaults.json` to both `polls/defaults` (production)
+and `polls-preview/defaults` (preprod and PR previews). The console works too:
+collection `polls`, document `defaults`, field `themes` as an array of
+strings, and the same again under `polls-preview`.
 
 ### 2. Anonymous auth
 
@@ -313,14 +321,12 @@ PATH="/opt/homebrew/opt/openjdk/bin:$PATH" firebase emulators:start --only auth,
 
 Hosting serves on **5050** (5000 is taken by macOS AirPlay Receiver on the
 owner's Mac); the preprod hosting config gets the next free port. Auth is on
-9099, Firestore on 8080. The emulator starts empty, so seed the preview
-defaults doc (rules are bypassed with the `owner` bearer token — emulator
-only):
+9099, Firestore on 8080. The emulator starts empty, so seed the
+defaults docs (the script uses the emulator's `owner` bearer token, which
+bypasses rules — emulator only):
 
 ```bash
-curl -s -X PATCH "http://127.0.0.1:8080/v1/projects/gw-church/databases/(default)/documents/polls-preview/defaults" \
-  -H 'Authorization: Bearer owner' -H 'Content-Type: application/json' \
-  -d '{"fields":{"themes":{"arrayValue":{"values":[{"stringValue":"Taco Night"},{"stringValue":"Spaghetti"}]}}}}'
+scripts/seed-poll-defaults.sh emulator
 ```
 
 then open http://localhost:5050/wednesday-dinner. The `.claude/launch.json`
@@ -336,8 +342,13 @@ is preselected, name prefilled, and the "You voted for…" status shown.
 
 ## Open decisions (owner)
 
-1. **Theme list and `closesNote`** — set when seeding `polls/defaults`. The
-   four themes on this page are placeholders from the design.
+1. **`closesNote`** — optional display-only text such as "Voting closes
+   Tuesday at 6 pm."; add it to `scripts/poll-defaults.json` and re-seed.
+   (Theme list decided 2026-09-05: Backyard BBQ, Mexican, Breakfast, Asian,
+   Italian, Soups / Chili / Stew, Southern Comfort, Casserole Night, Taco
+   Bar, Sandwich Night, International Night, Vegan, Potluck / Mystery
+   Surprise Dinner — capitalisation and separators are the agent's
+   normalisation of the owner's list.)
 2. **Hard deadline** — none by default. If a rule-enforced close is wanted
    every week, that is a weekly `polls/{weekId}` doc; say so and the page can
    grow a small admin affordance.
