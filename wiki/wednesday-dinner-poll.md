@@ -142,8 +142,8 @@ Page behaviour worth knowing:
   theme, which the tally is built from, and a `voters/{uid}` with the name
   that no client can read. Names are visible only in the Firebase console,
   for spotting duplicates.
-- The page is **not linked from the site nav or homepage** yet — reachable
-  by URL only. Open decision § 4.
+- Linked from the top bar on every page as **Wednesday Dinner**, between
+  About and Connect (owner, 2026-09-05); the poll page marks it current.
 
 ## Data model
 
@@ -397,10 +397,8 @@ is preselected, name prefilled, and the "You voted for…" status shown.
    (e.g. 6 pm); it is one constant in the page plus the rule's slack.
 3. **Blaze plan / App Check** — acceptable for reCAPTCHA Enterprise, or ship
    without App Check?
-4. **Where the page lives in the nav** — currently URL-only. Options: a
-   "Wednesday Dinner" item under Connect, a link card on the homepage, or a
-   new top-level item. Nav changes touch every page, so it was left out of
-   the feature PR.
+4. ~~Where the page lives in the nav~~ — decided 2026-09-05: a top-level
+   "Wednesday Dinner" item between About and Connect on every page.
 5. ~~Voter names on the page~~ — decided 2026-09-05: never shown; names
    are console-only (see § What is built).
 

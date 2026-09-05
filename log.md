@@ -526,3 +526,12 @@ owner-side setup step for the poll is complete. Wiki status table,
 § Console setup step 4, and [wiki/ci-cd.md](wiki/ci-cd.md) credentials
 updated. Still unverified: the rules workflow itself, which first runs on
 merge of PR #7. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Wednesday Dinner added to the top bar on every page
+Owner asked for a top-bar link so people can find the poll. Added a
+top-level "Wednesday Dinner" nav item between About and Connect to all 13
+`site/**/index.html` pages (the poll page's own item carries
+`class="current"`). Verified in Chromium that the six-item bar fits on
+desktop and collapses into the existing mobile menu. Wiki poll page: page
+behaviour note and open decision 4 closed. Pushed to PR #7 (preview
+channel); prod on merge.
