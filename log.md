@@ -360,3 +360,36 @@ before App Check. NOT verified from this session: firebase.google.com is
 blocked by the network egress proxy here, so the console click-paths are from
 knowledge, not checked against the live UI. Nothing enabled or built — the
 owner drives the console.
+
+## [2026-09-05] query | Dinner poll handoff to a local machine
+The owner is Firebase-authenticated on his Mac and asked for the whole design
+written up so work can continue there. Rewrote
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) as a handoff
+document: status table (nothing built, nothing enabled), the one-vote tier
+decision, the date-keyed week id that removes the weekly reset, a draft data
+model and Firestore security rules, the full console setup for Web App
+registration / Firestore / Anonymous auth / App Check, verification commands
+for an authenticated machine, and the repo changes the build still needs.
+Index line updated.
+
+Verified in session: `firebase.json` and `.firebaserc` are valid and mutually
+consistent; and the week-id implementation, cross-checked against Python's
+`date.isocalendar()` over 1200 samples (400 days x 3 times of day) with zero
+mismatches, covering both 2026 DST transitions and the 53-week year boundary.
+
+NOT verified: the security rules were written without an emulator and have
+never been run; the console click-paths and `firebase`/admin-API command names
+are from knowledge, because the web session's egress proxy returns 403 at
+CONNECT for firebase.google.com, console.firebase.google.com, gw-church.org and
+gw-church.web.app (`*.googleapis.com` is reachable — a Firestore admin call
+returned a real 401 CREDENTIALS_MISSING). Declined to have the owner paste a
+CI token or service-account key to work around that: long-lived full-access
+credentials in a chat transcript are a poor trade for state the console shows
+directly.
+
+Two design problems surfaced while writing it up and are recorded as open
+items, not solved: a server-enforced vote deadline requires a per-week document,
+which reintroduces the weekly chore the design exists to avoid (resolved by
+making the deadline optional per week, UI-only by default); and Firestore rules
+are project-wide, so a rules deploy from a PR preview would affect production
+poll data — no answer yet for keeping preprod writes off prod.
