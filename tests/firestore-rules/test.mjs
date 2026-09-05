@@ -44,7 +44,9 @@ const setWeekDoc = data => env.withSecurityRulesDisabled(async ctx => {
 const alice = env.authenticatedContext('alice').firestore();
 const bob = env.authenticatedContext('bob').firestore();
 const anon = env.unauthenticatedContext().firestore();
-const vote = (over = {}) => ({ name: 'Alice', theme: 'Taco Night', at: serverTimestamp(), ...over });
+const vote = (over = {}) => ({ theme: 'Taco Night', at: serverTimestamp(), ...over });
+const voter = (over = {}) => ({ name: 'Alice', theme: 'Taco Night', at: serverTimestamp(), ...over });
+const V = c => `${c}/${KEY}/voters`;
 
 let pass = 0, fail = 0;
 async function t(name, expectOk, p) {
@@ -59,9 +61,11 @@ async function t(name, expectOk, p) {
 console.log('allow paths');
 await t('create own vote', true, setDoc(doc(alice, `${W('polls')}/alice`), vote()));
 await t('update own vote (change theme)', true, setDoc(doc(alice, `${W('polls')}/alice`), vote({ theme: 'Spaghetti' })));
-await t('second voter', true, setDoc(doc(bob, `${W('polls')}/bob`), vote({ name: 'Bob' })));
+await t('second voter', true, setDoc(doc(bob, `${W('polls')}/bob`), vote()));
 await t('vote in polls-preview', true, setDoc(doc(alice, `${W('polls-preview')}/alice`), vote()));
-await t('name at 60 chars', true, setDoc(doc(bob, `${W('polls')}/bob`), vote({ name: 'B'.repeat(60) })));
+await t('voter record with name', true, setDoc(doc(alice, `${V('polls')}/alice`), voter()));
+await t('voter record updated', true, setDoc(doc(alice, `${V('polls')}/alice`), voter({ theme: 'Spaghetti' })));
+await t('voter name at 60 chars', true, setDoc(doc(bob, `${V('polls')}/bob`), voter({ name: 'B'.repeat(60) })));
 await t('anon reads defaults', true, getDoc(doc(anon, 'polls/defaults')));
 await t('anon reads a vote', true, getDoc(doc(anon, `${W('polls')}/alice`)));
 await t('anon reads preview vote', true, getDoc(doc(anon, `${W('polls-preview')}/alice`)));
@@ -86,9 +90,18 @@ await t('unauthenticated write', false, setDoc(doc(anon, `${W('polls')}/anon`), 
 await t('write under someone else\'s uid', false, setDoc(doc(alice, `${W('polls')}/bob`), vote()));
 await t('theme not in list', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ theme: 'Sushi' })));
 await t('theme not a string', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ theme: 3 })));
-await t('empty name', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ name: '' })));
-await t('name at 61 chars', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ name: 'A'.repeat(61) })));
-await t('missing name', false, setDoc(doc(alice, `${W('polls')}/alice`), { theme: 'Taco Night', at: serverTimestamp() }));
+await t('name on the public vote doc', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ name: 'Alice' })));
+await t('missing theme', false, setDoc(doc(alice, `${W('polls')}/alice`), { at: serverTimestamp() }));
+await t('voter: read own record', false, getDoc(doc(alice, `${V('polls')}/alice`)));
+await t('voter: anon read', false, getDoc(doc(anon, `${V('polls')}/alice`)));
+await t('voter: empty name', false, setDoc(doc(alice, `${V('polls')}/alice`), voter({ name: '' })));
+await t('voter: name at 61 chars', false, setDoc(doc(alice, `${V('polls')}/alice`), voter({ name: 'A'.repeat(61) })));
+await t('voter: missing name', false, setDoc(doc(alice, `${V('polls')}/alice`), vote()));
+await t('voter: theme not in list', false, setDoc(doc(alice, `${V('polls')}/alice`), voter({ theme: 'Sushi' })));
+await t('voter: someone else\'s uid', false, setDoc(doc(alice, `${V('polls')}/bob`), voter()));
+await t('voter: unauthenticated', false, setDoc(doc(anon, `${V('polls')}/anon`), voter()));
+await t('voter: delete', false, deleteDoc(doc(alice, `${V('polls')}/alice`)));
+await t('voter: window closed', false, setDoc(doc(alice, `polls/${PREV}/voters/alice`), voter()));
 await t('extra field', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ extra: true })));
 await t('client-supplied timestamp', false, setDoc(doc(alice, `${W('polls')}/alice`), vote({ at: Timestamp.now() })));
 await t('delete own vote', false, deleteDoc(doc(alice, `${W('polls')}/alice`)));

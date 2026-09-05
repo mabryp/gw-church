@@ -93,7 +93,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAuth, signInAnonymously, connectAuthEmulator }
   from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js';
-import { getFirestore, doc, collection, getDoc, setDoc, onSnapshot, serverTimestamp,
+import { getFirestore, doc, collection, getDoc, writeBatch, onSnapshot, serverTimestamp,
          connectFirestoreEmulator }
   from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
 import { firebaseConfig } from '/wednesday-dinner/firebase-config.js';
@@ -209,27 +209,24 @@ function renderThemes(themes, examples) {
 }
 
 function renderResults(snap, themes, uid) {
-  const byTheme = new Map(themes.map(t => [t, []]));
+  const counts = new Map(themes.map(t => [t, 0]));
   let mine = null;
   for (const d of snap.docs) {
     const v = d.data();
-    if (!byTheme.has(v.theme)) byTheme.set(v.theme, []);
-    byTheme.get(v.theme).push(v.name);
+    counts.set(v.theme, (counts.get(v.theme) || 0) + 1);
     if (d.id === uid) mine = v;
   }
   const total = snap.size;
-  const max = Math.max(1, ...[...byTheme.values()].map(a => a.length));
+  const max = Math.max(1, ...counts.values());
   const out = $('results');
   out.replaceChildren();
-  for (const [theme, names] of byTheme) {
-    names.sort((a, b) => a.localeCompare(b));
+  for (const [theme, n] of counts) {
     const row = el('div', { class: 'tally-row' }, [
       el('div', { class: 'tally-head' }, [
         el('strong', { text: theme }),
-        el('span', { class: 'tally-count', text: `${names.length} vote${names.length === 1 ? '' : 's'}` }),
+        el('span', { class: 'tally-count', text: `${n} vote${n === 1 ? '' : 's'}` }),
       ]),
-      el('div', { class: 'tally-bar' }, [el('span', { style: `width:${Math.round(100 * names.length / max)}%` })]),
-      el('p', { class: 'tally-names', text: names.join(', ') || '—' }),
+      el('div', { class: 'tally-bar' }, [el('span', { style: `width:${Math.round(100 * n / max)}%` })]),
     ]);
     out.append(row);
   }
@@ -313,7 +310,6 @@ async function main() {
       firstSnapshot = false;
       const chosen = form.querySelector(`input[name="theme"][value="${CSS.escape(mine.theme)}"]`);
       if (chosen) chosen.checked = true;
-      if (!nameInput.value) nameInput.value = mine.name;
       setStatus($('status'), `You voted for ${mine.theme}. Change your mind? Pick another theme and vote again.`, 'ok');
     }
     firstSnapshot = false;
@@ -331,7 +327,14 @@ async function main() {
     btn.disabled = true;
     setStatus($('status'), 'Saving your vote…');
     try {
-      await setDoc(doc(db, COLL, pollKey, 'votes', user.uid), { name, theme: picked.value, at: serverTimestamp() });
+      // Two documents, one atomic write: the vote (theme only) is public so the
+      // tally can be live; the voter record (with the name) is never readable
+      // from the browser — see firestore.rules. Names are visible only in the
+      // Firebase console, for spotting duplicates.
+      const batch = writeBatch(db);
+      batch.set(doc(db, COLL, pollKey, 'votes', user.uid), { theme: picked.value, at: serverTimestamp() });
+      batch.set(doc(db, COLL, pollKey, 'voters', user.uid), { name, theme: picked.value, at: serverTimestamp() });
+      await batch.commit();
       try { localStorage.setItem(NAME_KEY, name); } catch (e) { /* ignore */ }
       setStatus($('status'), `Thanks, ${name}! Your vote for ${picked.value} is in.`, 'ok');
     } catch (e) {

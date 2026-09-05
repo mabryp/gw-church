@@ -274,4 +274,3 @@ main.page.wide { max-width: 1080px; }
 .tally-count { color: var(--muted); font-size: 0.92rem; white-space: nowrap; }
 .tally-bar { height: 0.7rem; background: var(--card); border-radius: 999px; overflow: hidden; margin: 0.3rem 0; }
 .tally-bar span { display: block; height: 100%; background: var(--lime); border-radius: 999px; transition: width 0.3s; }
-.tally-names { margin: 0; color: var(--muted); font-size: 0.88rem; }

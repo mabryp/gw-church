@@ -51,8 +51,10 @@ anonymous accessibility (see [Reading Plans](reading-plans.md) and the
 2026-09-01 log entries), so requiring a Google account to vote on taco night
 would be a step backwards for the same audience. The realistic failure mode
 here is **accidental** double-voting (a double tap; voting on a phone and again
-on a laptop), not ballot stuffing — device-bound plus a visible name list
-catches exactly that. Upgrading later is a one-line auth change plus one rule.
+on a laptop), not ballot stuffing — device-bound catches the double tap
+outright, and the name (visible to the owner in the console, never on the
+page) lets the phone-plus-laptop case be spotted. Upgrading later is a
+one-line auth change plus one rule.
 
 ### Schedule: vote a week ahead, close Saturday, announce Sunday
 
@@ -133,8 +135,12 @@ Page behaviour worth knowing:
 - Each choice shows its `examples` text in small muted type under the theme
   name (e.g. Backyard BBQ: burgers, hot dogs, potato salad…). Missing
   entries simply show the name alone; the tally shows names only.
-- Results list every voter's name under the theme they chose, so accidental
-  duplicates are visible to everyone. Open decision § 5 below.
+- Results show counts and bars only. **Names are never displayed** (owner,
+  2026-09-05) and never readable from the browser: each vote is written as
+  two documents in one atomic batch — a public `votes/{uid}` with just the
+  theme, which the tally is built from, and a `voters/{uid}` with the name
+  that no client can read. Names are visible only in the Firebase console,
+  for spotting duplicates.
 - The page is **not linked from the site nav or homepage** yet — reachable
   by URL only. Open decision § 4.
 
@@ -149,7 +155,11 @@ Page behaviour worth knowing:
       themes:     [...]             # replaces defaults for that week
       closesAt:   <timestamp>       # optional EARLIER deadline, rule-enforced
 
-    {coll}/{YYYY-MM-DD}/votes/{uid}
+    {coll}/{YYYY-MM-DD}/votes/{uid}     # public: the tally is built from these
+      theme: "Taco Night"
+      at:    <serverTimestamp>
+
+    {coll}/{YYYY-MM-DD}/voters/{uid}    # NOT readable by any client
       name:  "Jane D."
       theme: "Taco Night"
       at:    <serverTimestamp>
@@ -171,18 +181,21 @@ not a Wednesday — are rejected outright.
 
 ## Security rules (tested)
 
-`firestore.rules` in the repo root. In words: anyone may read anything under
-`polls` and `polls-preview`; nobody may write a config doc from the client;
-a signed-in user may create or update **only** `{coll}/{date}/votes/{their
-own uid}`, only when `date` is a real Wednesday whose voting window (the
-previous Sunday through Saturday, UTC with ~6h slack) contains the request
-time, only with exactly the fields `name` (1–60 chars), `theme` (must be in
-the active theme list — the week's doc if it exists, else `defaults`) and
-`at` (must be the server timestamp), and also before `closesAt` if the
+`firestore.rules` in the repo root. In words: anyone may read config docs
+and `votes` under `polls` and `polls-preview`; **nobody may read `voters`**;
+nobody may write a config doc from the client; a signed-in user may create
+or update **only** `{coll}/{date}/votes/{their own uid}` and
+`.../voters/{their own uid}`, only when `date` is a real Wednesday whose
+voting window (the previous Sunday through Saturday, UTC with ~6h slack)
+contains the request time, only with exactly the expected fields — `theme`
+(must be in the active theme list — the week's doc if it exists, else
+`defaults`) and `at` (must be the server timestamp) on both, plus `name`
+(1–60 chars) on the voter record only — and also before `closesAt` if the
 week's doc has one. Deletes are denied. Every other collection is denied.
 
-The 32 cases in `tests/firestore-rules/test.mjs` cover each clause from both
-sides. The test computes the current ballot key with the same schedule logic
+The 43 cases in `tests/firestore-rules/test.mjs` cover each clause from both
+sides for both documents, including that a voter record cannot be read even
+by its own author. The test computes the current ballot key with the same schedule logic
 as the page, so the window cases (the Wednesday after next, last week's
 Wednesday, a Thursday, a malformed key, an impossible date) stay valid
 whatever day the suite runs. All pass against the Firestore emulator as of
@@ -380,8 +393,8 @@ is preselected, name prefilled, and the "You voted for…" status shown.
    "Wednesday Dinner" item under Connect, a link card on the homepage, or a
    new top-level item. Nav changes touch every page, so it was left out of
    the feature PR.
-5. **Voter names on the page** — shown today under each theme so duplicates
-   are visible. Could show counts only, or names only to the owner.
+5. ~~Voter names on the page~~ — decided 2026-09-05: never shown; names
+   are console-only (see § What is built).
 
 ## Sources
 

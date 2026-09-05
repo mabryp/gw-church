@@ -11,11 +11,15 @@ rules_version = '2';
 // Each collection holds:
 //   {coll}/defaults              permanent config: { themes: [...] }
 //   {coll}/{YYYY-MM-DD}           optional per-Wednesday override: { themes, closesAt? }
-//   {coll}/{YYYY-MM-DD}/votes/{uid}  one vote per anonymous uid: { name, theme, at }
+//   {coll}/{YYYY-MM-DD}/votes/{uid}   one vote per anonymous uid: { theme, at } — public
+//   {coll}/{YYYY-MM-DD}/voters/{uid}  who cast it: { name, theme, at } — NOT readable
 //
 // Poll/config documents are read-only from the client (edit in the console).
-// Vote documents can be created and updated only by their own uid, never
-// deleted, and only with a theme from the week's active list.
+// Vote and voter documents can be created and updated only by their own uid,
+// never deleted, and only with a theme from the week's active list. The name
+// lives only on the voters doc, which no client can read: the tally on the
+// page is built from the public votes docs, and names are seen only in the
+// Firebase console.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -52,14 +56,29 @@ service cloud.firestore {
         : get(/databases/$(database)/documents/$(c)/defaults).data;
     }
 
-    function validVote(c) {
+    function validTheme(c) {
       let d = request.resource.data;
-      return d.keys().hasOnly(['name', 'theme', 'at'])
-          && d.keys().hasAll(['name', 'theme', 'at'])
-          && d.theme is string && d.theme in c.themes
-          && d.name is string && d.name.size() > 0 && d.name.size() <= 60
+      return d.theme is string && d.theme in c.themes
           && d.at == request.time
           && (!('closesAt' in c) || request.time < c.closesAt);
+    }
+    function validVote(c) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['theme', 'at']) && d.keys().hasAll(['theme', 'at'])
+          && validTheme(c);
+    }
+    function validVoter(c) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'theme', 'at']) && d.keys().hasAll(['name', 'theme', 'at'])
+          && d.name is string && d.name.size() > 0 && d.name.size() <= 60
+          && validTheme(c);
+    }
+    function ownVoteWrite(coll, docId, uid) {
+      return isPollColl(coll)
+          && isPollKey(docId)
+          && inVotingWindow(docId)
+          && request.auth != null
+          && request.auth.uid == uid;
     }
 
     match /{coll}/{docId} {
@@ -68,12 +87,13 @@ service cloud.firestore {
 
       match /votes/{uid} {
         allow read: if isPollColl(coll);
-        allow create, update: if isPollColl(coll)
-                              && isPollKey(docId)
-                              && inVotingWindow(docId)
-                              && request.auth != null
-                              && request.auth.uid == uid
-                              && validVote(cfg(coll, docId));
+        allow create, update: if ownVoteWrite(coll, docId, uid) && validVote(cfg(coll, docId));
+        allow delete: if false;
+      }
+
+      match /voters/{uid} {
+        allow read: if false;
+        allow create, update: if ownVoteWrite(coll, docId, uid) && validVoter(cfg(coll, docId));
         allow delete: if false;
       }
     }

@@ -467,3 +467,18 @@ Verified in Chromium against the emulators on Sat 2026-09-05: key
 `2026-09-09`, countdown to Saturday 11:59 PM, a vote landing under the date
 key. Wiki page updated throughout (summary, schedule, data model, rules,
 key/close section, open decisions). Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: names off the page and out of reach
+Owner decided not to display voters' names. Removed the name list from the
+results (counts and bars only). Because `votes` must stay publicly readable
+for the live tally, a name stored there would still be fetchable through the
+API even when not shown, so the vote is now written as two documents in one
+atomic batch: public `votes/{uid}` {theme, at} and `voters/{uid}` {name,
+theme, at} which no client can read (rules `allow read: if false`) — names
+are visible only in the Firebase console. Rules refactored into shared
+`validTheme` / `ownVoteWrite` helpers; tests extended to 43 cases (voter
+record allow/deny, own-record read denied, name rejected on the public
+doc): all pass. Verified in Chromium against the emulators that a vote
+writes both docs and the tally shows counts without names. Wiki updated
+(page behaviour, data model, rules, tier rationale, open decision 5 closed).
+Pushed to PR #7; no deploy target.
