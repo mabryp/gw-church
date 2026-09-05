@@ -200,7 +200,18 @@ main.page.wide { max-width: 1080px; }
 }
 
 /* ---------- Wednesday dinner poll ---------- */
-.poll-note { color: var(--muted); margin: 0 0 1.25rem; }
+.poll-note { color: var(--muted); margin: 0 0 1rem; }
+.poll-countdown {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--navy);
+  background: var(--card);
+  border-left: 4px solid var(--lime);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 0 0 1.25rem;
+  font-variant-numeric: tabular-nums;
+}
 .poll-preview {
   background: #fff7d6;
   border-left: 4px solid #e0b400;

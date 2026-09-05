@@ -10,8 +10,8 @@ rules_version = '2';
 //
 // Each collection holds:
 //   {coll}/defaults              permanent config: { themes: [...] }
-//   {coll}/{weekId}              optional per-week override: { themes, closesAt? }
-//   {coll}/{weekId}/votes/{uid}  one vote per anonymous uid: { name, theme, at }
+//   {coll}/{YYYY-MM-DD}           optional per-Wednesday override: { themes, closesAt? }
+//   {coll}/{YYYY-MM-DD}/votes/{uid}  one vote per anonymous uid: { name, theme, at }
 //
 // Poll/config documents are read-only from the client (edit in the console).
 // Vote documents can be created and updated only by their own uid, never
@@ -24,16 +24,31 @@ service cloud.firestore {
       return c == 'polls' || c == 'polls-preview';
     }
 
-    function isWeekId(w) {
-      return w.matches('^[0-9]{4}-W[0-9]{2}$');
+    // Poll key = the Wednesday's date, YYYY-MM-DD. Votes are accepted only
+    // during that Wednesday's voting week: Sunday through Saturday of the
+    // PREVIOUS week, Chicago time. Dates are UTC here, so the bounds carry a
+    // few hours of slack (lenient at both ends by up to 6h); the page shows
+    // the exact Saturday-midnight cutoff and this is the backstop.
+    function isPollKey(k) {
+      return k.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+    function wednesdayOf(k) {
+      let p = k.split('-');
+      return timestamp.date(int(p[0]), int(p[1]), int(p[2]));
+    }
+    function inVotingWindow(k) {
+      let wed = wednesdayOf(k);
+      return wed.dayOfWeek() == 3
+          && request.time >= wed - duration.value(10, 'd')
+          && request.time <  wed - duration.value(3, 'd') + duration.value(6, 'h');
     }
 
     // The week's own config doc if it exists, else the permanent defaults.
     // If neither exists, get() has no data and every write is denied —
     // {coll}/defaults must be created before the poll can accept votes.
-    function cfg(c, weekId) {
-      return exists(/databases/$(database)/documents/$(c)/$(weekId))
-        ? get(/databases/$(database)/documents/$(c)/$(weekId)).data
+    function cfg(c, key) {
+      return exists(/databases/$(database)/documents/$(c)/$(key))
+        ? get(/databases/$(database)/documents/$(c)/$(key)).data
         : get(/databases/$(database)/documents/$(c)/defaults).data;
     }
 
@@ -54,7 +69,8 @@ service cloud.firestore {
       match /votes/{uid} {
         allow read: if isPollColl(coll);
         allow create, update: if isPollColl(coll)
-                              && isWeekId(docId)
+                              && isPollKey(docId)
+                              && inVotingWindow(docId)
                               && request.auth != null
                               && request.auth.uid == uid
                               && validVote(cfg(coll, docId));

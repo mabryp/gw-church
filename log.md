@@ -447,3 +447,23 @@ made the page render it in small muted text under each radio choice
 the read-only config doc. Verified the seed round-trips through the
 emulator and the page renders all 13 choices with their examples. Wiki data
 model, files table and open-decisions note updated. Pushed to PR #7.
+
+## [2026-09-05] site | Dinner poll: vote a week ahead, close Saturday, countdown
+Owner corrected the schedule: voting is never for the current week's
+Wednesday; the Sunday–Saturday ballot is for the following week's Wednesday,
+closes Saturday so the winner is announced Sunday, and should show a
+countdown. Reworked the ballot key from ISO week to the target Wednesday's
+date (`YYYY-MM-DD`, Sunday +10 … Saturday +4 in Chicago time), which let the
+security rules compute the voting window from the key itself — so the
+deadline is now server-enforced every week with no per-week document
+(previous open decision closed). Rules reject keys that are not a Wednesday,
+last week's Wednesday, the week after next, malformed or impossible dates;
+UTC bounds carry ~6h slack, the page's countdown is exact. Page: Saturday
+11:59 pm Chicago close (`CLOSE_HOUR` constant, DST-aware), live countdown
+that locks the form at zero, a per-week `closesAt` can only close earlier,
+`closesNote` no longer shown. Tests rewritten to compute the live ballot key
+with the page's logic plus five window cases: 32/32 pass in the emulator.
+Verified in Chromium against the emulators on Sat 2026-09-05: key
+`2026-09-09`, countdown to Saturday 11:59 PM, a vote landing under the date
+key. Wiki page updated throughout (summary, schedule, data model, rules,
+key/close section, open decisions). Pushed to PR #7; no deploy target.

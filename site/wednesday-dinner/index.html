@@ -46,6 +46,7 @@
 
 <h1>Wednesday Dinner</h1>
 <p class="poll-note" id="poll-week">Loading this week's poll&hellip;</p>
+<p class="poll-countdown" id="countdown" role="timer" aria-live="off" hidden></p>
 <p class="poll-preview" id="poll-preview" hidden>Preview copy &mdash; votes cast here do not count toward the real poll.</p>
 
 <noscript><p class="poll-status warn">This poll needs JavaScript turned on.</p></noscript>
@@ -97,13 +98,16 @@ import { getFirestore, doc, collection, getDoc, setDoc, onSnapshot, serverTimest
   from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
 import { firebaseConfig } from '/wednesday-dinner/firebase-config.js';
 
-// ---------- Which week is this ballot for? ----------
-// Keyed by the ISO week of the UPCOMING Wednesday, in Chicago time: Mon–Wed
-// vote on this week's dinner, Thu–Sun on next week's. A new week is a new
-// key, so nothing ever needs resetting. Verified against Python's
-// isocalendar() over 1200 samples — see wiki/wednesday-dinner-poll.md.
+// ---------- Which Wednesday is this ballot for? ----------
+// Voting runs Sunday through Saturday (Chicago time) and is always for the
+// Wednesday of the FOLLOWING week — never the Wednesday of the week we are
+// in. It closes at the end of Saturday so the winner can be announced Sunday
+// and people have until Wednesday to prepare. The poll key is that
+// Wednesday's date, e.g. 2026-09-16, so a new week is a new key and nothing
+// is ever reset. firestore.rules enforces the same window server-side.
 const TZ = 'America/Chicago';
-const NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const CLOSE_HOUR = 24;                 // Saturday 24:00 = midnight going into Sunday
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function chicagoParts(d) {
   const f = new Intl.DateTimeFormat('en-CA', {
@@ -112,21 +116,37 @@ function chicagoParts(d) {
   return { y: +p.year, m: +p.month, d: +p.day, wd: p.weekday };
 }
 
-function isoWeekId(utc) {
-  const t = new Date(Date.UTC(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate()));
-  const dayNum = (t.getUTCDay() + 6) % 7;
-  t.setUTCDate(t.getUTCDate() - dayNum + 3);          // nearest Thursday
-  const isoYear = t.getUTCFullYear();
-  const jan4 = new Date(Date.UTC(isoYear, 0, 4));
-  const week = 1 + Math.round(((t - jan4) / 86400000 - 3 + ((jan4.getUTCDay() + 6) % 7)) / 7);
-  return `${isoYear}-W${String(week).padStart(2, '0')}`;
+// Chicago's UTC offset (minutes) at a given instant, DST-aware.
+function chicagoOffsetMin(at) {
+  const f = new Intl.DateTimeFormat('en-US', { timeZone: TZ, timeZoneName: 'longOffset' });
+  const tzn = f.formatToParts(at).find(x => x.type === 'timeZoneName').value; // e.g. GMT-05:00
+  const m = /GMT([+-])(\d{2}):?(\d{2})?/.exec(tzn);
+  return m ? (m[1] === '-' ? -1 : 1) * (60 * +m[2] + (+m[3] || 0)) : 0;
 }
 
+// The instant of a Chicago wall-clock time on a calendar date.
+function chicagoTime(y, m, d, hour = 0, minute = 0) {
+  const guess = Date.UTC(y, m - 1, d, hour, minute);
+  let t = guess - chicagoOffsetMin(new Date(guess)) * 60000;
+  t = guess - chicagoOffsetMin(new Date(t)) * 60000;   // settle across a DST edge
+  return new Date(t);
+}
+
+// Calendar date (as a UTC-midnight Date) of the Wednesday this ballot is for.
 function pollWednesday(now = new Date()) {
   const { y, m, d, wd } = chicagoParts(now);
-  const idx = NAMES.indexOf(wd);
-  const delta = idx <= 2 ? 2 - idx : 9 - idx;
+  const delta = 10 - DAYS.indexOf(wd);     // Sun +10 … Sat +4: next week's Wednesday
   return new Date(Date.UTC(y, m - 1, d + delta));
+}
+
+function keyOf(wed) {
+  return `${wed.getUTCFullYear()}-${String(wed.getUTCMonth() + 1).padStart(2, '0')}-${String(wed.getUTCDate()).padStart(2, '0')}`;
+}
+
+// Voting closes at CLOSE_HOUR on the Saturday before that Wednesday (Chicago).
+function closeTimeFor(wed) {
+  const sat = new Date(Date.UTC(wed.getUTCFullYear(), wed.getUTCMonth(), wed.getUTCDate() - 4));
+  return chicagoTime(sat.getUTCFullYear(), sat.getUTCMonth() + 1, sat.getUTCDate(), CLOSE_HOUR, 0);
 }
 
 // ---------- Environment ----------
@@ -163,17 +183,18 @@ function setStatus(node, msg, kind = '') {
   node.className = 'poll-status' + (kind ? ' ' + kind : '');
 }
 function fmtWhen(date) {
-  return date.toLocaleString('en-US', {
-    timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  const opts = { timeZone: TZ, weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+  const s = date.toLocaleString('en-US', opts);
+  // A close at exactly midnight reads better as the previous day at 11:59 PM.
+  return /12:00 AM$/.test(s) ? new Date(date.getTime() - 60000).toLocaleString('en-US', opts) : s;
 }
 
 // ---------- Page ----------
-const weekId = pollWeekId();
+const wednesday = pollWednesday();
+const pollKey = keyOf(wednesday);
 const form = $('vote-form');
 const nameInput = $('voter-name');
 const btn = $('vote-btn');
-
-function pollWeekId(now = new Date()) { return isoWeekId(pollWednesday(now)); }
 
 function renderThemes(themes, examples) {
   const fs = $('themes');
@@ -220,7 +241,7 @@ function renderResults(snap, themes, uid) {
 }
 
 async function loadConfig() {
-  const week = await getDoc(doc(db, COLL, weekId));
+  const week = await getDoc(doc(db, COLL, pollKey));
   if (week.exists()) return week.data();
   const defaults = await getDoc(doc(db, COLL, 'defaults'));
   return defaults.exists() ? defaults.data() : null;
@@ -228,9 +249,8 @@ async function loadConfig() {
 
 async function main() {
   const boot = $('boot-status');
-  const wed = pollWednesday();
-  const wedLabel = wed.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' });
-  $('poll-week').textContent = `This vote is for Wednesday, ${wedLabel}. One vote per person — you can change your mind until voting closes.`;
+  const wedLabel = wednesday.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' });
+  $('poll-week').textContent = `This vote is for Wednesday, ${wedLabel}. Voting closes Saturday night and the winner is announced Sunday. One vote per person — you can change your mind until voting closes.`;
   if (COLL !== 'polls') $('poll-preview').hidden = false;
 
   let user;
@@ -256,25 +276,38 @@ async function main() {
   }
   const themes = cfg.themes.filter(t => typeof t === 'string');
   const examples = cfg.examples && typeof cfg.examples === 'object' ? cfg.examples : {};
-  const closesAt = cfg.closesAt && typeof cfg.closesAt.toDate === 'function' ? cfg.closesAt.toDate() : null;
-  const closed = closesAt !== null && Date.now() >= closesAt.getTime();
+  // Saturday-night close from the schedule; a per-week doc's closesAt can only bring it earlier.
+  let closesAt = closeTimeFor(wednesday);
+  if (cfg.closesAt && typeof cfg.closesAt.toDate === 'function' && cfg.closesAt.toDate() < closesAt) {
+    closesAt = cfg.closesAt.toDate();
+  }
+  let closed = Date.now() >= closesAt.getTime();
 
   try { nameInput.value = localStorage.getItem(NAME_KEY) || ''; } catch (e) { /* storage unavailable */ }
   renderThemes(themes, examples);
   form.hidden = false;
   boot.hidden = true;
 
-  if (closed) {
+  function lockForm() {
+    closed = true;
     form.querySelectorAll('input, button').forEach(n => { n.disabled = true; });
-    setStatus($('status'), `Voting closed ${fmtWhen(closesAt)}.`, 'warn');
-  } else if (closesAt) {
-    setStatus($('status'), `Voting closes ${fmtWhen(closesAt)}.`);
-  } else if (typeof cfg.closesNote === 'string' && cfg.closesNote) {
-    setStatus($('status'), cfg.closesNote);
+    setStatus($('status'), `Voting closed ${fmtWhen(closesAt)}. Check back Sunday for the next ballot.`, 'warn');
   }
+  function tick() {
+    const left = closesAt.getTime() - Date.now();
+    if (left <= 0) { $('countdown').textContent = 'Voting has closed.'; if (!closed) lockForm(); return; }
+    const d = Math.floor(left / 86400000), h = Math.floor(left / 3600000) % 24,
+          m = Math.floor(left / 60000) % 60, sec = Math.floor(left / 1000) % 60;
+    const parts = d > 0 ? [`${d} day${d === 1 ? '' : 's'}`, `${h} hr`, `${m} min`]
+                        : [`${h} hr`, `${m} min`, `${sec} sec`];
+    $('countdown').textContent = `Voting closes ${fmtWhen(closesAt)} — ${parts.join(' ')} left.`;
+  }
+  $('countdown').hidden = false;
+  tick();
+  if (closed) lockForm(); else setInterval(tick, 1000);
 
   let firstSnapshot = true;
-  onSnapshot(collection(db, COLL, weekId, 'votes'), snap => {
+  onSnapshot(collection(db, COLL, pollKey, 'votes'), snap => {
     const mine = renderResults(snap, themes, user.uid);
     if (firstSnapshot && mine && !closed) {
       firstSnapshot = false;
@@ -298,7 +331,7 @@ async function main() {
     btn.disabled = true;
     setStatus($('status'), 'Saving your vote…');
     try {
-      await setDoc(doc(db, COLL, weekId, 'votes', user.uid), { name, theme: picked.value, at: serverTimestamp() });
+      await setDoc(doc(db, COLL, pollKey, 'votes', user.uid), { name, theme: picked.value, at: serverTimestamp() });
       try { localStorage.setItem(NAME_KEY, name); } catch (e) { /* ignore */ }
       setStatus($('status'), `Thanks, ${name}! Your vote for ${picked.value} is in.`, 'ok');
     } catch (e) {

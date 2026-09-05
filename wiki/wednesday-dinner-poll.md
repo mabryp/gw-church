@@ -1,6 +1,6 @@
 # Wednesday Dinner Poll
 
-**Summary:** A weekly congregation vote on the Wednesday dinner theme — built on a feature branch, not yet deployed or enabled. A Firestore-backed page at `/wednesday-dinner` on the existing `gw-church` Firebase project, keyed by the ISO week of the upcoming Wednesday so no weekly reset is ever needed. This page carries the design, what is built and how it was verified, the console setup the owner still has to do, and how to run it locally.
+**Summary:** A weekly congregation vote on the Wednesday dinner theme — built on a feature branch, not yet deployed or enabled. A Firestore-backed page at `/wednesday-dinner` on the existing `gw-church` Firebase project. Voting runs Sunday–Saturday for the *following* week's Wednesday, closes Saturday at midnight (announced Sunday), and is keyed by that Wednesday's date so no weekly reset is ever needed. This page carries the design, what is built and how it was verified, the console setup the owner still has to do, and how to run it locally.
 
 ## Status (as of 2026-09-05)
 
@@ -54,14 +54,26 @@ here is **accidental** double-voting (a double tap; voting on a phone and again
 on a laptop), not ballot stuffing — device-bound plus a visible name list
 catches exactly that. Upgrading later is a one-line auth change plus one rule.
 
+### Schedule: vote a week ahead, close Saturday, announce Sunday
+
+Owner's rule (2026-09-05): voting is **never for the Wednesday of the week
+we are in**. The ballot that runs Sunday through Saturday is for the
+Wednesday of the **following** week; it closes at the end of Saturday so the
+winner can be announced Sunday and people have until Wednesday to prepare.
+Example: Sun Sep 6 – Sat Sep 12 votes for Wed Sep 16; announced Sun Sep 13.
+
+The close is **Saturday 11:59 pm Chicago** (`CLOSE_HOUR = 24` in the page
+script — the one line to change for an earlier cutoff). The page shows a
+live countdown and locks the form the moment it reaches zero.
+
 ### Weekly refresh: key by date, reset nothing
 
-The poll id is derived from the date rather than by clearing anything: the
-page computes the ISO week of the **upcoming Wednesday** (e.g. `2026-W37`) and
-reads and writes only under that key. A new week is a new key, so "refreshes
-each week" happens with no cron job, no archiving, and no button for anyone to
-forget to press. The ballot rolls over on **Thursday** — Mon/Tue/Wed vote on
-this week's dinner, Thu–Sun vote on next week's.
+The poll key is the target Wednesday's date, `YYYY-MM-DD` (e.g.
+`2026-09-16`), computed from the current Chicago date: Sunday adds 10 days,
+Monday 9 … Saturday 4. The page reads and writes only under that key, so a
+new week is a new key and "refreshes each week" happens with no cron job, no
+archiving, and no button for anyone to forget to press. Old weeks stay in
+the database as history.
 
 ### Preview traffic never touches the live tally
 
@@ -93,7 +105,7 @@ on the site and de-duplicates only by eye.
 | `site/wednesday-dinner/index.html` | The page, on the shared site template. ES-module script: anonymous sign-in, week id, config load, live tally via `onSnapshot`, vote / re-vote via `setDoc` on `votes/{uid}`. Remembers the voter's name in `localStorage`. |
 | `site/wednesday-dinner/firebase-config.js` | The public Firebase web-app config. **Placeholders** until a Web App exists. Not a secret (see § Console setup step 0). |
 | `site/css/style.css` | New `Wednesday dinner poll` section at the end. |
-| `firestore.rules` | Security rules (below). |
+| `firestore.rules` | Security rules (below), including the server-side voting window. |
 | `firestore.indexes.json` | Empty; required by the `firestore` block. |
 | `firebase.json` | New `firestore` block (rules + indexes) and `emulators` block (auth 9099, firestore 8080, hosting 5050). |
 | `.github/workflows/rules-deploy.yml` | Deploys rules + indexes when they change on `main`. |
@@ -110,9 +122,12 @@ Page behaviour worth knowing:
   instead of the real project, so it runs fully with placeholder config.
 - If neither the week doc nor `defaults` exists, the page says "The poll is
   not set up yet" rather than showing an empty form.
-- If the active config has `closesAt` in the past, the form is disabled and
-  the close time shown. If it has a `closesNote` string, that is shown as-is
-  (UI only, not enforced). Otherwise nothing about a deadline is shown.
+- A countdown box ("Voting closes Saturday, September 12 at 11:59 PM — 6
+  days 4 hr 12 min left") ticks every second; under a day it shows hours,
+  minutes and seconds. At zero the form locks and says to check back Sunday.
+  A per-week doc's `closesAt` can only bring the close *earlier* than the
+  Saturday default. `closesNote` is no longer displayed (the countdown
+  replaces it) but is harmless if present.
 - A returning voter (same browser, same week) sees their choice preselected
   and "You voted for X. Change your mind? Pick another theme and vote again."
 - Each choice shows its `examples` text in small muted type under the theme
@@ -130,12 +145,11 @@ Page behaviour worth knowing:
       examples:   { theme: "..." }  # optional; shown in small text under each choice
       closesNote: "..."             # optional, display only
 
-    {coll}/{weekId}                 # OPTIONAL per-week override, e.g. 2026-W37
+    {coll}/{YYYY-MM-DD}             # OPTIONAL override for one Wednesday, e.g. 2026-09-16
       themes:     [...]             # replaces defaults for that week
-      closesAt:   <timestamp>       # optional hard, rule-enforced deadline
-      closesNote: "..."             # optional, display only
+      closesAt:   <timestamp>       # optional EARLIER deadline, rule-enforced
 
-    {coll}/{weekId}/votes/{uid}
+    {coll}/{YYYY-MM-DD}/votes/{uid}
       name:  "Jane D."
       theme: "Taco Night"
       at:    <serverTimestamp>
@@ -146,42 +160,44 @@ check that can be skipped. Re-voting before close is a plain update, so
 "change your mind" is free. Config docs are read-only from the client — edit
 them in the Firebase console.
 
-**Deadline trade-off, decided deliberately.** A truly zero-touch poll cannot
-have a server-enforced deadline, because enforcing one requires a per-week
-document with a `closesAt` — i.e. a weekly chore, the thing the whole design
-avoids. So `defaults` carries at most a display-only `closesNote`; writing a
-`{coll}/{weekId}` doc with `closesAt` for a given week adds a hard deadline
-for that week. Zero-touch by default, teeth available when wanted. A late vote
-on a dinner theme is not a security problem.
+**Deadline is server-enforced with no weekly chore.** Because the key is the
+Wednesday's date, the rules compute the voting window from the key itself:
+Sunday of the previous week through Saturday. So every week has a hard
+deadline automatically. The rules work in UTC and allow up to about six
+hours of slack at each end (the page's countdown is exact; the rule is the
+backstop against someone posting a vote after Saturday midnight). Votes for
+any other Wednesday — last week's, the week after next, or a date that is
+not a Wednesday — are rejected outright.
 
 ## Security rules (tested)
 
 `firestore.rules` in the repo root. In words: anyone may read anything under
 `polls` and `polls-preview`; nobody may write a config doc from the client;
-a signed-in user may create or update **only** `{coll}/{weekId}/votes/{their
-own uid}`, only when `weekId` matches `YYYY-Www`, only with exactly the fields
-`name` (1–60 chars), `theme` (must be in the active theme list — the week's
-doc if it exists, else `defaults`) and `at` (must be the server timestamp),
-and only before `closesAt` if the active config has one. Deletes are denied.
-Every other collection is denied entirely.
+a signed-in user may create or update **only** `{coll}/{date}/votes/{their
+own uid}`, only when `date` is a real Wednesday whose voting window (the
+previous Sunday through Saturday, UTC with ~6h slack) contains the request
+time, only with exactly the fields `name` (1–60 chars), `theme` (must be in
+the active theme list — the week's doc if it exists, else `defaults`) and
+`at` (must be the server timestamp), and also before `closesAt` if the
+week's doc has one. Deletes are denied. Every other collection is denied.
 
-The 28 cases in `tests/firestore-rules/test.mjs` cover each of those clauses
-from both sides (allow and deny), plus: a defaults theme rejected in a week
-that overrides the list, a vote under the `defaults` doc id, and a collection
-whose `defaults` doc is missing (every write denied, as intended). All pass
-against the Firestore emulator as of 2026-09-05.
+The 32 cases in `tests/firestore-rules/test.mjs` cover each clause from both
+sides. The test computes the current ballot key with the same schedule logic
+as the page, so the window cases (the Wednesday after next, last week's
+Wednesday, a Thursday, a malformed key, an impossible date) stay valid
+whatever day the suite runs. All pass against the Firestore emulator as of
+2026-09-05.
 
-## Week id (verified 2026-09-05)
+## Poll key and close time (verified 2026-09-05)
 
-The implementation lives in the page script. Cross-checked against Python's
-`date.isocalendar()` over **1200 samples** — 400 consecutive days at three
-times of day each, chosen to straddle midnight in Chicago. Zero mismatches,
-including both 2026 DST transitions (Mar 8, Nov 1) and the year boundary:
-2026 has 53 ISO weeks, and Thu 2026-12-31 correctly rolls forward to
-`2027-W01`. Timezone is pinned to `America/Chicago` so a traveller's browser
-cannot land on a different ballot. Confirmed live in the emulator run:
-Saturday 2026-09-05 produced "This vote is for Wednesday, September 9"
-(`2026-W37`).
+Both live in the page script. The key needs no ISO-week arithmetic any more
+(the earlier ISO-week design was cross-checked against Python over 1200
+samples; that work is superseded). The Chicago calendar date comes from
+`Intl.DateTimeFormat`, so a traveller's browser cannot land on a different
+ballot. The Saturday-midnight close is computed as a real instant using
+Chicago's UTC offset at that moment, so it is correct across both DST
+changes. Confirmed live in the emulator on Saturday 2026-09-05: key
+`2026-09-09`, countdown to Saturday, September 5 at 11:59 PM.
 
 ## Console setup (owner, one-time)
 
@@ -356,9 +372,8 @@ is preselected, name prefilled, and the "You voted for…" status shown.
    for Backyard BBQ and Southern Comfort and asked that International Night
    cover Nigerian, Chamorro (Guam), Filipino and Turkish food; the other
    eleven example lines are the agent's drafts, edit freely in the JSON.)
-2. **Hard deadline** — none by default. If a rule-enforced close is wanted
-   every week, that is a weekly `polls/{weekId}` doc; say so and the page can
-   grow a small admin affordance.
+2. **Close time** — built as Saturday 11:59 pm. Say if it should be earlier
+   (e.g. 6 pm); it is one constant in the page plus the rule's slack.
 3. **Blaze plan / App Check** — acceptable for reCAPTCHA Enterprise, or ship
    without App Check?
 4. **Where the page lives in the nav** — currently URL-only. Options: a
