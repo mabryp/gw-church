@@ -7,13 +7,17 @@
 #   scripts/seed-poll-defaults.sh prod       # real gw-church project; needs
 #                                            # gcloud logged in as the owner
 #
+# If the owner's account is not gcloud's active one, name it instead of
+# switching configs:  GCLOUD_ACCOUNT=owner@example.com scripts/seed-poll-defaults.sh prod
+#
 # Re-run any time the theme list changes; it replaces both defaults docs.
 set -eu
 cd "$(dirname "$0")"
 
 case "${1:-}" in
   emulator) BASE="http://127.0.0.1:8080"; TOKEN="owner" ;;
-  prod)     BASE="https://firestore.googleapis.com"; TOKEN="$(gcloud auth print-access-token)" ;;
+  prod)     BASE="https://firestore.googleapis.com"
+            TOKEN="$(gcloud auth print-access-token ${GCLOUD_ACCOUNT:+--account="$GCLOUD_ACCOUNT"})" ;;
   *) echo "usage: $0 emulator|prod" >&2; exit 2 ;;
 esac
 

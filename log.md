@@ -493,3 +493,16 @@ Not a secret by design; the rules and (later) App Check protect the data.
 Wiki status table and setup step updated. Remaining owner steps: create
 Firestore, enable Anonymous auth, grant the deploy account two IAM roles,
 first manual rules deploy, seed defaults. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: Firestore live, rules deployed, defaults seeded
+Owner created the Firestore database (step 2), ran the first manual rules
+deploy from the Mac (step 5, `firebase deploy --only firestore` — deploy
+complete, rules released), and hit `PERMISSION_DENIED` on the seed (step
+6). Cause: gcloud's active account is the school account, which has no
+access to gw-church; the Gmail account was already authenticated in gcloud,
+just not active. Added a `GCLOUD_ACCOUNT` override to
+`scripts/seed-poll-defaults.sh` and seeded both `polls/defaults` and
+`polls-preview/defaults` on the real project (13 themes + examples read
+back unauthenticated — also confirming the deployed rules' public read).
+Wiki status table and seeding notes updated. Pushed to PR #7; no hosting
+deploy target (the rules deploy was the owner's, manual, bootstrap).

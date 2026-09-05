@@ -12,12 +12,13 @@ Nothing is deployed and nothing is enabled on the Firebase project.
 | Design decision (Option A vs B) | Option A built, per the design's recommendation — owner has not formally confirmed |
 | Page `site/wednesday-dinner/` | **Built**; verified end to end against the local emulators |
 | `firestore.rules` | **Built**; 28 allow/deny cases pass in the Firestore emulator (`tests/firestore-rules/`) |
-| Rules deploy workflow | **Built** (`.github/workflows/rules-deploy.yml`); has never run |
+| Rules deploy workflow | **Built** (`.github/workflows/rules-deploy.yml`); has never run. Rules were deployed **manually** once by the owner 2026-09-05 (bootstrap) |
 | Web App registered on `gw-church` | **Done** 2026-09-05 — "gw-church site", app id `1:158831221425:web:73add5b1d866dca7c7a090`; real config committed in `firebase-config.js` |
-| Firestore database | **Not created** — the Cloud Firestore API is not even enabled on the project |
+| Firestore database | **Created** by the owner 2026-09-05 (`(default)`, Standard) |
 | Anonymous auth | Not enabled |
 | App Check | Not configured |
-| Deploy service-account roles for rules | Not granted (see § Deploying the rules) |
+| Deploy service-account roles for rules | Unknown — verify on first run of the rules workflow (see § Deploying the rules) |
+| `polls/defaults` + `polls-preview/defaults` | **Seeded** 2026-09-05 with the 13 themes and examples |
 | Theme list | **Decided** (owner, 2026-09-05) — 13 themes in `scripts/poll-defaults.json`, seeded by `scripts/seed-poll-defaults.sh` |
 | Close time / `closesNote` | Owner input needed (optional) |
 
@@ -263,7 +264,11 @@ scripts/seed-poll-defaults.sh prod
 ```
 
 That writes `scripts/poll-defaults.json` to both `polls/defaults` (production)
-and `polls-preview/defaults` (preprod and PR previews). The console works too:
+and `polls-preview/defaults` (preprod and PR previews). If the owner's
+account is signed in to gcloud but not active, pass it without switching:
+`GCLOUD_ACCOUNT=<owner address> scripts/seed-poll-defaults.sh prod`
+(this is how the 2026-09-05 seed was done; a token for the wrong account
+gives `PERMISSION_DENIED`). The console works too:
 collection `polls`, document `defaults`, field `themes` as an array of
 strings, and the same again under `polls-preview`.
 
