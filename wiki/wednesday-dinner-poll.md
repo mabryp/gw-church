@@ -4,20 +4,21 @@
 
 ## Status (as of 2026-09-05)
 
-Repo side is complete and tested on branch `claude/weekly-dinner-poll-d8ftg6`.
-Nothing is deployed and nothing is enabled on the Firebase project.
+**Live on gw-church.org/wednesday-dinner since 2026-09-05** (PR #7 merged by
+the owner; prod deploy succeeded; preprod mirror synced). Linked from the
+top bar on every page.
 
 | Item | State |
 |---|---|
 | Design decision (Option A vs B) | Option A built, per the design's recommendation — owner has not formally confirmed |
-| Page `site/wednesday-dinner/` | **Built**; verified end to end against the local emulators |
+| Page `site/wednesday-dinner/` | **Live** on prod; verified against the emulators, the PR preview (real project) and by fetching the live page |
 | `firestore.rules` | **Built**; 28 allow/deny cases pass in the Firestore emulator (`tests/firestore-rules/`) |
-| Rules deploy workflow | **Built** (`.github/workflows/rules-deploy.yml`); has never run. Rules were deployed **manually** once by the owner 2026-09-05 (bootstrap) |
+| Rules deploy workflow | **First run failed** on the merge (2026-09-05): the service account lacks `serviceusage.services.get` — needs `roles/serviceusage.serviceUsageViewer` (see § Deploying the rules). Live rules are fine: the owner deployed them manually first |
 | Web App registered on `gw-church` | **Done** 2026-09-05 — "gw-church site", app id `1:158831221425:web:73add5b1d866dca7c7a090`; real config committed in `firebase-config.js` |
 | Firestore database | **Created** by the owner 2026-09-05 (`(default)`, Standard) |
 | Anonymous auth | Not enabled |
-| App Check | Not configured |
-| Deploy service-account roles for rules | **Granted** by the owner 2026-09-05 — verified via `gcloud projects get-iam-policy`: `roles/firebaserules.admin` + `roles/datastore.viewer` |
+| App Check | Not configured (optional; see § Console setup step 3) |
+| Deploy service-account roles for rules | `roles/firebaserules.admin` + `roles/datastore.viewer` granted 2026-09-05; **`roles/serviceusage.serviceUsageViewer` still missing** (owner action) |
 | `polls/defaults` + `polls-preview/defaults` | **Seeded** 2026-09-05 with the 13 themes and examples |
 | Theme list | **Decided** (owner, 2026-09-05) — 13 themes in `scripts/poll-defaults.json`, seeded by `scripts/seed-poll-defaults.sh` |
 | Close time / `closesNote` | Owner input needed (optional) |
@@ -326,9 +327,22 @@ for ROLE in roles/firebaserules.admin roles/datastore.viewer; do
 done
 ```
 
-Granted 2026-09-05 and verified with `gcloud projects get-iam-policy`.
-Whether they are sufficient is confirmed by the rules workflow's first run
-on `main`; if it fails on a permission, the error names the missing one. Note the owner's
+Granted 2026-09-05, but the workflow's first run showed they are **not
+sufficient**: before deploying, the Firebase CLI checks that the Firestore
+API is enabled via `serviceusage.googleapis.com`, and the service account
+got `403 Permission denied to get service [firestore.googleapis.com]`.
+That check needs `serviceusage.services.get`, which is in
+`roles/serviceusage.serviceUsageViewer` (read-only). Grant it and re-run
+the failed workflow (`gh run rerun 33999102998`):
+
+```bash
+gcloud projects add-iam-policy-binding gw-church \
+  --member=serviceAccount:github-action-hosting@gw-church.iam.gserviceaccount.com \
+  --role=roles/serviceusage.serviceUsageViewer
+```
+
+(An agent session attempted this grant and was blocked by its permission
+policy — IAM changes on the project are the owner's.) Note the owner's
 `gcloud` on the Mac is currently logged in as the school account with a
 different active project — use `gcloud auth login` / `--account` first.
 

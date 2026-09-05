@@ -37,7 +37,9 @@ the GitHub repo.
    `main`. Rules are project-wide (one database behind prod, preprod and
    every preview channel), so they never deploy from a PR. The service
    account has `roles/firebaserules.admin` and `roles/datastore.viewer`
-   for this step (granted 2026-09-05; first workflow run still pending).
+   for this step, but the first run (2026-09-05) failed: it also needs
+   `roles/serviceusage.serviceUsageViewer` so the CLI can check the
+   Firestore API is enabled. See the poll page § Deploying the rules.
 
 Wiki/log/CLAUDE.md-only commits deploy nothing (the hosting workflows
 path-filter on `site/**` and `firebase.json`; the rules workflow on the two
