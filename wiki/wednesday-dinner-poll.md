@@ -98,7 +98,7 @@ on the site and de-duplicates only by eye.
 | `firebase.json` | New `firestore` block (rules + indexes) and `emulators` block (auth 9099, firestore 8080, hosting 5050). |
 | `.github/workflows/rules-deploy.yml` | Deploys rules + indexes when they change on `main`. |
 | `tests/firestore-rules/` | 28-case rules test (`npm install && npm test`). |
-| `scripts/poll-defaults.json` | The canonical default theme list (13 themes, owner-supplied 2026-09-05) and optional `closesNote`. |
+| `scripts/poll-defaults.json` | The canonical default theme list (13 themes, owner-supplied 2026-09-05), a per-theme `examples` map shown under each choice, and optional `closesNote`. |
 | `scripts/seed-poll-defaults.sh` | Writes that file to `polls/defaults` and `polls-preview/defaults` — `emulator` or `prod` (needs `gcloud` as the owner). Re-run whenever the list changes. |
 | `.gitignore` | Emulator logs, `.firebase/`, `node_modules/`. |
 
@@ -115,6 +115,9 @@ Page behaviour worth knowing:
   (UI only, not enforced). Otherwise nothing about a deadline is shown.
 - A returning voter (same browser, same week) sees their choice preselected
   and "You voted for X. Change your mind? Pick another theme and vote again."
+- Each choice shows its `examples` text in small muted type under the theme
+  name (e.g. Backyard BBQ: burgers, hot dogs, potato salad…). Missing
+  entries simply show the name alone; the tally shows names only.
 - Results list every voter's name under the theme they chose, so accidental
   duplicates are visible to everyone. Open decision § 5 below.
 - The page is **not linked from the site nav or homepage** yet — reachable
@@ -124,6 +127,7 @@ Page behaviour worth knowing:
 
     {coll}/defaults                 # permanent; used when a week has no doc
       themes:     [...]             # from scripts/poll-defaults.json (13 themes)
+      examples:   { theme: "..." }  # optional; shown in small text under each choice
       closesNote: "..."             # optional, display only
 
     {coll}/{weekId}                 # OPTIONAL per-week override, e.g. 2026-W37
@@ -348,7 +352,10 @@ is preselected, name prefilled, and the "You voted for…" status shown.
    Italian, Soups / Chili / Stew, Southern Comfort, Casserole Night, Taco
    Bar, Sandwich Night, International Night, Vegan, Potluck / Mystery
    Surprise Dinner — capitalisation and separators are the agent's
-   normalisation of the owner's list.)
+   normalisation of the owner's list. The owner supplied the example dishes
+   for Backyard BBQ and Southern Comfort and asked that International Night
+   cover Nigerian, Chamorro (Guam), Filipino and Turkish food; the other
+   eleven example lines are the agent's drafts, edit freely in the JSON.)
 2. **Hard deadline** — none by default. If a rule-enforced close is wanted
    every week, that is a weekly `polls/{weekId}` doc; say so and the page can
    grow a small admin affordance.

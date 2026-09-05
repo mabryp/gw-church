@@ -21,6 +21,8 @@ BODY="$(python3 - <<'PY'
 import json
 d = json.load(open("poll-defaults.json"))
 fields = {"themes": {"arrayValue": {"values": [{"stringValue": t} for t in d["themes"]]}}}
+if d.get("examples"):
+    fields["examples"] = {"mapValue": {"fields": {k: {"stringValue": v} for k, v in d["examples"].items()}}}
 if d.get("closesNote"):
     fields["closesNote"] = {"stringValue": d["closesNote"]}
 print(json.dumps({"fields": fields}))

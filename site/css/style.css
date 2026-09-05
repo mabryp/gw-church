@@ -225,7 +225,10 @@ main.page.wide { max-width: 1080px; }
 }
 .poll-form .choice:hover { background: #eef0e6; }
 .poll-form .choice:has(input:checked) { border-left-color: var(--lime); background: #eef0e6; }
-.poll-form .choice input { width: 1.2rem; height: 1.2rem; margin: 0; accent-color: var(--navy); flex: none; }
+.poll-form .choice input { width: 1.2rem; height: 1.2rem; margin: 0.2rem 0 0; accent-color: var(--navy); flex: none; }
+.poll-form .choice { align-items: flex-start; }
+.poll-form .choice-text { display: flex; flex-direction: column; gap: 0.1rem; }
+.poll-form .choice-examples { font-weight: 400; font-size: 0.88rem; color: var(--muted); line-height: 1.4; }
 .poll-form label.name { display: block; font-weight: 600; margin: 0 0 1.1rem; }
 .poll-form input[type="text"] {
   display: block;

@@ -433,3 +433,17 @@ the page rendering the 13-item ballot. Updated
 [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) (status,
 files, seeding step, open decisions — theme list closed, `closesNote` still
 open) and the index line. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: example dishes under each theme
+Owner asked for example dishes on each theme (gave Backyard BBQ and Southern
+Comfort, and asked that International Night reflect the congregation's
+Nigerian, Guamanian/Chamorro, Filipino and Turkish food). Added an
+`examples` map to `scripts/poll-defaults.json` (owner's two lines verbatim
+with minor tidying; the other eleven are agent drafts flagged in the wiki),
+taught `scripts/seed-poll-defaults.sh` to write it as a Firestore map, and
+made the page render it in small muted text under each radio choice
+(`site/wednesday-dinner/index.html`, `site/css/style.css`). Rules unchanged:
+`themes` is still the validated string list; `examples` is display-only on
+the read-only config doc. Verified the seed round-trips through the
+emulator and the page renders all 13 choices with their examples. Wiki data
+model, files table and open-decisions note updated. Pushed to PR #7.

@@ -175,13 +175,15 @@ const btn = $('vote-btn');
 
 function pollWeekId(now = new Date()) { return isoWeekId(pollWednesday(now)); }
 
-function renderThemes(themes, selected) {
+function renderThemes(themes, examples) {
   const fs = $('themes');
   fs.querySelectorAll('.choice').forEach(n => n.remove());
   for (const theme of themes) {
     const input = el('input', { type: 'radio', name: 'theme', value: theme });
-    if (theme === selected) input.checked = true;
-    fs.append(el('label', { class: 'choice' }, [input, el('span', { text: theme })]));
+    const text = [el('span', { class: 'choice-name', text: theme })];
+    const ex = examples[theme];
+    if (typeof ex === 'string' && ex) text.push(el('span', { class: 'choice-examples', text: ex }));
+    fs.append(el('label', { class: 'choice' }, [input, el('span', { class: 'choice-text' }, text)]));
   }
 }
 
@@ -253,11 +255,12 @@ async function main() {
     return;
   }
   const themes = cfg.themes.filter(t => typeof t === 'string');
+  const examples = cfg.examples && typeof cfg.examples === 'object' ? cfg.examples : {};
   const closesAt = cfg.closesAt && typeof cfg.closesAt.toDate === 'function' ? cfg.closesAt.toDate() : null;
   const closed = closesAt !== null && Date.now() >= closesAt.getTime();
 
   try { nameInput.value = localStorage.getItem(NAME_KEY) || ''; } catch (e) { /* storage unavailable */ }
-  renderThemes(themes, null);
+  renderThemes(themes, examples);
   form.hidden = false;
   boot.hidden = true;
 

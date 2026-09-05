@@ -13,5 +13,20 @@
     "International Night",
     "Vegan",
     "Potluck / Mystery Surprise Dinner"
-  ]
+  ],
+  "examples": {
+    "Backyard BBQ": "burgers, hot dogs, potato salad, mac salad, baked beans, corn on the cob",
+    "Mexican": "enchiladas, fajitas, tamales, rice and beans, chips and salsa",
+    "Breakfast": "pancakes, waffles, eggs, bacon, sausage, biscuits and gravy, breakfast tacos",
+    "Asian": "stir-fry, fried rice, lo mein, teriyaki chicken, dumplings, egg rolls",
+    "Italian": "spaghetti, lasagna, baked ziti, chicken parmesan, garlic bread, salad",
+    "Soups / Chili / Stew": "chili, chicken noodle, tortilla soup, beef stew, potato soup, cornbread",
+    "Southern Comfort": "fried chicken, meat loaf, mac and cheese, pork chops, gumbo, collard greens",
+    "Casserole Night": "King Ranch chicken, tater tot casserole, chicken and rice, green bean casserole, enchilada casserole",
+    "Taco Bar": "seasoned beef and chicken, tortillas, and all the fixings: lettuce, cheese, salsa, guacamole, sour cream",
+    "Sandwich Night": "subs, sliders, pulled pork, grilled cheese, chicken salad, chips and pickles",
+    "International Night": "food from all over the world: Nigerian jollof rice and suya, Chamorro red rice and kelaguen from Guam, Filipino pancit, lumpia, and adobo, Turkish kebabs and pide, and anything else you love",
+    "Vegan": "veggie chili, grain bowls, roasted vegetables, pasta primavera, lentil curry, fresh salads",
+    "Potluck / Mystery Surprise Dinner": "bring whatever you like; nobody knows what's coming until the lids come off"
+  }
 }
