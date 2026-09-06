@@ -20,6 +20,17 @@
           "destination": "/connect",
           "type": 301
         }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=300"
+            }
+          ]
+        }
       ]
     },
     {
@@ -41,6 +52,17 @@
           "source": "/social_media",
           "destination": "/connect",
           "type": 301
+        }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=300"
+            }
+          ]
         }
       ]
     }

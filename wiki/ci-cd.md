@@ -46,6 +46,17 @@ path-filter on `site/**` and `firebase.json`; the rules workflow on the two
 Firestore files). PRs from forks are skipped (no secret access);
 developers should push branches to this repo.
 
+## Caching after a deploy
+
+Firebase Hosting's default is `Cache-Control: max-age=3600`, so a browser
+that loaded a page or the stylesheet within the hour before a deploy keeps
+the old copy until then — on 2026-09-05 the owner saw the new nav with the
+old stylesheet (the poll page unstyled) right after the poll merge. Two
+mitigations, both in the 2026-09-05 cache PR: `firebase.json` sets
+`Cache-Control: max-age=300` for every path on both targets, and every
+page links the stylesheet as `/css/style.css?v=YYYYMMDD` — **bump that
+query string whenever `style.css` changes** so browsers fetch it at once.
+
 ## Credentials
 
 - Service account: `github-action-hosting@gw-church.iam.gserviceaccount.com`
