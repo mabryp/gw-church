@@ -572,5 +572,6 @@ nine sub-items, at ~674px on an 812px screen — easy to miss and off-screen
 on shorter phones (the owner's phone also still had the cached pre-merge
 homepage). Moved "Wednesday Dinner" to directly after Home on all 13 pages
 so it is the second line of the phone menu and second item on the desktop
-bar. Added to PR #8 (title and body updated); wiki poll page updated.
-Prod on the owner's merge.
+bar. First pushed to the PR #8 branch, which turned out to be already
+merged, so re-raised as PR #9 on a fresh branch (the stray branch was
+deleted). Wiki poll page updated. Prod on the owner's merge.
