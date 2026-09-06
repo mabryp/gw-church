@@ -1,0 +1,101 @@
+rules_version = '2';
+
+// Wednesday dinner poll. Design and data model: wiki/wednesday-dinner-poll.md
+//
+// Two top-level collections share these rules:
+//   polls          — production (gw-church.org)
+//   polls-preview  — written by gw-church-preprod.web.app, PR preview
+//                    channels and localhost, so review traffic never touches
+//                    the live tally. The page picks the collection by hostname.
+//
+// Each collection holds:
+//   {coll}/defaults              permanent config: { themes: [...] }
+//   {coll}/{YYYY-MM-DD}           optional per-Wednesday override: { themes, closesAt? }
+//   {coll}/{YYYY-MM-DD}/votes/{uid}   one vote per anonymous uid: { theme, at } — public
+//   {coll}/{YYYY-MM-DD}/voters/{uid}  who cast it: { name, theme, at } — NOT readable
+//
+// Poll/config documents are read-only from the client (edit in the console).
+// Vote and voter documents can be created and updated only by their own uid,
+// never deleted, and only with a theme from the week's active list. The name
+// lives only on the voters doc, which no client can read: the tally on the
+// page is built from the public votes docs, and names are seen only in the
+// Firebase console.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isPollColl(c) {
+      return c == 'polls' || c == 'polls-preview';
+    }
+
+    // Poll key = the Wednesday's date, YYYY-MM-DD. Votes are accepted only
+    // during that Wednesday's voting week: Sunday through Saturday of the
+    // PREVIOUS week, Chicago time. Dates are UTC here, so the bounds carry a
+    // few hours of slack (lenient at both ends by up to 6h); the page shows
+    // the exact Saturday-midnight cutoff and this is the backstop.
+    function isPollKey(k) {
+      return k.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+    }
+    function wednesdayOf(k) {
+      let p = k.split('-');
+      return timestamp.date(int(p[0]), int(p[1]), int(p[2]));
+    }
+    function inVotingWindow(k) {
+      let wed = wednesdayOf(k);
+      return wed.dayOfWeek() == 3
+          && request.time >= wed - duration.value(10, 'd')
+          && request.time <  wed - duration.value(3, 'd') + duration.value(6, 'h');
+    }
+
+    // The week's own config doc if it exists, else the permanent defaults.
+    // If neither exists, get() has no data and every write is denied —
+    // {coll}/defaults must be created before the poll can accept votes.
+    function cfg(c, key) {
+      return exists(/databases/$(database)/documents/$(c)/$(key))
+        ? get(/databases/$(database)/documents/$(c)/$(key)).data
+        : get(/databases/$(database)/documents/$(c)/defaults).data;
+    }
+
+    function validTheme(c) {
+      let d = request.resource.data;
+      return d.theme is string && d.theme in c.themes
+          && d.at == request.time
+          && (!('closesAt' in c) || request.time < c.closesAt);
+    }
+    function validVote(c) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['theme', 'at']) && d.keys().hasAll(['theme', 'at'])
+          && validTheme(c);
+    }
+    function validVoter(c) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'theme', 'at']) && d.keys().hasAll(['name', 'theme', 'at'])
+          && d.name is string && d.name.size() > 0 && d.name.size() <= 60
+          && validTheme(c);
+    }
+    function ownVoteWrite(coll, docId, uid) {
+      return isPollColl(coll)
+          && isPollKey(docId)
+          && inVotingWindow(docId)
+          && request.auth != null
+          && request.auth.uid == uid;
+    }
+
+    match /{coll}/{docId} {
+      allow read: if isPollColl(coll);
+      allow write: if false;
+
+      match /votes/{uid} {
+        allow read: if isPollColl(coll);
+        allow create, update: if ownVoteWrite(coll, docId, uid) && validVote(cfg(coll, docId));
+        allow delete: if false;
+      }
+
+      match /voters/{uid} {
+        allow read: if false;
+        allow create, update: if ownVoteWrite(coll, docId, uid) && validVoter(cfg(coll, docId));
+        allow delete: if false;
+      }
+    }
+  }
+}

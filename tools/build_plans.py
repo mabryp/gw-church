@@ -2,8 +2,9 @@
 """Regenerate both reading-plan embed documents on the shared template.
 Content transcribed verbatim from the original embeds (raw/embeds/)."""
 import html
+import os
 
-ROOT = '/Users/mabryp/repositories/gateway_site_work'
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 MATTHEW = {
@@ -130,6 +131,64 @@ MARK = {
          None,
          'Mark presents Jesus as the Servant who acts with authority, compassion, and sacrificial love. Luke now begins an orderly account, inviting us to understand with certainty who Jesus is and why His life changes everything.',
          'https://docs.google.com/forms/d/e/1FAIpQLSe_utf8OKAsEdcB3Jag5gKG6iTuxNQnwYhtzAceOssv8HyOUQ/viewform'),
+    ],
+}
+
+LUKE = {
+    'title': 'The Gospel of Luke',
+    'doc_title': 'The Gospel of Luke Reading Plan',
+    'subtitle': 'Follow Jesus through Luke’s compassionate account of the Savior who seeks the lost, welcomes the outcast, and brings good news to all people.',
+    'pills': ['9 Weeks', 'August 31 – October 30, 2026', 'Monday–Friday Readings'],
+    'footer': 'Gateway Church · Gospel Reading Plan · 2026',
+    'weeks': [
+        # (num, range, topic, dates, [5 passages], ot_refs, summary, quiz_url)
+        # Schedule from the Gateway Public Calendar ("Reading Plan Luke ..."
+        # events); "Catch-Up / Reflection" fills weekdays the calendar leaves open.
+        (22, 'Luke 1–2', 'The Savior Arrives', 'Aug 31 – Sep 4',
+         ['Luke 1:1–38', 'Luke 1:39–80', 'Luke 2:1–20', 'Luke 2:21–40', 'Luke 2:41–52'],
+         'Isaiah 40 · 1 Samuel 2 · Micah 5',
+         'Luke opens his orderly account with songs, angels, and humble shepherds. The long-promised Savior arrives not in a palace but a manger, and from the very first chapter Luke shows God lifting up the lowly.',
+         'https://docs.google.com/forms/d/e/1FAIpQLSfT4hh7mterDg5v-GXSNXcXdWpTshSkFNf6VrZkoEe08oIyLg/viewform'),
+        (23, 'Luke 3–4', 'Prepared and Announced', 'Sep 7 – Sep 11',
+         ['Luke 3', 'Luke 4:1–30', 'Luke 4:31–44', 'Luke 4:16–21', 'Review Luke 4:16–21'],
+         'Isaiah 61 · Psalm 2',
+         'John prepares the way, the Spirit descends, and Jesus withstands the tempter. In the Nazareth synagogue Jesus reads Isaiah and announces His mission: good news to the poor, liberty to the captives, sight to the blind.',
+         'https://docs.google.com/forms/d/e/1FAIpQLSeWWPAPnUqPJgJGZzX7XHeqWzUl_Pq5AP50xGiyt4eYR23zvw/viewform'),
+        (24, 'Luke 5–6', 'Calling and Teaching', 'Sep 14 – Sep 18',
+         ['Luke 5', 'Luke 6:1–26', 'Luke 6:27–49', 'Catch-Up / Reflection', 'Catch-Up / Reflection'],
+         None,
+         'Jesus calls ordinary fishermen and a tax collector to follow Him, then teaches on the plain: blessings for the poor, love for enemies, and a life built on the rock of hearing and doing His words.',
+         None),
+        (25, 'Luke 7–8', 'Compassion and Power', 'Sep 21 – Sep 25',
+         ['Luke 7', 'Luke 8:1–25', 'Luke 8:26–56', 'Review Luke 7–8', 'Review Luke 7–8'],
+         None,
+         'A centurion’s faith, a widow’s son raised, a sinful woman forgiven — Luke shows the Savior’s heart for the hurting. His power over storms, demons, disease, and death confirms that no one is beyond His reach.',
+         None),
+        (26, 'Luke 9', 'Who Is Jesus?', 'Sep 28 – Oct 2',
+         ['Luke 9:1–36', 'Luke 9:37–62', 'Reflection', 'Catch-Up / Reflection', 'Catch-Up / Reflection'],
+         None,
+         'Peter confesses Jesus as the Christ, and the transfiguration confirms it. Yet Jesus immediately speaks of suffering, and He sets His face toward Jerusalem — following Him means taking up a cross daily.',
+         None),
+        (27, 'Luke 10–12', 'On the Road with the Savior', 'Oct 5 – Oct 9',
+         ['Luke 10', 'Luke 11', 'Luke 12:1–34', 'Luke 12:35–59', 'Catch-Up / Reflection'],
+         None,
+         'On the road to Jerusalem, Jesus teaches what His followers’ lives should look like: neighbor-love like the Samaritan’s, persistent prayer, freedom from greed and worry, and readiness for the Master’s return.',
+         None),
+        (28, 'Luke 13–15', 'Parables of the Seeking God', 'Oct 12 – Oct 16',
+         ['Luke 13', 'Luke 14', 'Luke 15', 'Catch-Up / Reflection', 'Catch-Up / Reflection'],
+         None,
+         'The narrow door, the great banquet, and the cost of discipleship lead into Luke 15’s beloved trilogy — the lost sheep, the lost coin, and the lost son — revealing a God who seeks the lost and celebrates their return.',
+         None),
+        (29, 'Luke 16–19', 'Seeking and Saving the Lost', 'Oct 19 – Oct 23',
+         ['Luke 16', 'Luke 17', 'Luke 18', 'Luke 19:1–27', 'Luke 19:28–48'],
+         None,
+         'From the rich man and Lazarus to blind Bartimaeus and Zacchaeus, Jesus declares His purpose: “the Son of Man came to seek and to save the lost.” The week closes with the King entering Jerusalem to shouts of praise.',
+         None),
+        (30, 'Luke 20–24', 'The Cross and the Empty Tomb', 'Oct 26 – Oct 30',
+         ['Luke 20–21', 'Luke 22', 'Luke 23', 'Luke 24:1–35', 'Luke 24:36–53'],
+         None,
+         'Rejected by the leaders, betrayed, and crucified between criminals, Jesus forgives even from the cross. Then the tomb is empty: hearts burn on the Emmaus road, and the risen Savior sends His witnesses to all nations.',
+         None),
     ],
 }
 
@@ -267,4 +326,6 @@ with open(f'{ROOT}/site/embeds/matthew-reading-plan.html', 'w') as f:
     f.write(build(MATTHEW, 'ot-why', True))
 with open(f'{ROOT}/site/embeds/mark-reading-plan.html', 'w') as f:
     f.write(build(MARK, 'summary', True))
-print('wrote both plans')
+with open(f'{ROOT}/site/embeds/luke-reading-plan.html', 'w') as f:
+    f.write(build(LUKE, 'summary', True))
+print('wrote all plans')

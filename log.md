@@ -215,31 +215,352 @@ command cheat sheet, and how to learn alongside the AI. Indexed under "The
 project". CLAUDE.md teaching-mode note now points to it and caps lesson
 length so teaching doesn't crowd out website work.
 
-## [2026-08-12] site | Luke/John reading plan hero sections
-Alex's first learning PR (#4, branch claude/getting-started-repo-c87o87):
-added site/embeds/temp-luke-reading-plan.html and
-temp-john-reading-plan.html, matching the Matthew/Mark hero component
-(reading-plan.css) with portrait-themed subtitles (Luke: Savior, John: Son
-of God) and a coming-soon note; the two site/reading-plan/*/index.html pages
-now embed these via iframe instead of a plain paragraph. Meta-row pills are
-placeholders (no confirmed schedule yet) rather than invented dates. "temp-"
-naming flags these embeds for rename once real plan content is written.
-Preview verified on gw-church-preprod PR #4 channel.
+## [2026-08-06] site | preview URL pinned to PR description (preview-deploy.yml)
+Owner reported the PR #4 preview "didn't work" — the deploy had in fact
+succeeded, but the preview URL lived only in a bot comment in the PR
+conversation tab and was easy to miss. Per owner directive (link must be
+apparent to Phillip and Alex after each preview deploy), preview-deploy.yml
+gained a github-script step that pins the preview URL and expiry to the TOP
+of the PR description in a marker-delimited block, updated in place on every
+push. Deploy-affecting change (workflow only; no site/ content touched).
+wiki/ci-cd.md and wiki/git-basics.md updated to say where the link appears
+and to clarify that gw-church-preprod.web.app itself only re-syncs on merge.
 
-## [2026-08-12] site | Connect page: Facebook → YouTube for livestreams
-Corrected outdated claim on site/connect/index.html and
-wiki/connect-channels.md: sermons are no longer livestreamed on Facebook —
-YouTube is now the livestream and past-stream destination (per Alex, owner
-of this correction). Facebook copy now covers pastor messages and church
-news/events only.
+## [2026-08-30] query | Luke reading plan schedule located
+Owner asked whether the Luke reading plan is accessible. The repo has only
+placeholders, but Joy Dumont published the full Luke schedule as "Reading
+Plan Luke ..." all-day events on the Gateway Public Calendar (most entered
+the night of Aug 29-30). Retrieved the complete run — weekdays Aug 31 to
+Oct 30, 2026, Luke 1:1-38 through 24:36-53, with two Friday OT supplement
+sets and review/reflection days; a few weekday slots still empty. Filed the
+schedule into wiki/reading-plans.md (new "Luke schedule" section, table row,
+summary) and updated the index line. Site page can now be built from it.
 
-## [2026-08-12] site | Connect page icon cards; shared .link-cards update
-Reworked Connect's Facebook/YouTube links into icon link-cards (monochrome
-navy inline SVGs, no hotlinked logo images) using the existing `.link-cards`
-component from site/css/style.css. The CSS change (`.link-cards a` to flex)
-is shared site-wide, so also updated site/about/index.html's three cards
-with a `.link-text` wrapper to keep their stacked title/subtitle layout —
-caught via local render (headless Chromium) before committing: the first
-pass silently broke About's layout (title and subtitle collapsed onto one
-line), fixed and re-verified with screenshots. Font-loading and one
-favicon 404 console errors are sandbox/pre-existing, unrelated.
+## [2026-08-30] site | Luke reading plan page built on shared template (preprod PR)
+Owner asked for the Luke plan on the site matching Matthew/Mark. Added LUKE
+(weeks 22-30, Aug 31 - Oct 30) to tools/build_plans.py from the Gateway
+Public Calendar schedule and generated site/embeds/luke-reading-plan.html
+(no quiz buttons yet); rewrote site/reading-plan/luke-reading-plan/index.html
+as an iframe wrapper cloned from Matthew's. build_plans.py now derives its
+repo root from the script path (was a hardcoded local path) and emits all
+three plans; Matthew/Mark output verified byte-identical. Week titles and
+summaries are LLM-written pending owner review; open calendar slots render
+as "Catch-Up / Reflection". Target: preprod preview via PR to main —
+supersedes PR #4's coming-soon hero. Wiki reading-plans.md/index updated.
+
+## [2026-08-30] site | fix inner scrollbar on embed wrapper pages (PR #5)
+Owner reported an inner scrollbar on the Luke plan preview. Cause: the
+wrapper pages' iframe auto-size script observed the embed's inner document
+with a parent-window ResizeObserver, which silently never fires in some
+browsers (WebKit/Firefox) — so after web fonts reflowed the content taller,
+the frame stayed at its load-time height and the overflow scrolled inside
+the iframe (Chromium unaffected; reproduced/verified headlessly). Fixed on
+all five wrapper pages (three reading plans, Charley's Notes, Search
+Sermons): arm() now always polls fit() every 800ms and re-fits on
+doc.fonts.ready, keeping ResizeObserver as a fast path. Verified in
+Chromium desktop+mobile with ResizeObserver deleted: frames size to
+content, no inner scroll. Pushed to PR #5 (preprod preview).
+
+## [2026-09-01] site | Drafted Luke quiz bank and wired the Luke plan for quizzes
+Asked whether the Luke quiz was accessible. It is not: the `gospel_quiz` sheet
+(id 1IHJE85Y…) is invisible to the Drive account agent sessions connect through
+(phillip.mabry@gw-school.org) — the id returns "not found" and no quiz/gospel
+files are searchable — and no Luke bank existed in the repo. Drafted one
+instead: `luke_quiz_bank.csv`, 108 questions for W22–W30, byte-schema-identical
+to `mark_quiz_bank.csv` (12 per week, 4 easy / 4 medium / 4 hard, points 1/2/3,
+CRLF, UTF-8), keyed to each week's readings in `tools/build_plans.py` and
+validated (header match, no blanks, unique ids, every correct_answer present
+among its choices). Flipped LUKE to `has_quizzes=True` and rebuilt; the only
+rendered change is the quiz-activation script, since the template hides buttons
+until a `data-quiz-url` is set, so readers see no difference yet. Updated
+wiki/reading-plans.md (new "Luke quiz bank" section with the owner-side steps)
+and wiki/index.md. Not done, and not doable from an agent session: loading the
+bank into the sheet, running Quiz Builder for W22–W30, the UI-only results
+settings, and pasting the nine URLs back into build_plans.py.
+
+## [2026-09-01] ingest | Luke quiz questions (owner-supplied)
+Owner uploaded the real Luke bank: 90 questions, 10 per week for W22–W30, in a
+simple 9-column format. Archived verbatim as
+`raw/luke_quizzes_weeks_22-30.csv`. Its week/passage groupings match the LUKE
+weeks in build_plans.py exactly. Discarded the 108-question LLM draft from
+earlier today rather than merging it, and rewrote `luke_quiz_bank.csv` as a
+machine conversion of the owner's file into the 23-column gospel_quiz schema —
+question text, all four options, and the answer key carried over verbatim
+(verified row by row against the source). Derived mechanically: quiz_id,
+quiz_title, reference_id, topic, passages, tags. Left blank rather than
+invented: learning_objective, explanation, common_misconception — note that
+`explanation` is the post-answer feedback in the Matthew/Mark forms, so as
+loaded Luke will grade but explain nothing. Given uniform values for want of a
+source: difficulty medium / points 2, question_type recall. Updated
+wiki/reading-plans.md and wiki/index.md. Still blocked on the owner's personal
+Google account: loading the sheet, Quiz Builder for W22–W30, the UI-only
+results settings, and the nine URLs.
+
+## [2026-09-01] lint | Answer-position bias in the Mark quiz bank
+While comparing answer distributions, found that 77 of 84 correct answers in
+`mark_quiz_bank.csv` sit in position B (A: 1, C: 6, D: 0) with
+`shuffle_answers` FALSE on every row — so a taker who always picks B scores
+~92% on the seven live Mark quizzes without reading. Flagged, not repaired:
+the forms are built and live, and re-keying them is the owner's call.
+Matthew's bank is not in the repo and could not be checked. The owner's Luke
+questions are well distributed (A 27 / B 24 / C 20 / D 19) and were loaded
+with shuffle_answers TRUE.
+
+## [2026-09-01] site | Linked the Week 22 Luke quiz
+Owner supplied the first Luke form URL (W22). Wired it into the LUKE week 22
+tuple in tools/build_plans.py and rebuilt; the Week 22 card now carries
+data-quiz-url and renders an active "Take the Week 22 Quiz" button. Matthew and
+Mark output unchanged. W23–W30 slots remain None, so those weeks still render
+no button. NOT verified from this session: docs.google.com is blocked by the
+network egress proxy here, so the form's title, question count, and anonymous
+accessibility could not be checked the way the Mark forms were — the owner
+should confirm on the PR preview, particularly that the form opens without a
+Google sign-in for congregation members.
+
+## [2026-09-01] site | Linked the Week 23 Luke quiz
+Wired the owner-supplied W23 form URL into tools/build_plans.py and rebuilt.
+Weeks 22 and 23 now render active quiz buttons on the Luke plan; W24–W30 slots
+remain None. Confirmed no duplicate form ids across the file and no change to
+the Matthew or Mark output. Same caveat as W22: docs.google.com is blocked by
+the egress proxy here, so the form's title, question count, and anonymous
+accessibility were not verified from this session.
+
+## [2026-09-04] query | Weekly Wednesday dinner theme poll
+Owner asked how best to add a weekly poll for the Wednesday dinner theme, with
+a fresh vote each week, readable results, one vote per person, and low
+management overhead. Surveyed the current stack (static Firebase Hosting, no
+database or functions; workflows deploy hosting only, path-filtered to
+`site/**` and `firebase.json`; existing interactive pieces are Google
+Forms/Sheets/Apps Script) and filed the analysis as
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md), linked from the
+index under "The website". Key findings recorded there: real one-vote-per-person
+requires identifying voters, which conflicts with this repo's standing practice
+of keeping congregation-facing forms sign-in-free (see the 2026-09-01 entries),
+so a device-bound anonymous uid plus a required name is the right tier; and
+keying the poll by the ISO week of the upcoming Wednesday removes the weekly
+reset entirely. Recommended a Firestore-backed page on the existing Firebase
+project over a prefilled Google Form, noting that Firestore rules would be a new
+deploy surface the workflows do not currently cover. Nothing built — design only,
+pending the owner's decision.
+
+## [2026-09-04] query | Firebase setup path for the dinner poll
+Owner asked how to turn on Firestore, Anonymous auth, and App Check for the
+poll design in [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md).
+Walked the console steps in session; corrected the design page's App Check
+provider from reCAPTCHA v3 to **reCAPTCHA Enterprise** (Google now steers new
+integrations to Enterprise and recommends v3 users upgrade; both invisible,
+10k assessments/month free), and recorded two caveats found while working it
+through: reCAPTCHA Enterprise may require the project on the Blaze plan even
+inside its free tier, and reCAPTCHA site keys are domain-scoped, so Firebase
+Hosting PR preview channels get a fresh subdomain per PR that the key will not
+cover — App Check should stay unenforced until the page is on a stable domain.
+Also noted the missing prerequisite: no Web App is registered on the project
+yet (the site loads no Firebase SDK today), and that registration must come
+before App Check. NOT verified from this session: firebase.google.com is
+blocked by the network egress proxy here, so the console click-paths are from
+knowledge, not checked against the live UI. Nothing enabled or built — the
+owner drives the console.
+
+## [2026-09-05] query | Dinner poll handoff to a local machine
+The owner is Firebase-authenticated on his Mac and asked for the whole design
+written up so work can continue there. Rewrote
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) as a handoff
+document: status table (nothing built, nothing enabled), the one-vote tier
+decision, the date-keyed week id that removes the weekly reset, a draft data
+model and Firestore security rules, the full console setup for Web App
+registration / Firestore / Anonymous auth / App Check, verification commands
+for an authenticated machine, and the repo changes the build still needs.
+Index line updated.
+
+Verified in session: `firebase.json` and `.firebaserc` are valid and mutually
+consistent; and the week-id implementation, cross-checked against Python's
+`date.isocalendar()` over 1200 samples (400 days x 3 times of day) with zero
+mismatches, covering both 2026 DST transitions and the 53-week year boundary.
+
+NOT verified: the security rules were written without an emulator and have
+never been run; the console click-paths and `firebase`/admin-API command names
+are from knowledge, because the web session's egress proxy returns 403 at
+CONNECT for firebase.google.com, console.firebase.google.com, gw-church.org and
+gw-church.web.app (`*.googleapis.com` is reachable — a Firestore admin call
+returned a real 401 CREDENTIALS_MISSING). Declined to have the owner paste a
+CI token or service-account key to work around that: long-lived full-access
+credentials in a chat transcript are a poor trade for state the console shows
+directly.
+
+Two design problems surfaced while writing it up and are recorded as open
+items, not solved: a server-enforced vote deadline requires a per-week document,
+which reintroduces the weekly chore the design exists to avoid (resolved by
+making the deadline optional per week, UI-only by default); and Firestore rules
+are project-wide, so a rules deploy from a PR preview would affect production
+poll data — no answer yet for keeping preprod writes off prod.
+
+## [2026-09-05] site | Built the Wednesday dinner poll (feature branch, not deployed)
+Owner asked to continue the poll from his Mac. Verified project state with
+the Firebase CLI (logged in as the owner): no Web App registered and the
+Cloud Firestore API not enabled, so every console step is still ahead. Built
+the whole repo side on `claude/weekly-dinner-poll-d8ftg6` under the design's
+recommended Option A: `site/wednesday-dinner/index.html` on the shared
+template (anonymous sign-in, date-keyed ballot, live tally, change-your-mind
+re-vote), `site/wednesday-dinner/firebase-config.js` (placeholders until a
+Web App exists), `firestore.rules`, `firestore.indexes.json`, `firestore` and
+`emulators` blocks in `firebase.json`, a new `.github/workflows/rules-deploy.yml`
+that deploys rules from `main` only, a poll section in `site/css/style.css`,
+`tests/firestore-rules/` (28 allow/deny cases), and a `.gitignore` for
+emulator logs. Resolved the open preprod-vs-prod data problem: the page writes
+to `polls` only on production hostnames and to `polls-preview` everywhere
+else, with a visible banner; the rules cover both. Verified: all 28 rules
+cases pass in the Firestore emulator; the page runs end to end in Chromium
+against the auth + firestore + hosting emulators (vote lands with name,
+re-vote moves rather than doubles, a second voter appears live, a returning
+voter sees their choice preselected). NOT verified: anything against the real
+project — no Web App, database, or Anonymous auth exists yet; the rules-deploy
+workflow has never run and the service account still needs two roles; the
+first rules deploy has to be manual from the Mac (bootstrap, documented).
+Rewrote [wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) to
+match (status, what is built, tested rules, console steps incl. seeding and
+IAM, local development, five owner decisions); index line updated. Deploy
+target: none — PR opened for a preprod preview only.
+
+## [2026-09-05] site | Dinner poll: owner's theme list recorded, seed script added
+Owner supplied the 13 default dinner themes. Normalised capitalisation and
+separators (e.g. "soups/chili/stew" → "Soups / Chili / Stew", "suprise" →
+"Surprise") and recorded them as `scripts/poll-defaults.json`, with
+`scripts/seed-poll-defaults.sh emulator|prod` to write them to both
+`polls/defaults` and `polls-preview/defaults` — replacing the console
+click-path and the ad-hoc curl in the local-dev notes. Verified the script
+against the Firestore emulator (both docs written, 13 themes read back) and
+the page rendering the 13-item ballot. Updated
+[wiki/wednesday-dinner-poll.md](wiki/wednesday-dinner-poll.md) (status,
+files, seeding step, open decisions — theme list closed, `closesNote` still
+open) and the index line. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: example dishes under each theme
+Owner asked for example dishes on each theme (gave Backyard BBQ and Southern
+Comfort, and asked that International Night reflect the congregation's
+Nigerian, Guamanian/Chamorro, Filipino and Turkish food). Added an
+`examples` map to `scripts/poll-defaults.json` (owner's two lines verbatim
+with minor tidying; the other eleven are agent drafts flagged in the wiki),
+taught `scripts/seed-poll-defaults.sh` to write it as a Firestore map, and
+made the page render it in small muted text under each radio choice
+(`site/wednesday-dinner/index.html`, `site/css/style.css`). Rules unchanged:
+`themes` is still the validated string list; `examples` is display-only on
+the read-only config doc. Verified the seed round-trips through the
+emulator and the page renders all 13 choices with their examples. Wiki data
+model, files table and open-decisions note updated. Pushed to PR #7.
+
+## [2026-09-05] site | Dinner poll: vote a week ahead, close Saturday, countdown
+Owner corrected the schedule: voting is never for the current week's
+Wednesday; the Sunday–Saturday ballot is for the following week's Wednesday,
+closes Saturday so the winner is announced Sunday, and should show a
+countdown. Reworked the ballot key from ISO week to the target Wednesday's
+date (`YYYY-MM-DD`, Sunday +10 … Saturday +4 in Chicago time), which let the
+security rules compute the voting window from the key itself — so the
+deadline is now server-enforced every week with no per-week document
+(previous open decision closed). Rules reject keys that are not a Wednesday,
+last week's Wednesday, the week after next, malformed or impossible dates;
+UTC bounds carry ~6h slack, the page's countdown is exact. Page: Saturday
+11:59 pm Chicago close (`CLOSE_HOUR` constant, DST-aware), live countdown
+that locks the form at zero, a per-week `closesAt` can only close earlier,
+`closesNote` no longer shown. Tests rewritten to compute the live ballot key
+with the page's logic plus five window cases: 32/32 pass in the emulator.
+Verified in Chromium against the emulators on Sat 2026-09-05: key
+`2026-09-09`, countdown to Saturday 11:59 PM, a vote landing under the date
+key. Wiki page updated throughout (summary, schedule, data model, rules,
+key/close section, open decisions). Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: names off the page and out of reach
+Owner decided not to display voters' names. Removed the name list from the
+results (counts and bars only). Because `votes` must stay publicly readable
+for the live tally, a name stored there would still be fetchable through the
+API even when not shown, so the vote is now written as two documents in one
+atomic batch: public `votes/{uid}` {theme, at} and `voters/{uid}` {name,
+theme, at} which no client can read (rules `allow read: if false`) — names
+are visible only in the Firebase console. Rules refactored into shared
+`validTheme` / `ownVoteWrite` helpers; tests extended to 43 cases (voter
+record allow/deny, own-record read denied, name rejected on the public
+doc): all pass. Verified in Chromium against the emulators that a vote
+writes both docs and the tally shows counts without names. Wiki updated
+(page behaviour, data model, rules, tier rationale, open decision 5 closed).
+Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: Web App registered on gw-church (setup step 1)
+Owner asked for setup step 1 to be run. Registered the Web App "gw-church
+site" on project `gw-church` with `firebase apps:create WEB` (app id
+`1:158831221425:web:73add5b1d866dca7c7a090`) and committed its public
+config — apiKey, authDomain, projectId, appId — into
+`site/wednesday-dinner/firebase-config.js`, replacing the placeholders.
+Not a secret by design; the rules and (later) App Check protect the data.
+Wiki status table and setup step updated. Remaining owner steps: create
+Firestore, enable Anonymous auth, grant the deploy account two IAM roles,
+first manual rules deploy, seed defaults. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Dinner poll: Firestore live, rules deployed, defaults seeded
+Owner created the Firestore database (step 2), ran the first manual rules
+deploy from the Mac (step 5, `firebase deploy --only firestore` — deploy
+complete, rules released), and hit `PERMISSION_DENIED` on the seed (step
+6). Cause: gcloud's active account is the school account, which has no
+access to gw-church; the Gmail account was already authenticated in gcloud,
+just not active. Added a `GCLOUD_ACCOUNT` override to
+`scripts/seed-poll-defaults.sh` and seeded both `polls/defaults` and
+`polls-preview/defaults` on the real project (13 themes + examples read
+back unauthenticated — also confirming the deployed rules' public read).
+Wiki status table and seeding notes updated. Pushed to PR #7; no hosting
+deploy target (the rules deploy was the owner's, manual, bootstrap).
+
+## [2026-09-05] site | Dinner poll verified end to end on the PR preview (real project)
+With the Web App registered, Firestore created, rules deployed and defaults
+seeded, opened PR #7's preview channel in Chromium: anonymous sign-in
+succeeded (so the owner's step 3 is done), the 13 seeded themes and
+examples loaded, the countdown showed the Saturday close, and a test vote
+("Test vote (Claude)", Backyard BBQ) was accepted by the live rules and
+appeared in the tally — written to `polls-preview/2026-09-09`, not the
+production collection. No console errors. Remaining before merge: confirm
+the deploy service account's two IAM roles (only testable by the rules
+workflow's first run on main) and the owner's review. Nothing deployed.
+
+## [2026-09-05] site | Dinner poll: deploy service account granted rules roles
+Owner granted `roles/firebaserules.admin` and `roles/datastore.viewer` to
+`github-action-hosting@gw-church.iam.gserviceaccount.com`; verified with
+`gcloud projects get-iam-policy gw-church` (four roles total now). Every
+owner-side setup step for the poll is complete. Wiki status table,
+§ Console setup step 4, and [wiki/ci-cd.md](wiki/ci-cd.md) credentials
+updated. Still unverified: the rules workflow itself, which first runs on
+merge of PR #7. Pushed to PR #7; no deploy target.
+
+## [2026-09-05] site | Wednesday Dinner added to the top bar on every page
+Owner asked for a top-bar link so people can find the poll. Added a
+top-level "Wednesday Dinner" nav item between About and Connect to all 13
+`site/**/index.html` pages (the poll page's own item carries
+`class="current"`). Verified in Chromium that the six-item bar fits on
+desktop and collapses into the existing mobile menu. Wiki poll page: page
+behaviour note and open decision 4 closed. Pushed to PR #7 (preview
+channel); prod on merge.
+
+## [2026-09-05] site | Wednesday dinner poll LIVE on prod (PR #7 merged)
+Owner merged PR #7. `Deploy to production` succeeded: gw-church.org serves
+`/wednesday-dinner` with the real Firebase config, the "Wednesday Dinner"
+top-bar item is on every page, and gw-church-preprod.web.app mirrors main
+(all confirmed by fetching the live pages; browsing the live domain from
+the agent was blocked by policy). The new `Deploy Firestore rules`
+workflow FAILED on its first run: the service account got a 403 from
+serviceusage.googleapis.com checking that the Firestore API is enabled —
+it needs `roles/serviceusage.serviceUsageViewer` in addition to the two
+roles granted earlier. No impact: the live rules are the ones the owner
+deployed manually. Attempted to grant the role from the session and was
+blocked by the permission classifier, so it is recorded as an owner
+action with the exact command; re-run the workflow after granting.
+Updated the poll page (status, § Deploying the rules), the index line and
+[wiki/ci-cd.md](wiki/ci-cd.md). Committed directly to main (wiki/log
+only). Deploy target: prod (via merge).
+
+## [2026-09-05] site | Stylesheet cache-busting and a 5-minute cache lifetime
+Owner reported the live poll page rendering unstyled (default fieldset
+border, inline radios) though the new nav was present: the browser had the
+fresh HTML but the pre-merge `style.css` from Firebase Hosting's default
+one-hour cache — the live stylesheet itself was verified correct. Fix on
+branch `fix/stylesheet-cache-busting`: every page now links
+`/css/style.css?v=20260905` (bump the query string on future stylesheet
+changes), and `firebase.json` adds `Cache-Control: max-age=300` for all
+paths on both hosting targets so future deploys propagate within minutes.
+Noted in [wiki/ci-cd.md](wiki/ci-cd.md) § Caching after a deploy. PR
+opened for the preprod preview; prod on the owner's merge.

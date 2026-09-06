@@ -21,9 +21,45 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: FirebaseExtended/action-hosting-deploy@v0
+        id: firebase_deploy
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GW_CHURCH }}
           projectId: gw-church
           target: preprod
           expires: 7d
+      # The action's own URL comment gets buried in the conversation tab, so
+      # also pin the link to the top of the PR description where reviewers
+      # land first. Re-runs update the pinned block in place.
+      - name: Pin preview URL to PR description
+        if: steps.firebase_deploy.outputs.details_url
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.firebase_deploy.outputs.details_url }}
+          PREVIEW_EXPIRES: ${{ steps.firebase_deploy.outputs.expire_time }}
+        with:
+          script: |
+            const start = '<!-- preview-url:start -->';
+            const end = '<!-- preview-url:end -->';
+            const block = [
+              start,
+              `> ### 🔍 Preview this change: ${process.env.PREVIEW_URL}`,
+              `> Updated on every push. Expires ${process.env.PREVIEW_EXPIRES}.`,
+              end,
+            ].join('\n');
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            const body = pr.body || '';
+            const re = new RegExp(`${start}[\\s\\S]*?${end}`);
+            const updated = re.test(body)
+              ? body.replace(re, block)
+              : `${block}\n\n${body}`;
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: updated,
+            });

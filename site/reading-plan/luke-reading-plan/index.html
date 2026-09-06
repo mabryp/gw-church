@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Luke Reading Plan · Gateway Church</title>
-<meta name="description" content="Gospel of Luke reading plan — coming soon.">
+<meta name="description" content="Gospel of Luke reading plan — 9 weeks, August 31 – October 30, 2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css?v=20260905">
 </head>
 <body>
 <header class="site-header">
@@ -38,6 +38,7 @@
           <li><a href="/about/gateway-christian-school">Gateway Christian School</a></li>
         </ul>
       </li>
+      <li><a href="/wednesday-dinner">Wednesday Dinner</a></li>
       <li><a href="/connect">Connect</a></li>
     </ul>
   </nav>
@@ -45,7 +46,7 @@
 <main class="page wide">
 <h1>Luke Reading Plan</h1>
 <div class="embed-frame tall">
-  <iframe src="/embeds/temp-luke-reading-plan.html" title="Luke Reading Plan" loading="lazy"></iframe>
+  <iframe src="/embeds/luke-reading-plan.html" title="Luke Reading Plan" loading="lazy"></iframe>
 </div>
 </main>
 <footer class="site-footer">
@@ -67,5 +68,38 @@
     </div>
   </div>
 </footer>
+<script>
+  // Same-origin embed: size the iframe to its content so the page scrolls, not the frame
+  (function () {
+    var frame = document.querySelector('.embed-frame iframe');
+    if (!frame) return;
+    function fit() {
+      try {
+        var doc = frame.contentDocument;
+        if (doc && doc.documentElement) {
+          frame.style.height = doc.documentElement.scrollHeight + 'px';
+        }
+      } catch (e) { /* cross-origin: leave fixed height */ }
+    }
+    function arm() {
+      fit();
+      // ResizeObserver alone is not enough: observing the inner document from
+      // the parent silently never fires in some browsers (WebKit/Firefox), so
+      // late reflows (web fonts) left the frame too short with an inner
+      // scrollbar. Poll as well - fit() is cheap and idempotent.
+      try {
+        var doc = frame.contentDocument;
+        if (doc && 'ResizeObserver' in window) {
+          new ResizeObserver(fit).observe(doc.documentElement);
+        }
+        if (doc && doc.fonts && doc.fonts.ready) doc.fonts.ready.then(fit);
+      } catch (e) {}
+      setInterval(fit, 800);
+    }
+    frame.addEventListener('load', arm);
+    if (frame.contentDocument && frame.contentDocument.readyState === 'complete') arm();
+    window.addEventListener('resize', fit);
+  })();
+</script>
 </body>
 </html>

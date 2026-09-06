@@ -15,25 +15,56 @@ the GitHub repo.
 1. **Feature branch → PR** against `main`. Any PR touching `site/` or
    `firebase.json` triggers `.github/workflows/preview-deploy.yml`, which
    deploys a **temporary preview channel** on the preprod site
-   (`gw-church-preprod`) and comments the unique URL on the PR
+   (`gw-church-preprod`) with a unique URL
    (e.g. `gw-church-preprod--pr7-<hash>.web.app`). Channels expire after
-   7 days; parallel PRs get separate URLs and never collide.
+   7 days; parallel PRs get separate URLs and never collide. The URL is
+   surfaced in two places on the PR (owner directive 2026-08-06 — the link
+   must be apparent to all collaborators): **pinned at the top of the PR
+   description** in a marker-delimited block the workflow updates on every
+   push, and in the Firebase bot's comment in the conversation thread.
+   Note: the live preprod URL (gw-church-preprod.web.app) does NOT change
+   on PR pushes — it only re-syncs to `main` on merge.
 2. **Owner reviews the preview URL.** Merging the PR is the acceptance.
 3. **Merge to `main`** triggers `.github/workflows/prod-deploy.yml`, which
    deploys the `live` channel of **prod** (gw-church.org) and then re-deploys
    the `live` channel of **preprod**, keeping gw-church-preprod.web.app a
    mirror of `main`.
 
-Wiki/log/CLAUDE.md-only commits deploy nothing (both workflows path-filter on
-`site/**` and `firebase.json`). PRs from forks are skipped (no secret access);
+4. **Firestore rules** (added 2026-09-05 for the
+   [Wednesday Dinner Poll](wednesday-dinner-poll.md)): a third workflow,
+   `.github/workflows/rules-deploy.yml`, runs `firebase deploy --only
+   firestore` when `firestore.rules` or `firestore.indexes.json` change on
+   `main`. Rules are project-wide (one database behind prod, preprod and
+   every preview channel), so they never deploy from a PR. The service
+   account has `roles/firebaserules.admin` and `roles/datastore.viewer`
+   for this step, but the first run (2026-09-05) failed: it also needs
+   `roles/serviceusage.serviceUsageViewer` so the CLI can check the
+   Firestore API is enabled. See the poll page § Deploying the rules.
+
+Wiki/log/CLAUDE.md-only commits deploy nothing (the hosting workflows
+path-filter on `site/**` and `firebase.json`; the rules workflow on the two
+Firestore files). PRs from forks are skipped (no secret access);
 developers should push branches to this repo.
+
+## Caching after a deploy
+
+Firebase Hosting's default is `Cache-Control: max-age=3600`, so a browser
+that loaded a page or the stylesheet within the hour before a deploy keeps
+the old copy until then — on 2026-09-05 the owner saw the new nav with the
+old stylesheet (the poll page unstyled) right after the poll merge. Two
+mitigations, both in the 2026-09-05 cache PR: `firebase.json` sets
+`Cache-Control: max-age=300` for every path on both targets, and every
+page links the stylesheet as `/css/style.css?v=YYYYMMDD` — **bump that
+query string whenever `style.css` changes** so browsers fetch it at once.
 
 ## Credentials
 
 - Service account: `github-action-hosting@gw-church.iam.gserviceaccount.com`
   (created 2026-07-22 via gcloud, key `bef7a02e...`).
 - Roles (minimal): `roles/firebasehosting.admin`,
-  `roles/serviceusage.apiKeysViewer` on project `gw-church`.
+  `roles/serviceusage.apiKeysViewer` on project `gw-church`; plus
+  `roles/firebaserules.admin` and `roles/datastore.viewer` (added
+  2026-09-05) for the Firestore rules workflow.
 - Key stored ONLY as GitHub Actions secret
   `FIREBASE_SERVICE_ACCOUNT_GW_CHURCH` on mabryp/gw-church; the local key file
   was deleted after upload. Rotate: create a new key with
@@ -61,4 +92,4 @@ environments for URLs and the manual CLI commands.
 
 - Owner directives in working session, 2026-07-22.
 - `.github/workflows/preview-deploy.yml`, `.github/workflows/prod-deploy.yml`,
-  `.firebaserc`, `firebase.json`.
+  `.github/workflows/rules-deploy.yml`, `.firebaserc`, `firebase.json`.
