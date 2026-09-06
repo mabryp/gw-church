@@ -143,8 +143,11 @@ Page behaviour worth knowing:
   theme, which the tally is built from, and a `voters/{uid}` with the name
   that no client can read. Names are visible only in the Firebase console,
   for spotting duplicates.
-- Linked from the top bar on every page as **Wednesday Dinner**, between
-  About and Connect (owner, 2026-09-05); the poll page marks it current.
+- Linked from the top bar on every page as **Wednesday Dinner**, second
+  item right after Home (owner asked for a top-bar link 2026-09-05; moved
+  from fifth to second the same day because in the phone menu it sat under
+  nine sub-items near the bottom of the screen); the poll page marks it
+  current.
 
 ## Data model
 
@@ -412,7 +415,7 @@ is preselected, name prefilled, and the "You voted for…" status shown.
 3. **Blaze plan / App Check** — acceptable for reCAPTCHA Enterprise, or ship
    without App Check?
 4. ~~Where the page lives in the nav~~ — decided 2026-09-05: a top-level
-   "Wednesday Dinner" item between About and Connect on every page.
+   "Wednesday Dinner" item, second after Home, on every page.
 5. ~~Voter names on the page~~ — decided 2026-09-05: never shown; names
    are console-only (see § What is built).
 
