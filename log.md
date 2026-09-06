@@ -575,3 +575,20 @@ so it is the second line of the phone menu and second item on the desktop
 bar. First pushed to the PR #8 branch, which turned out to be already
 merged, so re-raised as PR #9 on a fresh branch (the stray branch was
 deleted). Wiki poll page updated. Prod on the owner's merge.
+
+## [2026-09-06] site | Dinner poll: "This Wednesday" winner banner
+Owner (Sunday morning, first ballot just closed) reported no way to see
+which theme won for the coming Wednesday, and asked for a section naming
+it, annotated as open or closed. Added a banner at the top of
+`site/wednesday-dinner/index.html`: computes the upcoming Wednesday
+(today if Wednesday); Sun–Wed that ballot closed the previous Saturday, so
+its votes are read once (`getDocs`, public read — no rules change) and the
+top theme shown as final with its vote share and example dishes; Thu–Sat
+the upcoming Wednesday is the open ballot, so the banner renders live from
+the existing snapshot as "leading … voting still open until Saturday".
+Ties name every tied theme; zero votes is stated. Ballot section now
+headed "Vote for the following week". Styles added to `style.css` and the
+stylesheet version bumped to `?v=20260906` on all 13 pages per the new
+convention. Verified the schedule logic for all seven weekdays in node and
+the closed and tie cases in Chromium against the emulator with seeded
+votes for 2026-09-09. Wiki page updated. PR opened for preprod preview.
