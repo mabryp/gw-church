@@ -2,10 +2,11 @@
 
 **Summary:** [Gateway Church](gateway-church.md)'s outreach/contact channels as listed on the Connect page and homepage embeds.
 
-- **Facebook:** https://www.facebook.com/gwchurchSA/ — sermons streamed in real
-  time; pastor messages; church news and events.
+- **Facebook:** https://www.facebook.com/gwchurchSA/ — pastor messages; church
+  news and events.
 - **YouTube:** https://www.youtube.com/channel/UCbb8E83onnnQvtVSekCOFEA —
-  "ministries in action"; also the source feeding the sermon index of the
+  live sermon streams, past streamed sermons, and "ministries in action";
+  also the source feeding the sermon index of the
   [Sermon Search System](sermon-search-system.md) (index docs carry
   `video_description`, `transcript`, `published_at`, `thumbnails`).
 - **Email / phone:** staff@gw-church.org, (210) 674-5703.

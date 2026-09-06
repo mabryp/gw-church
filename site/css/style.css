@@ -125,7 +125,9 @@ main.page.wide { max-width: 1080px; }
 
 .link-cards { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
 .link-cards a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
   padding: 1rem 1.25rem;
   background: var(--card);
   border-left: 4px solid var(--lime);
@@ -133,6 +135,8 @@ main.page.wide { max-width: 1080px; }
   text-decoration: none;
 }
 .link-cards a:hover { background: #eef0e6; }
+.link-cards .link-icon { flex: none; width: 26px; height: 26px; fill: var(--navy); }
+.link-cards .link-text { display: block; }
 .link-cards strong { font-family: var(--serif); font-size: 1.15rem; color: var(--navy); display: block; }
 .link-cards span { color: var(--muted); font-size: 0.92rem; }
 
