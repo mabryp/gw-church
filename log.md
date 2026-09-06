@@ -564,3 +564,13 @@ changes), and `firebase.json` adds `Cache-Control: max-age=300` for all
 paths on both hosting targets so future deploys propagate within minutes.
 Noted in [wiki/ci-cd.md](wiki/ci-cd.md) § Caching after a deploy. PR
 opened for the preprod preview; prod on the owner's merge.
+
+## [2026-09-05] site | Wednesday Dinner moved to second in the nav (phone menu)
+Owner reported not seeing the link on mobile. Checked the PR #8 preview at
+375px: the item was present in the ☰ menu but sixth in the list, under
+nine sub-items, at ~674px on an 812px screen — easy to miss and off-screen
+on shorter phones (the owner's phone also still had the cached pre-merge
+homepage). Moved "Wednesday Dinner" to directly after Home on all 13 pages
+so it is the second line of the phone menu and second item on the desktop
+bar. Added to PR #8 (title and body updated); wiki poll page updated.
+Prod on the owner's merge.
