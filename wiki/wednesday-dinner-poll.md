@@ -126,6 +126,14 @@ Page behaviour worth knowing:
   instead of the real project, so it runs fully with placeholder config.
 - If neither the week doc nor `defaults` exists, the page says "The poll is
   not set up yet" rather than showing an empty form.
+- **"This Wednesday" banner** (owner request, 2026-09-06) at the top of the
+  page names the theme for the very next Wednesday. Sun–Wed that is the
+  ballot that closed last Saturday: read once, shown as final ("Voting
+  closed — 3 of 6 votes"). Thu–Sat the next Wednesday *is* the open ballot,
+  so the banner says "Next Wednesday … voting still open" and shows the
+  current leader live. Ties list every tied theme ("the kitchen breaks the
+  tie"); no votes says so. The example dishes appear under the winning
+  theme. The ballot below it is headed "Vote for the following week".
 - A countdown box ("Voting closes Saturday, September 12 at 11:59 PM — 6
   days 4 hr 12 min left") ticks every second; under a day it shows hours,
   minutes and seconds. At zero the form locks and says to check back Sunday.

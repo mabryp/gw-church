@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css?v=20260905">
+<link rel="stylesheet" href="/css/style.css?v=20260906">
 </head>
 <body>
 <header class="site-header">
@@ -46,6 +46,13 @@
 <main class="page">
 
 <h1>Wednesday Dinner</h1>
+<section class="winner" id="winner" hidden aria-live="polite">
+  <p class="winner-label" id="winner-label"></p>
+  <p class="winner-theme" id="winner-theme"></p>
+  <p class="winner-examples" id="winner-examples"></p>
+  <p class="winner-note" id="winner-note"></p>
+</section>
+<h2 class="ballot-heading">Vote for the following week</h2>
 <p class="poll-note" id="poll-week">Loading this week's poll&hellip;</p>
 <p class="poll-countdown" id="countdown" role="timer" aria-live="off" hidden></p>
 <p class="poll-preview" id="poll-preview" hidden>Preview copy &mdash; votes cast here do not count toward the real poll.</p>
@@ -94,7 +101,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAuth, signInAnonymously, connectAuthEmulator }
   from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js';
-import { getFirestore, doc, collection, getDoc, writeBatch, onSnapshot, serverTimestamp,
+import { getFirestore, doc, collection, getDoc, getDocs, writeBatch, onSnapshot, serverTimestamp,
          connectFirestoreEmulator }
   from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
 import { firebaseConfig } from '/wednesday-dinner/firebase-config.js';
@@ -137,6 +144,15 @@ function chicagoTime(y, m, d, hour = 0, minute = 0) {
 function pollWednesday(now = new Date()) {
   const { y, m, d, wd } = chicagoParts(now);
   const delta = 10 - DAYS.indexOf(wd);     // Sun +10 … Sat +4: next week's Wednesday
+  return new Date(Date.UTC(y, m - 1, d + delta));
+}
+
+// Calendar date of the very next Wednesday (today, if today is Wednesday).
+// Sun–Wed this is the Wednesday whose vote closed last Saturday; Thu–Sat it
+// is next week's Wednesday, i.e. the ballot currently open.
+function upcomingWednesday(now = new Date()) {
+  const { y, m, d, wd } = chicagoParts(now);
+  const delta = (3 - DAYS.indexOf(wd) + 7) % 7;
   return new Date(Date.UTC(y, m - 1, d + delta));
 }
 
@@ -238,6 +254,51 @@ function renderResults(snap, themes, uid) {
   return mine;
 }
 
+// Count votes and find the leader(s). Returns { total, top: [themes], count }.
+function tally(snap) {
+  const counts = new Map();
+  for (const d of snap.docs) {
+    const t = d.data().theme;
+    if (typeof t === 'string') counts.set(t, (counts.get(t) || 0) + 1);
+  }
+  let count = 0;
+  for (const n of counts.values()) if (n > count) count = n;
+  const top = [...counts].filter(([, n]) => n === count && n > 0).map(([t]) => t).sort();
+  return { total: snap.size, top, count };
+}
+
+function joinNames(list) {
+  return list.length <= 2 ? list.join(' and ') : `${list.slice(0, -1).join(', ')}, and ${list[list.length - 1]}`;
+}
+
+// The banner at the top: what is being served this coming Wednesday.
+function renderWinner(wed, snap, open, closesAt, examples) {
+  const label = wed.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' });
+  const { total, top, count } = tally(snap);
+  const votes = `${total} vote${total === 1 ? '' : 's'}`;
+  let theme = '', ex = '', note = '';
+  if (top.length === 0) {
+    theme = open ? 'No votes yet' : 'No theme chosen';
+    note = open ? `Voting is open until ${fmtWhen(closesAt)} — cast the first vote below.`
+                : 'Nobody voted for this week.';
+  } else if (top.length === 1) {
+    theme = top[0];
+    ex = examples[theme] || '';
+    note = open ? `Leading with ${count} of ${votes} — voting is still open until ${fmtWhen(closesAt)}.`
+                : `Voting closed — ${count} of ${votes}.`;
+  } else {
+    theme = `Tie: ${joinNames(top)}`;
+    note = open ? `${count} votes each with voting still open until ${fmtWhen(closesAt)}.`
+                : `Voting closed with ${count} votes each — the kitchen breaks the tie.`;
+  }
+  $('winner-label').textContent = open ? `Next Wednesday, ${label} — voting still open` : `This Wednesday, ${label}`;
+  $('winner-theme').textContent = theme;
+  $('winner-examples').textContent = ex;
+  $('winner-examples').hidden = !ex;
+  $('winner-note').textContent = note;
+  $('winner').hidden = false;
+}
+
 async function loadConfig() {
   const week = await getDoc(doc(db, COLL, pollKey));
   if (week.exists()) return week.data();
@@ -304,8 +365,21 @@ async function main() {
   tick();
   if (closed) lockForm(); else setInterval(tick, 1000);
 
+  // Banner: the upcoming Wednesday. If it is the ballot that is open right
+  // now (Thu–Sat), it updates live from the same snapshot; otherwise its
+  // vote closed last Saturday and is read once.
+  const upcoming = upcomingWednesday();
+  const upcomingKey = keyOf(upcoming);
+  const upcomingIsOpen = upcomingKey === pollKey && !closed;
+  if (!upcomingIsOpen) {
+    getDocs(collection(db, COLL, upcomingKey, 'votes'))
+      .then(snap => renderWinner(upcoming, snap, false, null, examples))
+      .catch(e => console.error('winner lookup failed', e));
+  }
+
   let firstSnapshot = true;
   onSnapshot(collection(db, COLL, pollKey, 'votes'), snap => {
+    if (upcomingIsOpen) renderWinner(upcoming, snap, true, closesAt, examples);
     const mine = renderResults(snap, themes, user.uid);
     if (firstSnapshot && mine && !closed) {
       firstSnapshot = false;
