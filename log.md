@@ -552,3 +552,15 @@ action with the exact command; re-run the workflow after granting.
 Updated the poll page (status, § Deploying the rules), the index line and
 [wiki/ci-cd.md](wiki/ci-cd.md). Committed directly to main (wiki/log
 only). Deploy target: prod (via merge).
+
+## [2026-09-05] site | Stylesheet cache-busting and a 5-minute cache lifetime
+Owner reported the live poll page rendering unstyled (default fieldset
+border, inline radios) though the new nav was present: the browser had the
+fresh HTML but the pre-merge `style.css` from Firebase Hosting's default
+one-hour cache — the live stylesheet itself was verified correct. Fix on
+branch `fix/stylesheet-cache-busting`: every page now links
+`/css/style.css?v=20260905` (bump the query string on future stylesheet
+changes), and `firebase.json` adds `Cache-Control: max-age=300` for all
+paths on both hosting targets so future deploys propagate within minutes.
+Noted in [wiki/ci-cd.md](wiki/ci-cd.md) § Caching after a deploy. PR
+opened for the preprod preview; prod on the owner's merge.
