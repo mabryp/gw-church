@@ -6,7 +6,7 @@ LLM; updated on every ingest.
 ## The church
 
 - [gateway-church.md](gateway-church.md) — identity, contact info, mission, and hub page linking everything else
-- [chris-dumont.md](chris-dumont.md) — lead pastor since Charley's retirement; bio and photo pending, page is placeholder
+- [chris-dumont.md](chris-dumont.md) — lead pastor since Charley's retirement; photo and hands-on intro on the site, full bio pending
 - [charley.md](charley.md) — pastor emeritus: Air Force background, pastor 1981–retirement, international discipleship ministry
 - [what-we-believe.md](what-we-believe.md) — 11-point statement of faith with scripture citations
 - [gateway-christian-school.md](gateway-christian-school.md) — affiliated college-prep school; separate site gw-school.org
