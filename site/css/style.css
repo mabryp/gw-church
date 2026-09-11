@@ -109,6 +109,7 @@ main.page.wide { max-width: 1080px; }
 
 .photo { margin: 0 0 1.5rem; }
 .photo img { width: 100%; height: auto; border-radius: 10px; }
+.photo.portrait img { max-width: 480px; }
 .photo figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
 .photo-placeholder {
   display: flex;

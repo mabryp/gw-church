@@ -592,3 +592,17 @@ stylesheet version bumped to `?v=20260906` on all 13 pages per the new
 convention. Verified the schedule logic for all seven weekdays in node and
 the closed and tie cases in Chromium against the emulator with seeded
 votes for 2026-09-09. Wiki page updated. PR opened for preprod preview.
+
+## [2026-09-11] site | Pastor photo and "willing to get dirty" line
+Owner supplied a photo of Pastor Chris Dumont sitting on a live oak limb
+trimming with a pole saw, and asked that the pastor page use it and say
+he is willing to get dirty and work. Resized the 1270×1600 upload to
+794×1000, stripped EXIF, saved as `site/assets/pastor-chris-dumont.jpg`
+(~270 KB), and replaced the "photo coming soon" placeholder on
+`site/about/our-pastor/index.html` with the image, alt text, and a
+caption. Added a paragraph after the intro on his hands-on work ethic.
+Added `.photo.portrait img { max-width: 480px }` to `style.css` so the
+tall portrait does not fill the 780px column, and bumped the stylesheet
+version to `?v=20260911` on all 13 pages per the caching convention.
+Checked in Chromium at 1200px and 375px. Wiki: chris-dumont, site-structure,
+index updated. PR opened for preprod preview; prod on the owner's merge.
