@@ -592,3 +592,7 @@ stylesheet version bumped to `?v=20260906` on all 13 pages per the new
 convention. Verified the schedule logic for all seven weekdays in node and
 the closed and tie cases in Chromium against the emulator with seeded
 votes for 2026-09-09. Wiki page updated. PR opened for preprod preview.
+
+## [2026-11-05] site | John reading plan
+
+Added `site/embeds/john-reading-plan.html` with Weeks 32–36 from the owner-provided Gospel reading schedule, including weekday passages and Old Testament connections. Replaced the placeholder at `site/reading-plan/john-reading-plan/index.html` with the same embedded layout used by the Matthew, Mark, and Luke plans. Submitted on a feature branch for preprod PR review; production awaits owner merge.
