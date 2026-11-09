@@ -1,6 +1,6 @@
 # Wednesday Dinner Poll
 
-**Summary:** A weekly congregation vote on the Wednesday dinner theme — built on a feature branch, not yet deployed or enabled. A Firestore-backed page at `/wednesday-dinner` on the existing `gw-church` Firebase project. Voting runs Sunday–Saturday for the *following* week's Wednesday, closes Saturday at midnight (announced Sunday), and is keyed by that Wednesday's date so no weekly reset is ever needed. This page carries the design, what is built and how it was verified, the console setup the owner still has to do, and how to run it locally.
+**Summary:** A weekly congregation vote on the Wednesday dinner theme, live since 2026-09-05 and paused for the holidays from 2026-11-12 until early January 2027 (see § Holiday pause). A Firestore-backed page at `/wednesday-dinner` on the existing `gw-church` Firebase project. Voting runs Sunday–Saturday for the *following* week's Wednesday, closes Saturday at midnight (announced Sunday), and is keyed by that Wednesday's date so no weekly reset is ever needed. This page carries the design, what is built and how it was verified, the console setup the owner still has to do, and how to run it locally.
 
 ## Status (as of 2026-09-05)
 
@@ -25,6 +25,30 @@ top bar on every page.
 
 Verified 2026-09-05 from the owner's Mac (`firebase login:list` → owner
 account; `firebase use` → `gw-church`).
+
+## Holiday pause (owner, 2026-11-09)
+
+Regular Wednesday dinners stop after **Wednesday 2026-11-11** for the
+holidays and the Junior Convention. There will be one dinner in November and
+one in December (dates not yet announced), and the weekly schedule restarts
+after the new year. The page implements this with two constants in its
+script, `LAST_DINNER = '2026-11-11'` and `RESUME = '2027-01-03'` (a Sunday,
+so the first ballot back is for Wednesday 2027-01-13):
+
+- Until `RESUME` the page shows a `.pause-notice` box with the owner's
+  message and hides the ballot heading, week note, countdown, preview
+  banner, form and results. Firestore is not touched except as below.
+- Through `LAST_DINNER` the "This Wednesday" winner banner still renders
+  (read once) so people can see the theme for the final dinner; from the
+  Thursday after, the notice stands alone.
+- The security rules were not changed: a hand-crafted vote for a cancelled
+  Wednesday would still be accepted server-side, but nothing on the page
+  offers it. Voting for the week of resumption works automatically.
+
+To change the plan edit the two constants and the notice text in
+`site/wednesday-dinner/index.html`; the November/December one-off dinner
+dates belong in the notice (and the Google Calendar) once known. The restart
+date is the agent's assumption — confirm with the owner.
 
 ## Requirements (owner, 2026-09-04)
 

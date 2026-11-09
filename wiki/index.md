@@ -5,7 +5,7 @@ LLM; updated on every ingest.
 
 ## The church
 
-- [gateway-church.md](gateway-church.md) — identity, contact info, mission, and hub page linking everything else
+- [gateway-church.md](gateway-church.md) — identity, contact info, Sunday service facts (10 a.m., worship style, children's church/nursery), mission, hub page
 - [chris-dumont.md](chris-dumont.md) — lead pastor since Charley's retirement; bio and photo pending, page is placeholder
 - [charley.md](charley.md) — pastor emeritus: Air Force background, pastor 1981–retirement, international discipleship ministry
 - [what-we-believe.md](what-we-believe.md) — 11-point statement of faith with scripture citations
@@ -15,9 +15,10 @@ LLM; updated on every ingest.
 ## The website
 
 - [site-structure.md](site-structure.md) — full page map of the Google Site, content types, lint findings (broken link, empty pages)
+- [homepage.md](homepage.md) — the landing page: visitor-first structure adopted 2026-11-09 from the owner's sample; section map, buttons, styles
 - [sermon-search-system.md](sermon-search-system.md) — Elasticsearch-backed sermon/notes search embeds; indexes, fields, security note
 - [reading-plans.md](reading-plans.md) — 2026 Gospel Reading Plan program: Matthew (done), Mark (done Aug 28), Luke (Aug 31–Oct 30; page live, owner's 90-question bank converted, forms not yet built), John (placeholder)
-- [wednesday-dinner-poll.md](wednesday-dinner-poll.md) — weekly dinner-theme vote, live at /wednesday-dinner since 2026-09-05: schedule, data model, tested rules, Firebase setup record; rules workflow needs one more IAM role
+- [wednesday-dinner-poll.md](wednesday-dinner-poll.md) — weekly dinner-theme vote, live at /wednesday-dinner since 2026-09-05; paused for the holidays after 2026-11-11 until early Jan 2027: schedule, data model, tested rules, Firebase setup record; rules workflow needs one more IAM role
 
 ## The project
 

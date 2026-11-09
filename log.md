@@ -596,3 +596,87 @@ votes for 2026-09-09. Wiki page updated. PR opened for preprod preview.
 ## [2026-11-05] site | John reading plan
 
 Added `site/embeds/john-reading-plan.html` with Weeks 32–36 from the owner-provided Gospel reading schedule, including weekday passages and Old Testament connections. Replaced the placeholder at `site/reading-plan/john-reading-plan/index.html` with the same embedded layout used by the Matthew, Mark, and Luke plans. Submitted on a feature branch for preprod PR review; production awaits owner merge.
+
+## [2026-11-09] ingest | sample_landing_page.txt
+Owner added `raw/sample_landing_page.txt`, a visitor-first landing-page
+template with bracketed placeholders (church name, service time, address,
+worship description, children's note, two CTAs). Created
+[wiki/homepage.md](wiki/homepage.md) describing the new page structure and
+the facts the sources cannot fill; linked it from
+[wiki/gateway-church.md](wiki/gateway-church.md) § Mission and voice and from
+the index.
+
+## [2026-11-09] site | Homepage rewritten to visitor-first template
+Rewrote `site/index.html` `<main>` to follow the sample section for section:
+hero with h1, tagline, two welcome paragraphs, a "Join us this Sunday" box,
+Plan Your Visit (→ `#visit`) and Watch a Sermon (→ YouTube) buttons; "What to
+expect"; "Life together" (links Wednesday Dinner and the reading plan, keeps
+the "place to be known" line); Calendar; "Plan your visit" (former Find Us,
+now with phone/email/connect) with the map; closing CTA. Service time,
+worship description, and children's sentence are unknown to the wiki and raw
+sources, so they ship in the preview as yellow `mark.todo` placeholders for
+the owner to fill before merge. Added `.btn`/`.visit`/`.tagline`/`.closing`/
+`mark.todo` styles to `style.css` and bumped the stylesheet query string to
+`?v=20261109` on all 13 pages. Meta description updated. Branch
+`feat/visitor-first-landing`, PR for preprod preview; prod on the owner's
+merge. Wiki: homepage.md (new), gateway-church.md, migration.md, index.md.
+
+## [2026-11-09] site | Homepage: owner's facts filled in (PR #13)
+Owner answered the three placeholders and added direction: service Sundays
+at 10:00 a.m.; worship "mostly contemporary with traditional influences";
+state that Gateway is a Bible-believing church; children's church and
+nursery care offered; describe the congregation as young and vibrant; drop
+the "multi-cultural" paragraph. Applied to `site/index.html` (visit box,
+What to expect, Life together), removed the `mark.todo` placeholder style
+from `style.css`. Recorded the new facts in
+[wiki/gateway-church.md](wiki/gateway-church.md) § Sunday service, updated
+[wiki/homepage.md](wiki/homepage.md), migration.md, index.md. Pushed to the
+PR branch; preview redeploys; prod on the owner's merge.
+
+## [2026-11-09] site | Homepage tagline changed (PR #13)
+Owner: "There's a place for you here" isn't the message; lead with a high
+view of Scripture and family orientation to attract believing families
+looking for a biblically grounded church. Hero tagline is now "Rooted in
+God's Word. A home for your family."; meta description reworded to
+"Bible-believing, family-oriented church … Sundays at 10:00 a.m." Updated
+[wiki/homepage.md](wiki/homepage.md) and
+[wiki/gateway-church.md](wiki/gateway-church.md). Pushed to the PR branch.
+
+## [2026-11-09] site | "Watch a Sermon" → YouTube streams tab (PR #13)
+Owner asked for the homepage button to go to the live-streams tab
+(https://www.youtube.com/@gatewaychurchsa9289/streams) rather than the
+channel root. Changed the button href only; footer and Connect-page YouTube
+links still point at the channel. Recorded the handle/streams URL in
+[wiki/connect-channels.md](wiki/connect-channels.md) and updated
+[wiki/homepage.md](wiki/homepage.md).
+
+## [2026-11-09] query | Homepage design critique (PR #13 preview)
+Owner asked for UI/design recommendations. Screenshotted the preview at
+1280px and 390px (the latter via same-origin 390px iframes, since the
+browser window would not shrink) and ran a hierarchy/usability pass.
+Six findings recorded in [wiki/homepage.md](wiki/homepage.md) § Design
+review: CTA below the fold on phones, no photo, calendar unusable at phone
+width, calendar's 10:15 Sunday entries vs the stated 10:00, logo's opaque
+white box, long centered hero paragraphs. Nothing changed on the site.
+
+## [2026-11-09] site | Homepage design-review fixes (PR #13)
+Owner: "implement what you can." Applied review items 1, 3, 5, 6: hero
+reordered so the Sunday box and buttons sit directly under the tagline,
+welcome paragraphs moved below it and left-aligned on phones, logo capped at
+200px under 860px; calendar now has a second agenda-mode embed shown only
+on phones while the month grid shows on wide screens; logo's opaque white
+box hidden with `mix-blend-mode: multiply`. Stylesheet version bumped to
+`?v=20261109b` on all 13 pages. Open: photo (item 2) and the 10:00 vs
+10:15 Sunday time question (item 4). Wiki homepage.md updated.
+
+## [2026-11-09] site | Wednesday Dinner holiday pause notice (PR #13)
+Owner: dinners are cancelled after this coming Wednesday (Nov 11) for the
+holidays and the Junior Convention; one dinner in November and one in
+December, weekly schedule restarts after the new year; "stay tuned." Added
+a `.pause-notice` box to `site/wednesday-dinner/index.html` with that
+message and a dated pause in the script (`LAST_DINNER` 2026-11-11, `RESUME`
+2027-01-03): ballot, countdown and results hidden until resume; the "This
+Wednesday" banner stays through Nov 11. Rules unchanged. Stylesheet bumped
+to `?v=20261109c` on all 13 pages. Wiki: wednesday-dinner-poll.md § Holiday
+pause (new), summary and index line updated. Restart date and the spelling
+"Junior Convention" are assumptions to confirm with the owner.

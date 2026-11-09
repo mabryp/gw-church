@@ -213,6 +213,15 @@ main.page.wide { max-width: 1080px; }
 .winner-theme { font-family: var(--serif); font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.15; margin-top: 0.25rem; }
 .winner-examples { color: #d8ddea; font-size: 0.95rem; margin-top: 0.35rem; }
 .winner-note { color: #d8ddea; font-size: 0.92rem; margin-top: 0.6rem; }
+.pause-notice {
+  background: var(--card);
+  border-left: 6px solid var(--lime);
+  border-radius: 10px;
+  padding: 1rem 1.4rem 1.1rem;
+  margin: 0 0 1.5rem;
+}
+.pause-notice p { margin: 0; }
+.pause-notice .pause-title { font-family: var(--serif); font-size: 1.3rem; color: var(--navy); margin-bottom: 0.4rem; }
 .ballot-heading { margin-top: 0; }
 .poll-note { color: var(--muted); margin: 0 0 1rem; }
 .poll-countdown {
@@ -288,3 +297,46 @@ main.page.wide { max-width: 1080px; }
 .tally-count { color: var(--muted); font-size: 0.92rem; white-space: nowrap; }
 .tally-bar { height: 0.7rem; background: var(--card); border-radius: 999px; overflow: hidden; margin: 0.3rem 0; }
 .tally-bar span { display: block; height: 100%; background: var(--lime); border-radius: 999px; transition: width 0.3s; }
+
+/* ---------- Homepage: visitor-first landing ---------- */
+.hero h1 { margin: 1rem 0 0.25rem; }
+.hero .logo { mix-blend-mode: multiply; } /* opaque-white PNG: let its white take the page color */
+.tagline { font-family: var(--serif); font-size: 1.35rem; color: var(--navy); margin: 0 0 1rem; }
+.hero .visit + .lede { margin-top: 1.75rem; }
+.hero .lede + .lede { margin-top: 0.9rem; }
+.visit {
+  margin: 1.25rem auto 0;
+  max-width: 560px;
+  background: var(--card);
+  border-left: 4px solid var(--lime);
+  border-radius: 8px;
+  padding: 1.1rem 1.4rem 1.25rem;
+}
+.visit p { margin: 0; }
+.visit-label { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--navy); }
+.visit-when { font-family: var(--serif); font-size: 1.15rem; color: var(--navy); margin-top: 0.2rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1rem; }
+.btn {
+  display: inline-block;
+  font-weight: 700;
+  color: #fff;
+  background: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 8px;
+  padding: 0.6rem 1.3rem;
+  text-decoration: none;
+}
+.btn:hover { background: var(--navy-dark); border-color: var(--navy-dark); color: #fff; }
+.btn-outline { background: transparent; color: var(--navy); }
+.btn-outline:hover { background: var(--card); color: var(--navy-dark); }
+.closing { text-align: center; margin-top: 2.5rem; }
+.cal-agenda { display: none; }
+@media (max-width: 860px) {
+  .hero { padding-top: 0.5rem; }
+  .hero .logo { max-width: 200px; }
+  .hero .lede { text-align: left; }
+  .cal-month { display: none; }
+  .cal-agenda { display: block; }
+  .cal-agenda iframe { height: 480px; }
+}
+.closing .tagline { margin-bottom: 0.25rem; }
