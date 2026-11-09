@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css?v=20261109">
+<link rel="stylesheet" href="/css/style.css?v=20261109b">
 </head>
 <body>
 <header class="site-header">
@@ -49,8 +49,6 @@
   <img class="logo" src="/assets/home.png" alt="Gateway Church logo" width="500" height="348">
   <h1>Welcome to Gateway Church</h1>
   <p class="tagline">Rooted in God&rsquo;s Word. A home for your family.</p>
-  <p class="lede">Whether church has been part of your life for years or you&rsquo;re considering a visit for the first time, we&rsquo;d love to meet you. At Gateway, we gather to worship God, hear from the Bible, pray, and grow together as we follow Jesus.</p>
-  <p class="lede">You don&rsquo;t need to know what to say or do before you come. Join us as you are, and take the time you need to get to know us.</p>
   <div class="visit">
     <p class="visit-label">Join us this Sunday</p>
     <p class="visit-when">Sundays at 10:00 a.m. &middot; 6623 Five Palms Drive, San Antonio</p>
@@ -59,6 +57,8 @@
       <a class="btn btn-outline" href="https://www.youtube.com/@gatewaychurchsa9289/streams">Watch a Sermon</a>
     </p>
   </div>
+  <p class="lede">Whether church has been part of your life for years or you&rsquo;re considering a visit for the first time, we&rsquo;d love to meet you. At Gateway, we gather to worship God, hear from the Bible, pray, and grow together as we follow Jesus.</p>
+  <p class="lede">You don&rsquo;t need to know what to say or do before you come. Join us as you are, and take the time you need to get to know us.</p>
 </section>
 
 <section>
@@ -74,8 +74,12 @@
 
 <section>
   <h2>Calendar</h2>
-  <div class="embed-frame">
-    <iframe src="https://calendar.google.com/calendar/embed?ctz=America%2FChicago&showPrint=0&showTz=0&mode=month&src=b3458b987ae80eea19b5c70f6c6600a8c6f4475fff1ef61c46686c33e0caa559%40group.calendar.google.com" title="Gateway Church calendar" loading="lazy"></iframe>
+  <!-- Month grid on wide screens; agenda list on phones (CSS toggles which frame shows). -->
+  <div class="embed-frame cal-month">
+    <iframe src="https://calendar.google.com/calendar/embed?ctz=America%2FChicago&showPrint=0&showTz=0&mode=MONTH&src=b3458b987ae80eea19b5c70f6c6600a8c6f4475fff1ef61c46686c33e0caa559%40group.calendar.google.com" title="Gateway Church calendar (month)" loading="lazy"></iframe>
+  </div>
+  <div class="embed-frame cal-agenda">
+    <iframe src="https://calendar.google.com/calendar/embed?ctz=America%2FChicago&showPrint=0&showTz=0&showTitle=0&mode=AGENDA&src=b3458b987ae80eea19b5c70f6c6600a8c6f4475fff1ef61c46686c33e0caa559%40group.calendar.google.com" title="Gateway Church calendar (upcoming events)" loading="lazy"></iframe>
   </div>
 </section>
 

@@ -658,3 +658,13 @@ Six findings recorded in [wiki/homepage.md](wiki/homepage.md) § Design
 review: CTA below the fold on phones, no photo, calendar unusable at phone
 width, calendar's 10:15 Sunday entries vs the stated 10:00, logo's opaque
 white box, long centered hero paragraphs. Nothing changed on the site.
+
+## [2026-11-09] site | Homepage design-review fixes (PR #13)
+Owner: "implement what you can." Applied review items 1, 3, 5, 6: hero
+reordered so the Sunday box and buttons sit directly under the tagline,
+welcome paragraphs moved below it and left-aligned on phones, logo capped at
+200px under 860px; calendar now has a second agenda-mode embed shown only
+on phones while the month grid shows on wide screens; logo's opaque white
+box hidden with `mix-blend-mode: multiply`. Stylesheet version bumped to
+`?v=20261109b` on all 13 pages. Open: photo (item 2) and the 10:00 vs
+10:15 Sunday time question (item 4). Wiki homepage.md updated.

@@ -290,11 +290,13 @@ main.page.wide { max-width: 1080px; }
 .tally-bar span { display: block; height: 100%; background: var(--lime); border-radius: 999px; transition: width 0.3s; }
 
 /* ---------- Homepage: visitor-first landing ---------- */
-.hero h1 { margin: 1.25rem 0 0.25rem; }
+.hero h1 { margin: 1rem 0 0.25rem; }
+.hero .logo { mix-blend-mode: multiply; } /* opaque-white PNG: let its white take the page color */
 .tagline { font-family: var(--serif); font-size: 1.35rem; color: var(--navy); margin: 0 0 1rem; }
+.hero .visit + .lede { margin-top: 1.75rem; }
 .hero .lede + .lede { margin-top: 0.9rem; }
 .visit {
-  margin: 1.75rem auto 0;
+  margin: 1.25rem auto 0;
   max-width: 560px;
   background: var(--card);
   border-left: 4px solid var(--lime);
@@ -319,4 +321,13 @@ main.page.wide { max-width: 1080px; }
 .btn-outline { background: transparent; color: var(--navy); }
 .btn-outline:hover { background: var(--card); color: var(--navy-dark); }
 .closing { text-align: center; margin-top: 2.5rem; }
+.cal-agenda { display: none; }
+@media (max-width: 860px) {
+  .hero { padding-top: 0.5rem; }
+  .hero .logo { max-width: 200px; }
+  .hero .lede { text-align: left; }
+  .cal-month { display: none; }
+  .cal-agenda { display: block; }
+  .cal-agenda iframe { height: 480px; }
+}
 .closing .tagline { margin-bottom: 0.25rem; }
