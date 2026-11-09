@@ -11,10 +11,12 @@ section, with [Gateway Church](gateway-church.md) facts filled in:
    Word. A home for your family." (owner's direction 2026-11-09: lead with a
    high view of Scripture and family orientation, aimed at believing families
    seeking a biblically grounded church; the sample's "There's a place for you
-   here." was dropped), two welcome paragraphs, a "Join us this Sunday" box with time
-   and street address, and two buttons: *Plan Your Visit* (anchor to the
-   visit section below) and *Watch a Sermon* (the YouTube channel's live-streams tab, see
-   [Connect Channels](connect-channels.md)).
+   here." was dropped), then the "Join us this Sunday" box with time and
+   street address and two buttons: *Plan Your Visit* (anchor to the visit
+   section below) and *Watch a Sermon* (the YouTube channel's live-streams
+   tab, see [Connect Channels](connect-channels.md)). The two welcome
+   paragraphs follow the box (moved below it 2026-11-09 so the box is above
+   the fold on phones; left-aligned under 860px).
 2. **What to expect** — arrival; worship "mostly contemporary with
    traditional influences", prayer, sermon rooted in Scripture; "We are a
    Bible-believing church"; children's church and nursery care during the
@@ -25,19 +27,23 @@ section, with [Gateway Church](gateway-church.md) facts filled in:
    rest, heal, learn, grow, lead, and make an impact" line. The former
    "multi-cultural, community-oriented" wording was dropped at the owner's
    request (2026-11-09).
-4. **Calendar** — Google Calendar embed (unchanged).
+4. **Calendar** — two Google Calendar embeds of the same public calendar:
+   month grid (`.cal-month`) on wide screens, agenda list (`.cal-agenda`)
+   under 860px; CSS shows one or the other.
 5. **Plan your visit** (`#visit`) — address, phone, email, connect link, map
    embed (the former "Find Us" section, renamed to match the button).
 6. **Closing** — "We hope to see you soon." + *Plan Your Visit* button.
 
 Button and visit-box styles live in `site/css/style.css` under "Homepage:
 visitor-first landing" (`.btn`, `.btn-outline`, `.btn-row`, `.visit`,
-`.tagline`, `.closing`).
+`.tagline`, `.closing`, `.cal-month`/`.cal-agenda`, phone rules in the
+860px media query). The logo PNG is opaque white, so `.hero .logo` uses
+`mix-blend-mode: multiply` to hide its box.
 
 ## Design review (2026-11-09, PR #13 preview)
 
-Reviewed at 1280px and 390px. Findings, highest impact first; none applied
-yet — owner to choose:
+Reviewed at 1280px and 390px. Findings, highest impact first. Items 1, 3, 5,
+6 applied the same day on the owner's go-ahead; 2 and 4 wait on the owner:
 
 1. **Sunday CTA is below the fold on phones.** Logo (≈250px) + h1 + tagline
    + two centered paragraphs push the "Join us this Sunday" box past the first
