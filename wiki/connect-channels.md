@@ -8,6 +8,10 @@
   "ministries in action"; also the source feeding the sermon index of the
   [Sermon Search System](sermon-search-system.md) (index docs carry
   `video_description`, `transcript`, `published_at`, `thumbnails`).
+  Handle URL: https://www.youtube.com/@gatewaychurchsa9289 — its **Streams**
+  tab (https://www.youtube.com/@gatewaychurchsa9289/streams) is where the
+  Sunday services are streamed and is the target of the
+  [Homepage](homepage.md) "Watch a Sermon" button (owner, 2026-11-09).
 - **Email / phone:** staff@gw-church.org, (210) 674-5703.
 - **Google Calendar embed** on homepage: public calendar id
   `b3458b987ae80eea19b5c70f6c6600a8c6f4475fff1ef61c46686c33e0caa559@group.calendar.google.com`

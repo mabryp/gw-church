@@ -13,7 +13,7 @@ section, with [Gateway Church](gateway-church.md) facts filled in:
    seeking a biblically grounded church; the sample's "There's a place for you
    here." was dropped), two welcome paragraphs, a "Join us this Sunday" box with time
    and street address, and two buttons: *Plan Your Visit* (anchor to the
-   visit section below) and *Watch a Sermon* (YouTube channel, see
+   visit section below) and *Watch a Sermon* (the YouTube channel's live-streams tab, see
    [Connect Channels](connect-channels.md)).
 2. **What to expect** — arrival; worship "mostly contemporary with
    traditional influences", prayer, sermon rooted in Scripture; "We are a

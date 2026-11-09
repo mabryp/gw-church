@@ -641,3 +641,11 @@ God's Word. A home for your family."; meta description reworded to
 "Bible-believing, family-oriented church … Sundays at 10:00 a.m." Updated
 [wiki/homepage.md](wiki/homepage.md) and
 [wiki/gateway-church.md](wiki/gateway-church.md). Pushed to the PR branch.
+
+## [2026-11-09] site | "Watch a Sermon" → YouTube streams tab (PR #13)
+Owner asked for the homepage button to go to the live-streams tab
+(https://www.youtube.com/@gatewaychurchsa9289/streams) rather than the
+channel root. Changed the button href only; footer and Connect-page YouTube
+links still point at the channel. Recorded the handle/streams URL in
+[wiki/connect-channels.md](wiki/connect-channels.md) and updated
+[wiki/homepage.md](wiki/homepage.md).
