@@ -680,3 +680,24 @@ Wednesday" banner stays through Nov 11. Rules unchanged. Stylesheet bumped
 to `?v=20261109c` on all 13 pages. Wiki: wednesday-dinner-poll.md § Holiday
 pause (new), summary and index line updated. Restart date and the spelling
 "Junior Convention" are assumptions to confirm with the owner.
+
+## [2026-11-09] ingest | what_we_believe.txt
+Owner supplied a new five-article statement of faith (God and His Word;
+Jesus Christ and Salvation; The Holy Spirit; The Church and Our Calling; Our
+Hope) with an opening confession and scripture references per article. It
+replaces the Google Site's 11-point list. Rewrote wiki/what-we-believe.md:
+current statement table, site-page notes, previous statement kept as a
+historical section; index.md and site-structure.md lines updated. New fact
+surfaced: the church describes itself as a small, independent congregation
+led by a team of elders.
+
+## [2026-11-09] site | What We Believe page rebuilt from the new statement (PR pending)
+`site/about/what-we-believe/index.html` now carries the five-article text
+verbatim in a creed layout: large Playfair opening confession under a lime
+rule, two-column article grid (title left, text right, stacks under 700px)
+with hairline rules, scripture references as pills linking to Bible Gateway
+in a new tab, and a closing invitation with "Plan a visit" and "Connect with
+us" buttons. Meta description rewritten. Stylesheet: `.beliefs` rules
+removed, "creed layout" block added; version bumped to `?v=20261109d` on all
+13 pages. Branch `feat/what-we-believe` off main; preview on preprod via PR,
+prod only on the owner's merge.
