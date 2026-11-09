@@ -106,6 +106,9 @@ in cached-DNS checks.
   `gw-church-preprod` with prod/preprod deploy targets (see Hosting
   environments above). Initial deploy verified at
   https://gw-church-preprod.web.app.
+- 2026-11-09: Homepage rewritten to the owner's visitor-first template
+  ([Homepage](homepage.md)); PR opened for preprod preview, pending three
+  owner-supplied facts.
 
 ## Sources
 

@@ -288,3 +288,37 @@ main.page.wide { max-width: 1080px; }
 .tally-count { color: var(--muted); font-size: 0.92rem; white-space: nowrap; }
 .tally-bar { height: 0.7rem; background: var(--card); border-radius: 999px; overflow: hidden; margin: 0.3rem 0; }
 .tally-bar span { display: block; height: 100%; background: var(--lime); border-radius: 999px; transition: width 0.3s; }
+
+/* ---------- Homepage: visitor-first landing ---------- */
+.hero h1 { margin: 1.25rem 0 0.25rem; }
+.tagline { font-family: var(--serif); font-size: 1.35rem; color: var(--navy); margin: 0 0 1rem; }
+.hero .lede + .lede { margin-top: 0.9rem; }
+.visit {
+  margin: 1.75rem auto 0;
+  max-width: 560px;
+  background: var(--card);
+  border-left: 4px solid var(--lime);
+  border-radius: 8px;
+  padding: 1.1rem 1.4rem 1.25rem;
+}
+.visit p { margin: 0; }
+.visit-label { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--navy); }
+.visit-when { font-family: var(--serif); font-size: 1.15rem; color: var(--navy); margin-top: 0.2rem; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1rem; }
+.btn {
+  display: inline-block;
+  font-weight: 700;
+  color: #fff;
+  background: var(--navy);
+  border: 2px solid var(--navy);
+  border-radius: 8px;
+  padding: 0.6rem 1.3rem;
+  text-decoration: none;
+}
+.btn:hover { background: var(--navy-dark); border-color: var(--navy-dark); color: #fff; }
+.btn-outline { background: transparent; color: var(--navy); }
+.btn-outline:hover { background: var(--card); color: var(--navy-dark); }
+.closing { text-align: center; margin-top: 2.5rem; }
+.closing .tagline { margin-bottom: 0.25rem; }
+/* Placeholder text the owner must fill before prod — remove class when done */
+mark.todo { background: #fff3a3; color: #5a4a00; padding: 0 0.25em; border-radius: 3px; }

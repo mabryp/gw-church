@@ -596,3 +596,27 @@ votes for 2026-09-09. Wiki page updated. PR opened for preprod preview.
 ## [2026-11-05] site | John reading plan
 
 Added `site/embeds/john-reading-plan.html` with Weeks 32–36 from the owner-provided Gospel reading schedule, including weekday passages and Old Testament connections. Replaced the placeholder at `site/reading-plan/john-reading-plan/index.html` with the same embedded layout used by the Matthew, Mark, and Luke plans. Submitted on a feature branch for preprod PR review; production awaits owner merge.
+
+## [2026-11-09] ingest | sample_landing_page.txt
+Owner added `raw/sample_landing_page.txt`, a visitor-first landing-page
+template with bracketed placeholders (church name, service time, address,
+worship description, children's note, two CTAs). Created
+[wiki/homepage.md](wiki/homepage.md) describing the new page structure and
+the facts the sources cannot fill; linked it from
+[wiki/gateway-church.md](wiki/gateway-church.md) § Mission and voice and from
+the index.
+
+## [2026-11-09] site | Homepage rewritten to visitor-first template
+Rewrote `site/index.html` `<main>` to follow the sample section for section:
+hero with h1, tagline, two welcome paragraphs, a "Join us this Sunday" box,
+Plan Your Visit (→ `#visit`) and Watch a Sermon (→ YouTube) buttons; "What to
+expect"; "Life together" (links Wednesday Dinner and the reading plan, keeps
+the "place to be known" line); Calendar; "Plan your visit" (former Find Us,
+now with phone/email/connect) with the map; closing CTA. Service time,
+worship description, and children's sentence are unknown to the wiki and raw
+sources, so they ship in the preview as yellow `mark.todo` placeholders for
+the owner to fill before merge. Added `.btn`/`.visit`/`.tagline`/`.closing`/
+`mark.todo` styles to `style.css` and bumped the stylesheet query string to
+`?v=20261109` on all 13 pages. Meta description updated. Branch
+`feat/visitor-first-landing`, PR for preprod preview; prod on the owner's
+merge. Wiki: homepage.md (new), gateway-church.md, migration.md, index.md.
