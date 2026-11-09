@@ -632,3 +632,12 @@ from `style.css`. Recorded the new facts in
 [wiki/gateway-church.md](wiki/gateway-church.md) § Sunday service, updated
 [wiki/homepage.md](wiki/homepage.md), migration.md, index.md. Pushed to the
 PR branch; preview redeploys; prod on the owner's merge.
+
+## [2026-11-09] site | Homepage tagline changed (PR #13)
+Owner: "There's a place for you here" isn't the message; lead with a high
+view of Scripture and family orientation to attract believing families
+looking for a biblically grounded church. Hero tagline is now "Rooted in
+God's Word. A home for your family."; meta description reworded to
+"Bible-believing, family-oriented church … Sundays at 10:00 a.m." Updated
+[wiki/homepage.md](wiki/homepage.md) and
+[wiki/gateway-church.md](wiki/gateway-church.md). Pushed to the PR branch.

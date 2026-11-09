@@ -28,8 +28,9 @@ to be a disciple of Christ and to do this discipleship life in community."
 Homepage themes: a place to be known, rest, heal, learn, grow, lead, make an
 impact; multi-cultural, community-oriented, "room enough for everyone." Tagline
 motif on the school page: a mission "to train and send." The homepage was
-rewritten 2026-11-09 in a visitor-first voice ("There's a place for you
-here.") — see [Homepage](homepage.md); the discipleship sentence above no
+rewritten 2026-11-09 in a visitor-first voice aimed at believing families
+seeking a biblically grounded church, tagline "Rooted in God's Word. A home
+for your family." — see [Homepage](homepage.md); the discipleship sentence above no
 longer appears on the live page but remains the church's self-description.
 
 Lead pastor: [Chris Dumont](chris-dumont.md), who succeeded

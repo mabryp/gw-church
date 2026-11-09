@@ -7,8 +7,11 @@
 Follows the owner's sample (`raw/sample_landing_page.txt`) section for
 section, with [Gateway Church](gateway-church.md) facts filled in:
 
-1. **Hero** — logo, "Welcome to Gateway Church", tagline "There's a place for
-   you here.", two welcome paragraphs, a "Join us this Sunday" box with time
+1. **Hero** — logo, "Welcome to Gateway Church", tagline "Rooted in God's
+   Word. A home for your family." (owner's direction 2026-11-09: lead with a
+   high view of Scripture and family orientation, aimed at believing families
+   seeking a biblically grounded church; the sample's "There's a place for you
+   here." was dropped), two welcome paragraphs, a "Join us this Sunday" box with time
    and street address, and two buttons: *Plan Your Visit* (anchor to the
    visit section below) and *Watch a Sermon* (YouTube channel, see
    [Connect Channels](connect-channels.md)).
