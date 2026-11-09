@@ -1,6 +1,6 @@
 # Homepage
 
-**Summary:** The gw-church.org landing page (`site/index.html`): visitor-first copy adopted 2026-11-09 from an owner-supplied template, with three facts still awaiting the owner before it can go to prod.
+**Summary:** The gw-church.org landing page (`site/index.html`): visitor-first copy adopted 2026-11-09 from an owner-supplied template; service time, worship style, and family details supplied by the owner the same day.
 
 ## Structure (since 2026-11-09)
 
@@ -12,12 +12,16 @@ section, with [Gateway Church](gateway-church.md) facts filled in:
    and street address, and two buttons: *Plan Your Visit* (anchor to the
    visit section below) and *Watch a Sermon* (YouTube channel, see
    [Connect Channels](connect-channels.md)).
-2. **What to expect** — arrival, service outline, visitor details.
-3. **Life together** — weekday community; links to the
-   [Wednesday Dinner](wednesday-dinner-poll.md) page and the
+2. **What to expect** — arrival; worship "mostly contemporary with
+   traditional influences", prayer, sermon rooted in Scripture; "We are a
+   Bible-believing church"; children's church and nursery care during the
+   service (facts in [Gateway Church](gateway-church.md) § Sunday service).
+3. **Life together** — "a young, vibrant group"; weekday community; links to
+   the [Wednesday Dinner](wednesday-dinner-poll.md) page and the
    [reading plan](reading-plans.md); keeps the pre-2026 "a place to be known …
-   rest, heal, learn, grow, lead, and make an impact" line so the established
-   voice survives the rewrite.
+   rest, heal, learn, grow, lead, and make an impact" line. The former
+   "multi-cultural, community-oriented" wording was dropped at the owner's
+   request (2026-11-09).
 4. **Calendar** — Google Calendar embed (unchanged).
 5. **Plan your visit** (`#visit`) — address, phone, email, connect link, map
    embed (the former "Find Us" section, renamed to match the button).
@@ -25,19 +29,7 @@ section, with [Gateway Church](gateway-church.md) facts filled in:
 
 Button and visit-box styles live in `site/css/style.css` under "Homepage:
 visitor-first landing" (`.btn`, `.btn-outline`, `.btn-row`, `.visit`,
-`.tagline`, `.closing`, `mark.todo`).
-
-## Open facts (owner must supply)
-
-Neither the wiki nor any crawled Google Sites page states these, so the page
-carries them as highlighted `<mark class="todo">` placeholders. Replace the
-text and drop the `<mark>` before the PR is merged:
-
-- **Sunday service time** (hero visit box).
-- **One-phrase description of the worship portion** of the service (What to
-  expect).
-- **One sentence on children's programs / accessibility** (What to expect) —
-  or delete the sentence if there is nothing to say.
+`.tagline`, `.closing`).
 
 ## Earlier version (2026-07-20 to 2026-11-09)
 
@@ -51,3 +43,6 @@ The discipleship sentence and mission motifs remain recorded in
 
 - raw/sample_landing_page.txt (owner's template, added 2026-11-09)
 - raw/home.html (original Google Sites homepage)
+- Owner's direct answers in session, 2026-11-09 (service time, worship style,
+  children's church/nursery, "young and vibrant", Bible-believing, drop
+  "multi-cultural")

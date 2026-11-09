@@ -620,3 +620,15 @@ the owner to fill before merge. Added `.btn`/`.visit`/`.tagline`/`.closing`/
 `?v=20261109` on all 13 pages. Meta description updated. Branch
 `feat/visitor-first-landing`, PR for preprod preview; prod on the owner's
 merge. Wiki: homepage.md (new), gateway-church.md, migration.md, index.md.
+
+## [2026-11-09] site | Homepage: owner's facts filled in (PR #13)
+Owner answered the three placeholders and added direction: service Sundays
+at 10:00 a.m.; worship "mostly contemporary with traditional influences";
+state that Gateway is a Bible-believing church; children's church and
+nursery care offered; describe the congregation as young and vibrant; drop
+the "multi-cultural" paragraph. Applied to `site/index.html` (visit box,
+What to expect, Life together), removed the `mark.todo` placeholder style
+from `style.css`. Recorded the new facts in
+[wiki/gateway-church.md](wiki/gateway-church.md) § Sunday service, updated
+[wiki/homepage.md](wiki/homepage.md), migration.md, index.md. Pushed to the
+PR branch; preview redeploys; prod on the owner's merge.

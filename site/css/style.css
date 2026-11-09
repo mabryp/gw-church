@@ -320,5 +320,3 @@ main.page.wide { max-width: 1080px; }
 .btn-outline:hover { background: var(--card); color: var(--navy-dark); }
 .closing { text-align: center; margin-top: 2.5rem; }
 .closing .tagline { margin-bottom: 0.25rem; }
-/* Placeholder text the owner must fill before prod — remove class when done */
-mark.todo { background: #fff3a3; color: #5a4a00; padding: 0 0.25em; border-radius: 3px; }
