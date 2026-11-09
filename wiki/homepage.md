@@ -34,6 +34,33 @@ Button and visit-box styles live in `site/css/style.css` under "Homepage:
 visitor-first landing" (`.btn`, `.btn-outline`, `.btn-row`, `.visit`,
 `.tagline`, `.closing`).
 
+## Design review (2026-11-09, PR #13 preview)
+
+Reviewed at 1280px and 390px. Findings, highest impact first; none applied
+yet — owner to choose:
+
+1. **Sunday CTA is below the fold on phones.** Logo (≈250px) + h1 + tagline
+   + two centered paragraphs push the "Join us this Sunday" box past the first
+   screen at 390×844. Fix: order hero as logo → h1 → tagline → visit box →
+   paragraphs, and cap the logo at ~200px on small screens.
+2. **No photograph.** The page claims "young, vibrant" and "family" with
+   text only. A real congregation/family photo under the hero would carry the
+   message; owner must supply an image file (never hotlink — see
+   [Migration](migration.md) open item 4).
+3. **Calendar embed is noise on phones.** Month grid at 390px shows truncated
+   "Reading Plan Jo…" chips every weekday and unreadable Sunday entries. Fix:
+   serve the embed in `mode=AGENDA` below 860px (two iframes toggled by CSS)
+   or replace with a short "This week" list.
+4. **Calendar shows Sunday entries at 10:15** ("10:15 Message: …") while the
+   page says 10:00 a.m. — owner to confirm which is right.
+5. **Logo PNG has an opaque white box** visible against the off-white page
+   background. Fix: transparent PNG, or white hero background.
+6. **Long centered paragraphs** in the hero (4–5 lines centered) read worse
+   than left-aligned; consider one shorter paragraph, or left-align on phones.
+
+Minor: touch targets, contrast, and heading hierarchy pass; phone menu is
+14 items long but usable.
+
 ## Earlier version (2026-07-20 to 2026-11-09)
 
 Logo + discipleship lede ("Each of us is called to be a disciple of Christ…"),

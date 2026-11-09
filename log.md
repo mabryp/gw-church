@@ -649,3 +649,12 @@ channel root. Changed the button href only; footer and Connect-page YouTube
 links still point at the channel. Recorded the handle/streams URL in
 [wiki/connect-channels.md](wiki/connect-channels.md) and updated
 [wiki/homepage.md](wiki/homepage.md).
+
+## [2026-11-09] query | Homepage design critique (PR #13 preview)
+Owner asked for UI/design recommendations. Screenshotted the preview at
+1280px and 390px (the latter via same-origin 390px iframes, since the
+browser window would not shrink) and ran a hierarchy/usability pass.
+Six findings recorded in [wiki/homepage.md](wiki/homepage.md) § Design
+review: CTA below the fold on phones, no photo, calendar unusable at phone
+width, calendar's 10:15 Sunday entries vs the stated 10:00, logo's opaque
+white box, long centered hero paragraphs. Nothing changed on the site.
