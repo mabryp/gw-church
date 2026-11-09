@@ -18,7 +18,7 @@ LLM; updated on every ingest.
 - [homepage.md](homepage.md) — the landing page: visitor-first structure adopted 2026-11-09 from the owner's sample; section map, buttons, styles
 - [sermon-search-system.md](sermon-search-system.md) — Elasticsearch-backed sermon/notes search embeds; indexes, fields, security note
 - [reading-plans.md](reading-plans.md) — 2026 Gospel Reading Plan program: Matthew (done), Mark (done Aug 28), Luke (Aug 31–Oct 30; page live, owner's 90-question bank converted, forms not yet built), John (placeholder)
-- [wednesday-dinner-poll.md](wednesday-dinner-poll.md) — weekly dinner-theme vote, live at /wednesday-dinner since 2026-09-05: schedule, data model, tested rules, Firebase setup record; rules workflow needs one more IAM role
+- [wednesday-dinner-poll.md](wednesday-dinner-poll.md) — weekly dinner-theme vote, live at /wednesday-dinner since 2026-09-05; paused for the holidays after 2026-11-11 until early Jan 2027: schedule, data model, tested rules, Firebase setup record; rules workflow needs one more IAM role
 
 ## The project
 

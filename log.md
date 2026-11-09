@@ -668,3 +668,15 @@ on phones while the month grid shows on wide screens; logo's opaque white
 box hidden with `mix-blend-mode: multiply`. Stylesheet version bumped to
 `?v=20261109b` on all 13 pages. Open: photo (item 2) and the 10:00 vs
 10:15 Sunday time question (item 4). Wiki homepage.md updated.
+
+## [2026-11-09] site | Wednesday Dinner holiday pause notice (PR #13)
+Owner: dinners are cancelled after this coming Wednesday (Nov 11) for the
+holidays and the Junior Convention; one dinner in November and one in
+December, weekly schedule restarts after the new year; "stay tuned." Added
+a `.pause-notice` box to `site/wednesday-dinner/index.html` with that
+message and a dated pause in the script (`LAST_DINNER` 2026-11-11, `RESUME`
+2027-01-03): ballot, countdown and results hidden until resume; the "This
+Wednesday" banner stays through Nov 11. Rules unchanged. Stylesheet bumped
+to `?v=20261109c` on all 13 pages. Wiki: wednesday-dinner-poll.md § Holiday
+pause (new), summary and index line updated. Restart date and the spelling
+"Junior Convention" are assumptions to confirm with the owner.

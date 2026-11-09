@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css?v=20261109b">
+<link rel="stylesheet" href="/css/style.css?v=20261109c">
 </head>
 <body>
 <header class="site-header">
@@ -46,13 +46,17 @@
 <main class="page">
 
 <h1>Wednesday Dinner</h1>
+<section class="pause-notice" id="pause-notice" hidden>
+  <p class="pause-title">Wednesday dinners are pausing for the holidays</p>
+  <p>This Wednesday, November 11, is the last regular dinner of the year. After that, the weekly dinners take a break for the holidays and the Junior Convention. We&rsquo;ll still gather for one dinner in November and one in December &mdash; dates to be announced &mdash; and the weekly schedule and theme voting start again after the new year. Stay tuned for updates.</p>
+</section>
 <section class="winner" id="winner" hidden aria-live="polite">
   <p class="winner-label" id="winner-label"></p>
   <p class="winner-theme" id="winner-theme"></p>
   <p class="winner-examples" id="winner-examples"></p>
   <p class="winner-note" id="winner-note"></p>
 </section>
-<h2 class="ballot-heading">Vote for the following week</h2>
+<h2 class="ballot-heading" id="ballot-heading">Vote for the following week</h2>
 <p class="poll-note" id="poll-week">Loading this week's poll&hellip;</p>
 <p class="poll-countdown" id="countdown" role="timer" aria-live="off" hidden></p>
 <p class="poll-preview" id="poll-preview" hidden>Preview copy &mdash; votes cast here do not count toward the real poll.</p>
@@ -115,6 +119,16 @@ import { firebaseConfig } from '/wednesday-dinner/firebase-config.js';
 // is ever reset. firestore.rules enforces the same window server-side.
 const TZ = 'America/Chicago';
 const CLOSE_HOUR = 24;                 // Saturday 24:00 = midnight going into Sunday
+
+// ---------- Holiday pause (owner, 2026-11-09) ----------
+// Regular Wednesday dinners stop after LAST_DINNER for the holidays and the
+// Junior Convention (one dinner each in November and December, dates TBA).
+// Until RESUME the page shows the notice and hides the ballot; the "This
+// Wednesday" banner stays up through LAST_DINNER. RESUME is a Sunday so the
+// first ballot back is for the Wednesday of the following week. Edit these
+// two dates (and the notice text above) to change the plan.
+const LAST_DINNER = '2026-11-11';
+const RESUME = '2027-01-03';
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function chicagoParts(d) {
@@ -308,6 +322,27 @@ async function loadConfig() {
 
 async function main() {
   const boot = $('boot-status');
+  const tp = chicagoParts(new Date());
+  const todayKey = `${tp.y}-${String(tp.m).padStart(2, '0')}-${String(tp.d).padStart(2, '0')}`;
+  if (todayKey < RESUME) {
+    // Paused: notice instead of the ballot. Keep this Wednesday's theme banner
+    // up until the last dinner has happened, then show the notice alone.
+    $('pause-notice').hidden = false;
+    for (const id of ['ballot-heading', 'poll-week', 'countdown', 'poll-preview', 'vote-form', 'results-section']) $(id).hidden = true;
+    boot.hidden = true;
+    const last = upcomingWednesday();
+    if (keyOf(last) > LAST_DINNER) return;
+    try {
+      await signInAnonymously(auth);
+      const cfg = await loadConfig();
+      const examples = cfg && cfg.examples && typeof cfg.examples === 'object' ? cfg.examples : {};
+      const snap = await getDocs(collection(db, COLL, keyOf(last), 'votes'));
+      renderWinner(last, snap, false, null, examples);
+    } catch (e) {
+      console.error('winner lookup failed', e);
+    }
+    return;
+  }
   const wedLabel = wednesday.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'long', day: 'numeric' });
   $('poll-week').textContent = `This vote is for Wednesday, ${wedLabel}. Voting closes Saturday night and the winner is announced Sunday. One vote per person — you can change your mind until voting closes.`;
   if (COLL !== 'polls') $('poll-preview').hidden = false;
