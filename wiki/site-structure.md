@@ -8,7 +8,7 @@
 |---|---|---|
 | `/home` | Home | Text + Google Calendar embed + Google Maps embed |
 | `/about` | About | Text (address/contact only) |
-| `/about/what-we-believe` | What We Believe | Text — statement of faith, see [What We Believe](what-we-believe.md) |
+| `/about/what-we-believe` | What We Believe | Text — statement of faith (five-article version since 2026-11-09, creed layout with linked scripture), see [What We Believe](what-we-believe.md) |
 | `/about/our-pastor` | Our Pastor | Text — placeholder for [Chris Dumont](chris-dumont.md) (photo pending) + Pastor Emeritus section for [Charley](charley.md) |
 | `/about/gateway-christian-school` | Gateway Christian School | Text, see [Gateway Christian School](gateway-christian-school.md) |
 | `/connect` | Connect | Text + Facebook/YouTube links, see [Connect Channels](connect-channels.md) |
